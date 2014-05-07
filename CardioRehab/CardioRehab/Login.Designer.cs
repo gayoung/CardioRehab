@@ -49,7 +49,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Welcome to \r\nCardioRehab Program!";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // panel1
             // 
@@ -93,6 +92,7 @@
             this.button1.TabIndex = 2;
             this.button1.Text = "Login";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // textBox1 (username)
             // 

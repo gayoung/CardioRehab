@@ -21,16 +21,19 @@ namespace CardioRehab
         #region constructor
         public DatabaseClass()
         {
-            projectPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-
-            Console.WriteLine(projectPath);
+            projectPath = System.AppDomain.CurrentDomain.BaseDirectory;
+            projectPath = System.IO.Directory.GetParent(projectPath).FullName;
+            projectPath = System.IO.Directory.GetParent(projectPath).FullName;
+            projectPath = System.IO.Directory.GetParent(projectPath).FullName;
+            projectPath = System.IO.Directory.GetParent(projectPath).FullName;
         }
         #endregion
 
         public void ConnectToDB()
         {
-            m_dbconnection = new SQLiteConnection("Data source=" + projectPath + "\\Django\\mysite\\db.sqlite3;Version=3;");
+            m_dbconnection = new SQLiteConnection("Data source=" + projectPath + "\\cardio.db;Version=3;");
             m_dbconnection.Open();
+            MessageBox.Show("DB connected!");
         }
 
         /// <summary>
@@ -41,13 +44,6 @@ namespace CardioRehab
         {
             SQLiteCommand command = new SQLiteCommand(sql, m_dbconnection);
             command.ExecuteNonQuery();
-        }
-
-        public List<DatabaseRecord> GetRecord(String sql)
-        {
-            SQLiteCommand command = new SQLiteCommand(sql, m_dbconnection);
-            SQLiteDataReader reader = command.ExecuteReader();
-
         }
       
     }

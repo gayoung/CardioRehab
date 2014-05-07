@@ -35,11 +35,17 @@ namespace CardioRehab
             String username = textBox1.Text;
             String password = textBox2.Text;
 
-            String projectPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
-            SQLiteConnection connection = new SQLiteConnection("Data source=" + projectPath + "\\Django\\mysite\\db.sqlite3;Version=3;");
-            connection.Open();
+            DatabaseClass db = new DatabaseClass();
+            try
+            {
+                db.ConnectToDB();
+            }
+            catch(FileLoadException error)
+            {
+                MessageBox.Show(error.Message);
+            }
 
-            String sql = "SELECT"
+            String sql = "SELECT * FROM Authentication WHERE username=" + username.Trim() + "AND password=" + password.Trim();
         }
     }
 }
