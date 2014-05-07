@@ -1,0 +1,38 @@
+<!doctype html>
+{% load static %}
+
+<!-- Adding Patient page.-->
+<html>
+    <head>
+	<title>New Patients | LifeCycle</title>
+        <link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+		<body background="http://test.scripts.psu.edu/users/m/p/mpc5185/BlueFadeBackground2.png" style ="background-repeat: repeat-x">
+		<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+		<script type="text/javascript" src="/static/script.js"></script>
+    </head>
+    <body>
+		<center>
+		<h1>Add Patients</h1>
+			<div>
+				<form method="post" enctype="multipart/form-data">
+					{% csrf_token %}
+					<table>
+						<tr>
+							<td>Name:</td> <td><input type="text" name="name"  maxlength="45" /></td>
+						</tr>
+						<tr>
+							<td>Date of Birth:</td> <td><input type="date" name="bday"></td>
+						<tr>
+					</table>
+					{% if name %}
+						<br/><b>Added Patient</b>: {{ name }} <br/>
+					{% endif %}
+					<input type="submit"value="Save"/><button type="reset" value="Reset">Reset</button><button type="button" onclick="javascript:window.close()">Cancel</button>
+					<br/>If you are not it Chrome please input date as YYYY-MM-DD.
+				</form>
+			</div>
+		</center>
+	
+	
+    </body>
+</html>

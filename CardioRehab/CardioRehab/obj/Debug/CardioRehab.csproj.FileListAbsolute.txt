@@ -1,0 +1,10 @@
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\bin\Debug\CardioRehab.exe.config
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\bin\Debug\CardioRehab.exe
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\bin\Debug\CardioRehab.pdb
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.csprojResolveAssemblyReference.cache
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.Properties.Resources.resources
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.csproj.GenerateResource.Cache
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.exe
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.pdb
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.Login.resources
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\bin\Debug\System.Data.SQLite.dll

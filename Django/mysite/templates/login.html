@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en-us" >
+<head>
+<title>Log in | LifeCycle</title>
+<link rel="stylesheet" href="{% static '/static/background.css' %}" />
+<link rel="stylesheet" href="{% static '/static/admin/css/base.css' %}" />
+<link rel="stylesheet" href="{% static '/static/admin/css/login.css' %}" />
+
+
+<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+
+<meta name="robots" content="NONE,NOARCHIVE" />
+</head>
+
+
+<body class="login">
+  <div id="container">
+  
+    <div id="header">
+      <div id="branding">
+        <h1 id="site-name" align="center">LifeCycle</h1>
+      </div>
+    </div>
+    <div id="content" class="colM">
+      <div id="content-main">
+        <form role="form" action="{% url "django.contrib.auth.views.login" %}" method="post" 
+          id="login-form">
+          {% csrf_token %}
+
+          <div class="form-row">
+            <label for="id_username" class="required">Username:</label>
+            <input id="id_username" maxlength="245" name="username" type="text" />
+          </div>
+
+          <div class="form-row">
+            <label for="id_password" class="required">Password:</label>
+            <input id="id_password" name="password" type="password" />
+          </div>
+		  {% if form.errors %}
+           <br><br><p> Invalid username/password combination, please try again </p>
+          {% endif %}
+          <div class="submit-row">
+            <label>&nbsp;</label><input type="submit" value="Log In" />
+          </div>
+
+
+        </form>
+      </div>
+        <br class="clear" />
+    </div>
+      <div id="footer"></div>
+  </div>
+
+
+
+</body>
+<script type="text/javascript">
+document.getElementById('id_username').focus()
+</script>
+</html>

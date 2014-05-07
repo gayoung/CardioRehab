@@ -1,0 +1,54 @@
+{% load render_table from django_tables2 %}
+<!doctype html>
+{% load static %}
+<!--Main page after you log into the site. This will list all the Patients that are in the system. You will be able to see links to other part of the site.-->
+<html>
+	<head>
+	<title>Home | LifeCycle</title>
+	<script type="text/javascript" src="/static/script.js"></script>
+	<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+	<link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+	</head>
+
+	<body background="http://test.scripts.psu.edu/users/m/p/mpc5185/BlueFadeBackground2.png" style ="background-repeat: repeat-x">
+	{% csrf_token %}
+	<div id="main">
+		<div id="header">
+			<h1 id="site-name" align="center">LifeCycle</h1>
+		</div>
+		<div id="Clinician Name">
+			<h5 id="Clinicians Name" align="center">Logged in as: {{user.username}}</h5>
+		</div>
+		<div id="content">
+			<table align="center" width="100%">
+				<tr>
+					<td width=200px>
+						<table>
+						<tr>
+							<td><a href="JavaScript:newPopup('/kinect/patientstats');"><img src="http://c.dryicons.com/images/icon_sets/classy_icons_set/png/128x128/globe.png" width="75" height="75" type="image/svg+xml"></img></a></td>
+							<td><a href="JavaScript:newPopup('/kinect/patientstats');">All Stats</a></td>
+						</tr>
+						<tr>
+							<td><a href="JavaScript:newPopup('/kinect/heartstats');"><img src="http://www.i2clipart.com/cliparts/4/c/b/8/clipart-heart-4cb8.png" width="75" height="75" type="image/svg+xml"></img></a></td>
+							<td><a href="JavaScript:newPopup('/kinect/heartstats');">Heart Rate Stats</a></td>
+						</tr>
+						<tr>
+							<td><a href="JavaScript:newPopup('/kinect/o2stats');"><img src="http://czbeta.blob.core.windows.net/images/ab79bd7e-0ee7-4de3-8064-0562dcb07585_96px-Oxygen_symbol.svg.png" width="75" height="75" type="image/svg+xml"></img></a></td>
+							<td><a href="JavaScript:newPopup('/kinect/o2stats');">02 Saturation Stats</a></td>
+						</tr>
+						</table>
+					</td>
+					<td style="vertical-align: top;" align="center"width=200px>{% render_table table %}</td>
+					<td style="vertical-align: top;"width=200px>
+						<h4 align="right"><a href="/kinect/logout">LOG OUT</a></h4>
+						<h4 align="right"><a href="JavaScript:newPopup('/kinect/addpatients');">ADD PATIENTS</a></h4>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	</body>
+</html>
+
+

@@ -1,0 +1,27 @@
+<!doctype html>
+{% load static %}
+
+<!-- An editable text field that the Clinician can make comments about the workout session.-->
+<html>
+    <head>
+		<title>Individual Patients | LifeCycle</title>
+        <link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+		<body background="http://test.scripts.psu.edu/users/m/p/mpc5185/BlueFadeBackground2.png" style ="background-repeat: repeat-x">
+		<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+		<script type="text/javascript" src="/static/script.js"></script>
+    </head>
+    <body>
+	<center>
+	{{ id }}</br>
+	<form enctype="multipart/form-data" method="post">
+	{% csrf_token %}
+	<textarea class="vLargeTextField"cols="40" name="text" rows="10">{{text}}</textarea></br>
+	<input type="submit"value="Save" onclick ="reloadPage()"/>
+	</form>
+	<form action="JavaScript:window.close()">
+    <input type="submit" value="Back">
+	</form>
+	Press Ctrl-R or F5 to reload the page to see your changes.
+    </center>	
+    </body>
+</html>

@@ -1,0 +1,45 @@
+{% load render_table from django_tables2 %}
+<!doctype html>
+{% load static %}
+
+<!-- This is the page that will be generated for each specific Patient, so you will be able to see that patients workout sessions. Also you can see the Patients medical history.-->
+
+<html>
+    <head>
+		<title>Individual Patients | LifeCycle</title>
+        <link rel="stylesheet" href="{{ STATIC_URL }}django_tables2/themes/paleblue/css/screen.css" />
+		<body background="http://test.scripts.psu.edu/users/m/p/mpc5185/BlueFadeBackground2.png" style ="background-repeat: repeat-x">
+		<script type="text/javascript">window.__admin_media_prefix__ = "/static/admin/";</script>
+    </head>
+    <body>
+	<div id="Patient BioData">
+		<h2 align = "center">Patient BioData</h2>
+	</div>
+	<center>
+        {% render_table table %}
+    </center>
+	<div id ="Medical History">
+		<table align="center" border="1" style:"width= 400px">
+			<caption><h2>Medical History</h2></caption>
+			<tr>
+				<th>Prescriptions</th>
+				<td>Tylenol 3</th>
+				<td>Heart Pills</td>
+			</tr>
+			<tr>
+				<th>Previous Conditions</th>
+				<td>Heart Attack</td>
+			</tr>
+			<tr>
+				<th>Previous Clinicians</th>
+				<td>Dr. Doctor</td>
+			</tr>
+			<tr>
+				<th>Comments</th>
+				<td>None</td>
+			</tr>
+		</table>
+	</div>
+		
+    </body>
+</html>
