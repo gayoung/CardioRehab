@@ -26,15 +26,9 @@ namespace CardioRehab
             projectPath = System.IO.Directory.GetParent(projectPath).FullName;
             projectPath = System.IO.Directory.GetParent(projectPath).FullName;
             projectPath = System.IO.Directory.GetParent(projectPath).FullName;
+            m_dbconnection = new SQLiteConnection("Data source=" + projectPath + "\\cardio.db;Version=3;");
         }
         #endregion
-
-        public void ConnectToDB()
-        {
-            m_dbconnection = new SQLiteConnection("Data source=" + projectPath + "\\cardio.db;Version=3;");
-            m_dbconnection.Open();
-            MessageBox.Show("DB connected!");
-        }
 
         /// <summary>
         /// For running INSERT, UPDATE or DELETE 

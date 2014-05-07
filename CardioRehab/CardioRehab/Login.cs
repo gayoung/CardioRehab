@@ -20,16 +20,6 @@ namespace CardioRehab
             InitializeComponent();
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void button1_Click(object sender, EventArgs e)
         {
             String username = textBox1.Text;
@@ -38,14 +28,59 @@ namespace CardioRehab
             DatabaseClass db = new DatabaseClass();
             try
             {
-                db.ConnectToDB();
+                db.m_dbconnection.Open();
             }
             catch(FileLoadException error)
             {
+                // db connection failed
                 MessageBox.Show(error.Message);
             }
 
-            String sql = "SELECT * FROM Authentication WHERE username=" + username.Trim() + "AND password=" + password.Trim();
+            String sql = "SELECT * FROM authentication WHERE username='" + username.Trim() + "' AND password='" + password.Trim()+"'";
+            SQLiteCommand cmd = new SQLiteCommand(sql, db.m_dbconnection);
+            try
+            {
+                SQLiteDataReader reader = cmd.ExecuteReader();
+
+                // correct username and password
+                if (reader.HasRows)
+                {
+                    while (reader.Read())
+                    {
+                        String role = reader["role"].ToString();
+
+                        if (role.Trim() == "Patient") // user is a patient
+                        {
+                            Console.WriteLine("authenticated user is a patient");
+                            // open patient window
+                        }
+                        else if (role.Trim() == "Doctor") // user is a doctor
+                        {
+                            Console.WriteLine("authenticated user is a doctor");
+                            // open doctor window
+                        }
+                        else // user is an admin
+                        {
+                            Console.WriteLine("authenticated user is a admin");
+                            // open admin window
+                        }
+                    }
+
+                }
+                // incorrect username and password
+                else
+                {
+                    label4.Show();
+                }
+                reader.Dispose();
+            }
+            catch(SQLiteException ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
+            cmd.Dispose();
+            db.m_dbconnection.Close();
         }
     }
 }
