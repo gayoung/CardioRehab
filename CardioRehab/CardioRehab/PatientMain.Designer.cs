@@ -27,6 +27,8 @@ namespace CardioRehab
         /// <summary>
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
+        /// 
+        /// All icons were by Freepik at http://www.flaticon.com/authors/freepik
         /// </summary>
         private void InitializeComponent()
         {
