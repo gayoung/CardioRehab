@@ -171,7 +171,6 @@ namespace CardioRehab
             this.Name = "PatientMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Welcome to CardioRehab Application!";
-            this.WindowState = System.Windows.Forms.FormWindowState.Minimized;
             this.BiostatPanel.ResumeLayout(false);
             this.BiostatPanel.PerformLayout();
             this.ResumeLayout(false);

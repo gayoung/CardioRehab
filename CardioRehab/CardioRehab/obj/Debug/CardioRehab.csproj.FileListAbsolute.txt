@@ -9,4 +9,3 @@ C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\
 C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.csproj.GenerateResource.Cache
 C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.exe
 C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.pdb
-C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.csprojResolveAssemblyReference.cache
