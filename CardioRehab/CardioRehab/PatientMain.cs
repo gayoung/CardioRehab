@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -12,15 +15,38 @@ namespace CardioRehab
 {
     public partial class PatientMain : Form
     {
+        // currently under assumption that
+        // first output from the loop is LAN and second is wireless
+        private String docLocalIp;
+        private String wirelessIP;
+
+        private AsyncCallback socketBioWorkerCallback;
+        public Socket socketBioListener;
+        public Socket bioSocketWorker;
+        static string fname = string.Format("Tiny Tim-{0:yyyy-MM-dd hh.mm.ss.tt}.txt", DateTime.Now);
+
+        int[] oxdata = new int[1000];
+        int[] hrdata = new int[1000];
+        int[] bpdata = new int[1000];
+        public int hrcount, oxcount, bpcount;
+
         public PatientMain(int currentuser)
         {
             int user = currentuser;
 
             InitializeComponent();
+            //used to start socket server for bioSockets
+            InitializeBioSockets();
 
             this.SizeChanged += new EventHandler(PatientMain_Resize);
         }
-
+        
+        /// <summary>
+        /// This method is used to adjust the size of the form components
+        /// when the form window is resized (min/max).
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void PatientMain_Resize(object sender, EventArgs e)
         {
             int currentWidth = this.Width;
@@ -80,6 +106,206 @@ namespace CardioRehab
             bpValue.Location = new Point(bpValue.Location.X, bpLabel.Location.Y + bpLabel.Height + 5);
             oxiLabel.Location = new Point(oxiLabel.Location.X, bpValue.Location.Y + bpValue.Height + 5);
             oxiValue.Location = new Point(oxiValue.Location.X, oxiLabel.Location.Y + oxiLabel.Height + 5);
+        }
+
+        #region localIP
+        private void GetLocalIP()
+        {
+            Console.WriteLine(Dns.GetHostName());
+            IPAddress[] localIPs = Dns.GetHostAddresses(Dns.GetHostName());
+            int Ipcounter = 0;
+            foreach (IPAddress addr in localIPs)
+            {
+                if (addr.AddressFamily == AddressFamily.InterNetwork)
+                {
+                    if (Ipcounter == 1)
+                    {
+                        wirelessIP = addr.ToString();
+                    }
+                }
+            }
+        }
+        #endregion
+
+        private void InitializeBioSockets()
+        {
+            try
+            {
+                //create listening socket
+                socketBioListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                //IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
+                //IPEndPoint iplocal = new IPEndPoint(addy, 4444);
+                IPAddress addy = System.Net.IPAddress.Parse(wirelessIP);
+                IPEndPoint iplocal = new IPEndPoint(addy, 4444);
+                //bind to local IP Address
+                socketBioListener.Bind(iplocal);
+                //start listening -- 4 is max connections queue, can be changed
+                socketBioListener.Listen(4);
+                //create call back for client connections -- aka maybe recieve video here????
+                socketBioListener.BeginAccept(new AsyncCallback(OnBioSocketConnection), null);
+
+            }
+            catch (SocketException e)
+            {
+                //something went wrong
+                Console.WriteLine("SocketException thrown at InitializeBiosockets");
+                MessageBox.Show(e.Message);
+            }
+
+        }
+        private void OnBioSocketConnection(IAsyncResult asyn)
+        {
+
+            //BT creates file
+            using (StreamWriter sw = new StreamWriter(File.Create(fname)))
+            {
+                sw.WriteLine("Session started.");
+            }
+            //*
+
+            try
+            {
+                bioSocketWorker = socketBioListener.EndAccept(asyn);
+
+                WaitForBioData(bioSocketWorker);
+            }
+            catch (ObjectDisposedException)
+            {
+                System.Diagnostics.Debugger.Log(0, "1", "\n OnSocketConnection: Socket has been closed\n");
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException thrown at OnBioSocketConnection");
+                MessageBox.Show(e.Message);
+            }
+
+        }
+        private void WaitForBioData(System.Net.Sockets.Socket soc)
+        {
+            try
+            {
+                if (socketBioWorkerCallback == null)
+                {
+                    socketBioWorkerCallback = new AsyncCallback(OnBioDataReceived);
+                }
+
+                BioSocketPacket sockpkt = new BioSocketPacket();
+                sockpkt.packetSocket = soc;
+                //start listening for data
+                soc.BeginReceive(sockpkt.dataBuffer, 0, sockpkt.dataBuffer.Length, SocketFlags.None, socketBioWorkerCallback, sockpkt);
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException thrown at WaitForBioData");
+                MessageBox.Show(e.Message);
+            }
+        }
+
+        private void OnBioDataReceived(IAsyncResult asyn)
+        {
+            try
+            {
+                BioSocketPacket socketID = (BioSocketPacket)asyn.AsyncState;
+                //end receive
+                int end = 0;
+                end = socketID.packetSocket.EndReceive(asyn);
+
+                //just getting simple text right now -- needs to be changed
+                char[] chars = new char[end + 1];
+                System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
+                int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
+                System.String tmp = new System.String(chars);
+                //MessageBox.Show(tmp);
+
+                //BT time stamp
+                long ticks = DateTime.UtcNow.Ticks - DateTime.Parse("01/01/1970 00:00:00").Ticks;
+                ticks /= 10000000; //Convert windows ticks to seconds
+                string timestamp = ticks.ToString();
+                //*
+
+                if (!tmp.Contains('|'))
+                {
+                    // MessageBox.Show(tmp);
+                    tmp = string.Concat("patient1|", tmp);
+                    //MessageBox.Show(tmp);
+                }
+                System.String[] name = tmp.Split('|');
+
+                //System.String[] fakeBP = new String[1] { "BP" };
+                System.String[] fakeECG = new String[1] { "ECG" };
+
+
+                if (name.Length == 2)
+                {
+                    System.String[] data = name[1].Split(' ');
+
+                    byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
+
+                    //socketToClinician.Send(dataToClinician);
+                    //MessageBox.Show("Got stuff!");
+
+                    // Decide on what encouragement text should be displayed based on heart rate.
+                    if (data[0] == "HR")
+                    {
+                        //BT
+                        String timeStamp = GetTimestamp(DateTime.Now);
+                        hrdata[hrcount] = Convert.ToInt32(data[1]);
+                        hrcount++;
+                        using (StreamWriter sw = File.AppendText(fname))
+                        {
+                            sw.WriteLine(timeStamp + " |" + "HR " + data[1]);
+                        }
+                        //*
+
+                        // Below target zone.
+                        hrValue.Text = data[1] + "bpm";
+                    }
+
+                    // Change the Sats display in the UI thread.
+                    else if (data[0] == "OX")
+                    {
+                        //BT
+                        String timeStamp = GetTimestamp(DateTime.Now);
+                        oxdata[oxcount] = Convert.ToInt32(data[1]); ;
+                        oxcount++;
+                        using (StreamWriter sw = File.AppendText(fname))
+                        {
+                            sw.WriteLine(timeStamp + " |" + "OX " + data[1]);
+                        }
+                        
+                        oxiValue.Text = data[1] + " %";
+                    }
+
+                    if (data[0] == "BP")
+                    {
+                        //BT
+                        String timeStamp = GetTimestamp(DateTime.Now);
+                        bpdata[bpcount] = Convert.ToInt32(data[1]); ;
+                        bpcount++;
+                        using (StreamWriter sw = File.AppendText(fname))
+                        {
+                            sw.WriteLine(timeStamp + " |" + "BP " + data[1]);
+                        }
+                        bpValue.Text = data[1] + "/" + data[2];
+                    }
+                }
+                WaitForBioData(bioSocketWorker);
+            }
+            catch (ObjectDisposedException)
+            {
+                System.Diagnostics.Debugger.Log(0, "1", "\nOnDataReceived: Socket has been closed\n");
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException at OnBioDataReceived");
+                MessageBox.Show(e.Message);
+            }
+
+        }
+
+        public static String GetTimestamp(DateTime value)
+        {
+            return value.ToString("HH:mm:ss");
         }
 
     }
