@@ -1,6 +1,7 @@
 /* This is a sample populate SQL */
 
-DROP TABLE IF EXISTS doctor_patient_relation;
+DROP TABLE IF EXISTS session_data;
+DROP TABLE IF EXISTS patient_session;
 DROP TABLE IF EXISTS doctor;
 DROP TABLE IF EXISTS patient;
 DROP TABLE IF EXISTS authentication;
@@ -40,6 +41,40 @@ email CHAR(30) NOT NULL,
 local_ip CHAR(20),
 PRIMARY KEY(doctor_id),
 FOREIGN KEY(doctor_id) REFERENCES authentication(id)
+);
+
+CREATE TABLE patient_session(
+id INTEGER PRIMARY KEY,
+patient_id INTEGER NOT NULL,
+name CHAR(50), /* if nurse..etc are monitoring instead */
+label CHAR(20) NOT NULL, /* label of patient in software (patient1-6) */
+date_start TEXT NOT NULL,
+date_end TEXT NOT NULL,
+hrmax REAL NOT NULL,
+hrmin REAL NOT NULL,
+hravg REAL NOT NULL,
+oxmax REAL NOT NULL,
+oxmin REAL NOT NULL,
+oxavg REAL NOT NULL,
+sysmax REAL NOT NULL,
+sysmin REAL NOT NULL,
+sysavg REAL NOT NULL,
+diamax REAL NOT NULL,
+diamin REAL NOT NULL,
+diaavg REAL NOT NULL,
+FOREIGN KEY(patient_id) REFERENCES authentication(id)
+);
+
+CREATE TABLE session_data(
+id INTEGER PRIMARY KEY,
+session_id INTEGER,
+heart_rate INTEGER NOT NULL,
+oxygen INTEGER NOT NULL,
+systolic INTEGER NOT NULL,
+diastolic INTEGER NOT NULL,
+note TEXT,
+recorded_date TEXT NOT NULL,
+FOREIGN KEY(session_id) REFERENCES patient_session(id)
 );
 
 INSERT INTO authentication (username, password, role) VALUES ('admin', 'admin', 'Admin');
