@@ -112,7 +112,7 @@ namespace CardioRehab
         private void OnBioSocketConnection(IAsyncResult asyn)
         {
 
-            //MessageBox.Show("Connection Got");
+            Console.WriteLine("got connection");
             try
             {
                 bioSocketWorker = socketBioListener.EndAccept(asyn);
@@ -131,6 +131,7 @@ namespace CardioRehab
         }
         private void WaitForBioData(System.Net.Sockets.Socket soc)
         {
+            Console.WriteLine("wait for bio data");
             try
             {
                 if (socketBioWorkerCallback == null)
@@ -153,7 +154,7 @@ namespace CardioRehab
         {
             try
             {
-               // MessageBox.Show("Data here");
+                Console.WriteLine("data here!");
                 BioSocketPacket socketID = (BioSocketPacket)asyn.AsyncState;
                 //end receive
                 int end = 0;
@@ -165,7 +166,11 @@ namespace CardioRehab
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
                 tmp = Regex.Replace(tmp, @"\t|\n|\r", " ");
-                //MessageBox.Show(tmp);
+                
+                // DEBUGGING
+                Console.WriteLine("data passed");
+                Console.WriteLine(tmp);
+
                 System.String[] name = tmp.Split('|');
                 System.String[] data = name[1].Split(' ');
                 p1 = "patient1";
@@ -227,8 +232,11 @@ namespace CardioRehab
 
                     else if (data[0] == "OX")
                     {
+                        Console.WriteLine("oximeter readings");
                         if (name[0] == p1)
                         {
+                            Console.WriteLine(" before patient number verification");
+                            Console.WriteLine(data[1]);
                             if (patientNum == 1) oxValue1.Text = data[1] + "%";
                         }
                         if (name[0] == p2)
