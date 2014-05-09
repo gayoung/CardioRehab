@@ -323,7 +323,7 @@ namespace CardioRehab
 
                     byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
-                    //socketToClinician.Send(dataToClinician);
+                    socketToClinician.Send(dataToClinician);
                     //MessageBox.Show("Got stuff!");
 
                     // Decide on what encouragement text should be displayed based on heart rate.
