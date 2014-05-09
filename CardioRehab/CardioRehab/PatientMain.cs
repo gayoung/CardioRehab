@@ -26,7 +26,6 @@ namespace CardioRehab
         private AsyncCallback socketBioWorkerCallback;
         public Socket socketBioListener;
         public Socket bioSocketWorker;
-        //static string fname = string.Format("Tiny Tim-{0:yyyy-MM-dd hh.mm.ss.tt}.txt", DateTime.Now);
 
         int[] oxdata = new int[1000];
         int[] hrdata = new int[1000];
@@ -211,14 +210,6 @@ namespace CardioRehab
         }
         private void OnBioSocketConnection(IAsyncResult asyn)
         {
-
-            //BT creates file
-            //using (StreamWriter sw = new StreamWriter(File.Create(fname)))
-            //{
-            //    sw.WriteLine("Session started.");
-            //}
-            //*
-
             try
             {
                 bioSocketWorker = socketBioListener.EndAccept(asyn);
@@ -273,6 +264,7 @@ namespace CardioRehab
                 System.String tmp = new System.String(chars);
                 //MessageBox.Show(tmp);
 
+                // need to be changed to properly label the patient according to the port used
                 if (!tmp.Contains('|'))
                 {
                     // MessageBox.Show(tmp);
@@ -300,13 +292,6 @@ namespace CardioRehab
                         //BT
                         hrdata[hrcount] = Convert.ToInt32(data[1]);
                         hrcount++;
-                        //using (StreamWriter sw = File.AppendText(fname))
-                        //{
-                        //    sw.WriteLine(timeStamp + " |" + "HR " + data[1]);
-                        //}
-                        //*
-
-                        // Below target zone.
                         hrValue.Invoke((MethodInvoker)(() => hrValue.Text = data[1] + " bpm"));
                     }
 
@@ -316,11 +301,6 @@ namespace CardioRehab
                         //BT
                         oxdata[oxcount] = Convert.ToInt32(data[1]); ;
                         oxcount++;
-                        //using (StreamWriter sw = File.AppendText(fname))
-                        //{
-                        //    sw.WriteLine(timeStamp + " |" + "OX " + data[1]);
-                        //}
-
                         // MethodInvoker had to be used to solve cross threading issue
                         if(data[1] != null && data[2] != null)
                         {
@@ -334,10 +314,6 @@ namespace CardioRehab
                         //BT
                         bpdata[bpcount] = Convert.ToInt32(data[1]); ;
                         bpcount++;
-                        //using (StreamWriter sw = File.AppendText(fname))
-                        //{
-                        //    sw.WriteLine(timeStamp + " |" + "BP " + data[1]);
-                        //}
                         bpValue.Invoke((MethodInvoker)(() => bpValue.Text = data[1] + "/" + data[2]));
                     }
                 }
