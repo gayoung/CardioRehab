@@ -16,16 +16,19 @@ namespace CardioRehab
 {
     public partial class PatientMain : Form
     {
+        private DatabaseClass db;
+
         private int user;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String docLocalIp;
+        private String doctorIp;
         private String patientLocalIp;
         private String wirelessIP;
 
         private AsyncCallback socketBioWorkerCallback;
         public Socket socketBioListener;
         public Socket bioSocketWorker;
+        public Socket socketToClinician;
 
         int[] oxdata = new int[1000];
         int[] hrdata = new int[1000];
@@ -36,8 +39,9 @@ namespace CardioRehab
         /// Constructor for this class
         /// </summary>
         /// <param name="currentuser"> database ID for the current user</param>
-        public PatientMain(int currentuser)
+        public PatientMain(int currentuser, DatabaseClass openDB)
         {
+            db = openDB;
             user = currentuser;
 
             GetLocalIP();
@@ -45,7 +49,7 @@ namespace CardioRehab
             InitializeComponent();
             //used to start socket server for bioSockets
             InitializeBioSockets();
-            MessageBox.Show("Please enter the following IP address to the phone: " + wirelessIP);
+            //CreateSocketConnection();
 
             this.SizeChanged += new EventHandler(PatientMain_Resize);
         }
@@ -54,33 +58,67 @@ namespace CardioRehab
 
         private void CheckRecord()
         {
-            DatabaseClass db = new DatabaseClass();
-            try
-            {
-                db.m_dbconnection.Open();
-            }
-            catch (FileLoadException error)
-            {
-                // db connection failed
-                MessageBox.Show(error.Message);
-            }
-
             String query = "SELECT wireless_ip FROM patient WHERE patient_id=" + user;
             SQLiteCommand cmd = new SQLiteCommand(query, db.m_dbconnection);
            
             SQLiteDataReader reader = cmd.ExecuteReader();
 
-            // correct username and password
-            if (!reader.HasRows)
+            // current user does not have any IP addresses in the database record
+            if (reader.HasRows)
             {
-                String updatesql = "UPDATE patient SET wireless_ip="+ wirelessIP +
-                    ", local_ip=" + patientLocalIp + " WHERE patient_id=" + user;
+                Console.WriteLine("at update");
+                SQLiteCommand updatecmd = new SQLiteCommand(db.m_dbconnection);
+                updatecmd.CommandText = "UPDATE patient SET wireless_ip = @wireless, local_ip = @local where patient_id = @id";
 
-                SQLiteCommand updatecmd = new SQLiteCommand(updatesql, db.m_dbconnection);
+                updatecmd.Parameters.AddWithValue("@wireless", wirelessIP);
+                updatecmd.Parameters.AddWithValue("@local", patientLocalIp);
+                updatecmd.Parameters.AddWithValue("@id", user);
+
                 updatecmd.ExecuteNonQuery();
-
+                updatecmd.Dispose();
             }
             reader.Dispose();
+            cmd.Dispose();
+        }
+
+        private void GetDoctoIP()
+        {
+            String query = "SELECT doctor_id FROM patient WHERE patient_id=" + user;
+            SQLiteCommand cmd = new SQLiteCommand(query, db.m_dbconnection);
+
+            SQLiteDataReader reader = cmd.ExecuteReader();
+
+            // current user does not have any IP addresses in the database record
+            if (reader.HasRows)
+            {
+                while(reader.Read())
+                {
+                    String docId = reader["doctor_id"].ToString();
+                    String docquery = "SELECT local_ip FROM doctor WHERE doctor_id=" + docId;
+
+                    SQLiteCommand doccmd = new SQLiteCommand(docquery, db.m_dbconnection);
+                    SQLiteDataReader docResult = doccmd.ExecuteReader();
+
+                    if(docResult.HasRows)
+                    {
+                        while(docResult.Read())
+                        {
+                            doctorIp = docResult["local_ip"].ToString();
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("doctor does not have an IP in the db");
+                    }
+                    docResult.Dispose();
+                    doccmd.Dispose();
+                    break;
+
+                }
+            }
+            reader.Dispose();
+            cmd.Dispose();
         }
 
         /// <summary>
@@ -193,6 +231,8 @@ namespace CardioRehab
                     socketBioListener.Listen(4);
                     //create call back for client connections -- aka maybe recieve video here????
                     socketBioListener.BeginAccept(new AsyncCallback(OnBioSocketConnection), null);
+                    MessageBox.Show("Please enter the following IP address to the phone: " + wirelessIP + "and press Wifi Connect");
+
                 }
                 else
                 {
@@ -329,6 +369,38 @@ namespace CardioRehab
                 MessageBox.Show(e.Message);
             }
 
+        }
+
+        #endregion
+
+        #region socket connection with the doctor
+
+        private void CreateSocketConnection()
+        {
+            try
+            {
+                GetDoctoIP();
+                //create a new client socket
+                socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+                if(doctorIp != null)
+                {
+                    System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse(doctorIp);
+                    System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000);
+                    socketToClinician.Connect(remoteEndPoint);
+                }
+                else
+                {
+                    MessageBox.Show("doctor IP is null");
+                }
+                
+            }
+
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException thrown at CreateSocketConnection");
+                MessageBox.Show(e.Message);
+            }
         }
 
         #endregion

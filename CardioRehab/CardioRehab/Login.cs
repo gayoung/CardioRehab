@@ -54,7 +54,7 @@ namespace CardioRehab
                         {
                             Console.WriteLine("authenticated user is a patient");
                             // open patient window
-                            PatientMain patientWindow = new PatientMain(userid);
+                            PatientMain patientWindow = new PatientMain(userid, db);
                             patientWindow.Show();
                             patientWindow.FormClosed += new FormClosedEventHandler(MainWindowClosed);
                             this.Hide();
@@ -63,7 +63,7 @@ namespace CardioRehab
                         {
                             Console.WriteLine("authenticated user is a doctor");
                             // open doctor window
-                            DoctorMain doctorWindow = new DoctorMain(userid);
+                            DoctorMain doctorWindow = new DoctorMain(userid, db);
                             doctorWindow.Show();
                             doctorWindow.FormClosed += new FormClosedEventHandler(MainWindowClosed);
                             this.Hide();

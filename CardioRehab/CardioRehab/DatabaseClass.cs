@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace CardioRehab
 {
-    class DatabaseClass
+    public class DatabaseClass
     {
         #region variable declaration
         public String projectPath;
