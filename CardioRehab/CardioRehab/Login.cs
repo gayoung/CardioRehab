@@ -24,6 +24,7 @@ namespace CardioRehab
         {
             String username = textBox1.Text;
             String password = textBox2.Text;
+            int chosenIndex = index.SelectedIndex;
 
             DatabaseClass db = new DatabaseClass();
             try
@@ -54,7 +55,7 @@ namespace CardioRehab
                         {
                             Console.WriteLine("authenticated user is a patient");
                             // open patient window
-                            PatientMain patientWindow = new PatientMain(userid, db);
+                            PatientMain patientWindow = new PatientMain(chosenIndex, userid, db);
                             patientWindow.Show();
                             patientWindow.FormClosed += new FormClosedEventHandler(MainWindowClosed);
                             this.Hide();

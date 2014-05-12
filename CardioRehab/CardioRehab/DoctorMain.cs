@@ -27,10 +27,6 @@ namespace CardioRehab
         public Socket socketBioListener;
         public Socket bioSocketWorker;
 
-        // Patient's names for now
-        String p1, p2, p3, p4, p5, p6;
-        int patientNum = 1;
-
         public DoctorMain(int currentuser, DatabaseClass openDB)
         {
             db = openDB;
@@ -173,95 +169,98 @@ namespace CardioRehab
 
                 System.String[] name = tmp.Split('|');
                 System.String[] data = name[1].Split(' ');
-                p1 = "patient1";
-                p2 = "patient2";
-                p3 = "patient3";
-                p4 = "patient4";
-                p5 = "patient5";
-                p6 = "patient6";
+                
                 // Set the UI in the main thread.
                 this.Invoke((MethodInvoker)(() =>
                 {   
-                    if (data[0] == "HR") {
-  
-
-                        if (name[0] == p1)
-                        {
-                            if (patientNum == 1)
+                    switch(name[0].Trim())
+                    {
+                        case "patient1":
+                            if(data[0].Trim() == "HR")
                             {
                                 hrValue1.Text = data[1] + " bpm";
                             }
-                        }
-                        if (name[0] == p2)
-                        {
-                            if (patientNum == 2)
+                            else if(data[0].Trim() == "OX")
+                            {
+                                oxValue1.Text = data[1] + "%";
+                            }
+                            else if(data[0].Trim() == "BP")
+                            {
+                                bpValue1.Text = data[1] +  "/" + data[2];
+                            }
+                            break;
+                        case "patient2":
+                            if(data[0].Trim() == "HR")
                             {
                                 hrValue2.Text = data[1] + " bpm";
                             }
-                        }
-                        if (name[0] == p3)
-                        {
-                            if (patientNum == 3)
+                            else if(data[0].Trim() == "OX")
+                            {
+                                oxValue2.Text = data[1] + "%";
+                            }
+                            else if(data[0].Trim() == "BP")
+                            {
+                                bpValue2.Text = data[1] +  "/" + data[2];
+                            }
+                            break;
+                        case "patient3":
+                            if(data[0].Trim() == "HR")
                             {
                                 hrValue3.Text = data[1] + " bpm";
                             }
-                        }
-                        if (name[0] == p4)
-                        {
-                            if (patientNum == 4)
+                            else if(data[0].Trim() == "OX")
+                            {
+                                oxValue3.Text = data[1] + "%";
+                            }
+                            else if(data[0].Trim() == "BP")
+                            {
+                                bpValue3.Text = data[1] +  "/" + data[2];
+                            }
+                            break;
+                        case "patient4":
+                            if(data[0].Trim() == "HR")
                             {
                                 hrValue4.Text = data[1] + " bpm";
                             }
-                        }
-                        if (name[0] == p5)
-                        {
-                            if (patientNum == 5)
+                            else if(data[0].Trim() == "OX")
+                            {
+                                oxValue4.Text = data[1] + "%";
+                            }
+                            else if(data[0].Trim() == "BP")
+                            {
+                                bpValue4.Text = data[1] +  "/" + data[2];
+                            }
+                            break;
+                        case "patient5":
+                            if(data[0].Trim() == "HR")
                             {
                                 hrValue5.Text = data[1] + " bpm";
                             }
-                        }
-                        if (name[0] == p6)
-                        {
-                            if (patientNum == 6)
+                            else if(data[0].Trim() == "OX")
+                            {
+                                oxValue5.Text = data[1] + "%";
+                            }
+                            else if(data[0].Trim() == "BP")
+                            {
+                                bpValue5.Text = data[1] +  "/" + data[2];
+                            }
+                            break;
+                        case "patient6":
+                            if(data[0].Trim() == "HR")
                             {
                                 hrValue6.Text = data[1] + " bpm";
                             }
-                        }
-
+                            else if(data[0].Trim() == "OX")
+                            {
+                                oxValue6.Text = data[1] + "%";
+                            }
+                            else if(data[0].Trim() == "BP")
+                            {
+                                bpValue6.Text = data[1] +  "/" + data[2];
+                            }
+                            break;
                     }
-
-                    else if (data[0] == "OX")
-                    {
-                        Console.WriteLine("oximeter readings");
-                        if (name[0] == p1)
-                        {
-                            Console.WriteLine(" before patient number verification");
-                            Console.WriteLine(data[1]);
-                            if (patientNum == 1) oxValue1.Text = data[1] + "%";
-                        }
-                        if (name[0] == p2)
-                        {
-                            if (patientNum == 2) oxValue2.Text = data[1] + "%";
-                        }
-                        if (name[0] == p3)
-                        {
-                            if (patientNum == 3) oxValue3.Text = data[1] + "%";
-                        }
-                        if (name[0] == p4) { 
-                            if (patientNum == 4) oxValue4.Text = data[1] + "%";
-                        }
-                        if (name[0] == p5){
-                            if (patientNum == 5) oxValue5.Text = data[1] + "%";
-                        }
-                        if (name[0] == p6){
-                            if (patientNum == 6) oxValue6.Text = data[1] + "%";
-                        }
-                    }
-                    else if (data[0] == "BP")
-                    {
-                        if (patientNum == 1) bpValue1.Text = data[1] +  "/" + data[2];
-                    }
-                       
+  
                 }));
 
                 WaitForBioData(bioSocketWorker);

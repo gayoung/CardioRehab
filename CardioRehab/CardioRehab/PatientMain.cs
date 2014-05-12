@@ -25,6 +25,9 @@ namespace CardioRehab
         private String patientLocalIp;
         private String wirelessIP;
 
+        private int patientIndex;
+        private Timer mimicPhoneTimer;
+
         private AsyncCallback socketBioWorkerCallback;
         public Socket socketBioListener;
         public Socket bioSocketWorker;
@@ -39,23 +42,60 @@ namespace CardioRehab
         /// Constructor for this class
         /// </summary>
         /// <param name="currentuser"> database ID for the current user</param>
-        public PatientMain(int currentuser, DatabaseClass openDB)
+        public PatientMain(int chosen, int currentuser, DatabaseClass openDB)
         {
             db = openDB;
             user = currentuser;
+            patientIndex = chosen;
 
             GetLocalIP();
             CheckRecord();
             InitializeComponent();
-            //used to start socket server for bioSockets
-            InitializeBioSockets();
-            //CreateSocketConnection();
+
+            //InitializeBioSockets();
+            CreateSocketConnection();
+
+            // disable this function if InitializeBioSockets function is active
+            InitTimer();
 
             this.SizeChanged += new EventHandler(PatientMain_Resize);
         }
 
         #region Helper functions
 
+        /// <summary>
+        /// This method calls mimicPhoneTimer_Tick method which calls the PhoneTestMethod
+        /// to mimic the data sent by the phone at port 4444.
+        /// 
+        /// Used to test the application without having access to 6 phones to mock 6 proper patients.
+        /// 
+        /// The code was modified from
+        /// http://stackoverflow.com/questions/6169288/execute-specified-function-every-x-seconds
+        /// </summary>
+        public void InitTimer()
+        {
+            mimicPhoneTimer = new Timer();
+            mimicPhoneTimer.Tick += new EventHandler(mimicPhoneTimer_Tick);
+            mimicPhoneTimer.Interval = 2000; // 2 seconds
+            mimicPhoneTimer.Start();
+        }
+
+        /// <summary>
+        /// Function called by the timer class.
+        /// 
+        /// This method is called every 2 seconds.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mimicPhoneTimer_Tick(object sender, EventArgs e)
+        {
+            PhoneTestMethod();
+        }
+
+        /// <summary>
+        /// This method updates the database record of the patient with the latest
+        /// wifi and local IP addresses.
+        /// </summary>
         private void CheckRecord()
         {
             String query = "SELECT wireless_ip FROM patient WHERE patient_id=" + user;
@@ -81,6 +121,10 @@ namespace CardioRehab
             cmd.Dispose();
         }
 
+        /// <summary>
+        /// Retrieves the local IP address of the doctor from the
+        /// doctor database table.
+        /// </summary>
         private void GetDoctoIP()
         {
             String query = "SELECT doctor_id FROM patient WHERE patient_id=" + user;
@@ -212,6 +256,35 @@ namespace CardioRehab
             return value.ToString("HH:mm:ss");
         }
 
+        /// <summary>
+        /// method to be used to test the code without the phone
+        /// </summary>
+        private void PhoneTestMethod()
+        {
+            String data;
+            byte[] dataToClinician;
+
+            Random r = new Random();
+            int heartRate = r.Next(60, 140);
+            int oxygen = r.Next(93, 99);
+            int systolic = r.Next(100, 180);
+            int diastolic = r.Next(50, 105);
+
+            String patientLabel = "patient" + patientIndex;
+
+            data = patientLabel + "|" + "HR " + heartRate.ToString();
+            dataToClinician  = System.Text.Encoding.ASCII.GetBytes(data);
+            socketToClinician.Send(dataToClinician);
+
+            data = patientLabel + "|" + "OX " + oxygen.ToString();
+            dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+            socketToClinician.Send(dataToClinician);
+
+            data = patientLabel + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString();
+            dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+            socketToClinician.Send(dataToClinician);
+        }
+
         #endregion
 
         #region Setting up the socket connection for bio information
@@ -302,14 +375,12 @@ namespace CardioRehab
                 System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
-                //MessageBox.Show(tmp);
 
                 // need to be changed to properly label the patient according to the port used
                 if (!tmp.Contains('|'))
                 {
                     // MessageBox.Show(tmp);
-                    tmp = string.Concat("patient1|", tmp);
-                    //MessageBox.Show(tmp);
+                    tmp = string.Concat("patient" + patientIndex+1.ToString() + "|", tmp);
                 }
                 System.String[] name = tmp.Split('|');
 
@@ -324,7 +395,6 @@ namespace CardioRehab
                     byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
                     socketToClinician.Send(dataToClinician);
-                    //MessageBox.Show("Got stuff!");
 
                     // Decide on what encouragement text should be displayed based on heart rate.
                     if (data[0] == "HR")
@@ -386,7 +456,7 @@ namespace CardioRehab
                 if(doctorIp != null)
                 {
                     System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse(doctorIp);
-                    System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000);
+                    System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000+patientIndex);
                     socketToClinician.Connect(remoteEndPoint);
                 }
                 else
