@@ -46,7 +46,7 @@ namespace CardioRehab
         {
             db = openDB;
             user = currentuser;
-            patientIndex = chosen;
+            patientIndex = chosen+1;
 
             GetLocalIP();
             CheckRecord();
@@ -59,6 +59,16 @@ namespace CardioRehab
             InitTimer();
 
             this.SizeChanged += new EventHandler(PatientMain_Resize);
+        }
+
+        /// <summary>
+        /// class representation of the bio data of the patient as
+        /// TCP packet
+        /// </summary>
+        class BioSocketPacket
+        {
+            public System.Net.Sockets.Socket packetSocket;
+            public byte[] dataBuffer = new byte[666];
         }
 
         #region Helper functions
@@ -261,6 +271,7 @@ namespace CardioRehab
         /// </summary>
         private void PhoneTestMethod()
         {
+            Console.WriteLine("phone test method");
             String data;
             byte[] dataToClinician;
 
@@ -270,19 +281,34 @@ namespace CardioRehab
             int systolic = r.Next(100, 180);
             int diastolic = r.Next(50, 105);
 
+            // modify patient UI labels
+            hrValue.Invoke((MethodInvoker)(() => hrValue.Text = heartRate.ToString() + " bpm"));
+            oxiValue.Invoke((MethodInvoker)(() => oxiValue.Text = oxygen.ToString() + " %"));
+            bpValue.Invoke((MethodInvoker)(() => bpValue.Text = systolic.ToString() + "/" + diastolic.ToString()));
+
             String patientLabel = "patient" + patientIndex;
 
-            data = patientLabel + "|" + "HR " + heartRate.ToString();
-            dataToClinician  = System.Text.Encoding.ASCII.GetBytes(data);
-            socketToClinician.Send(dataToClinician);
+            try
+            {
+                data = patientLabel + "|" + "HR " + heartRate.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-            data = patientLabel + "|" + "OX " + oxygen.ToString();
-            dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-            socketToClinician.Send(dataToClinician);
+                data = patientLabel + "|" + "OX " + oxygen.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-            data = patientLabel + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString();
-            dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-            socketToClinician.Send(dataToClinician);
+                data = patientLabel + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
+            }
+            catch(Exception ex)
+            {
+                // doctor has terminated the connection
+                Console.WriteLine(ex.Message);
+                Application.Exit();
+            }
+            
         }
 
         #endregion
@@ -380,7 +406,7 @@ namespace CardioRehab
                 if (!tmp.Contains('|'))
                 {
                     // MessageBox.Show(tmp);
-                    tmp = string.Concat("patient" + patientIndex+1.ToString() + "|", tmp);
+                    tmp = string.Concat("patient" + patientIndex.ToString() + "|", tmp);
                 }
                 System.String[] name = tmp.Split('|');
 
@@ -449,14 +475,17 @@ namespace CardioRehab
         {
             try
             {
-                GetDoctoIP();
+                //GetDoctoIP();
+                
+                // TESTING CODE --> delete this code when the db server is running
+                doctorIp = "192.168.184.39";
                 //create a new client socket
                 socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
                 if(doctorIp != null)
                 {
                     System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse(doctorIp);
-                    System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000+patientIndex);
+                    System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000+patientIndex-1);
                     socketToClinician.Connect(remoteEndPoint);
                 }
                 else

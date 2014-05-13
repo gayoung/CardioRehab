@@ -47,7 +47,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BioSocketPacket.cs" />
     <Compile Include="DatabaseClass.cs" />
     <Compile Include="DoctorMain.cs">
       <SubType>Form</SubType>
