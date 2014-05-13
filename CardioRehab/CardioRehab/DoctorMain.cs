@@ -158,16 +158,10 @@ namespace CardioRehab
             
             try
             {
-                Console.WriteLine("OnBioSocketConnection1");
                 bioSocketWorkers_list.Add(currentSocket.EndAccept(asyn));
-
-                Console.WriteLine("OnBioSocketConnection2");
                 WaitForBioData(bioSocketWorkers_list[bioSocketWorkers_list.Count - 1], port);
-                Console.WriteLine("OnBioSocketConnection3");
                 // start accepting connections from other clients
                 currentSocket.BeginAccept(new AsyncCallback(OnBioSocketConnection), state);
-                Console.WriteLine("OnBioSocketConnection4");
-               
             }
             catch (ObjectDisposedException)
             {
@@ -194,23 +188,17 @@ namespace CardioRehab
             {
                 if (socketBioWorkerCallback == null)
                 {
-                    Console.WriteLine("WaitForBioData1");
                     socketBioWorkerCallback = new AsyncCallback(OnBioDataReceived);
                 }
 
                 ReceivedDataState state = new ReceivedDataState();
                 BioSocketPacket sockpkt = new BioSocketPacket();
-                Console.WriteLine("WaitForBioData2");
                 state.socketData = sockpkt;
-                Console.WriteLine("WaitForBioData3");
                 state.port = port;
-                Console.WriteLine("WaitForBioData4");
 
                 sockpkt.packetSocket = soc;
-                Console.WriteLine("WaitForBioData5");
                 //start listening for data
                 soc.BeginReceive(sockpkt.dataBuffer, 0, sockpkt.dataBuffer.Length, SocketFlags.None, socketBioWorkerCallback, state);
-                Console.WriteLine("WaitForBioData6");
             }
             catch (SocketException e)
             {
