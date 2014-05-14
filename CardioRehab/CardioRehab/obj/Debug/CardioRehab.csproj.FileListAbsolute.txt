@@ -10,3 +10,5 @@ C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\
 C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.exe
 C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.pdb
 C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\obj\Debug\CardioRehab.csprojResolveAssemblyReference.cache
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\bin\Debug\Coding4Fun.Kinect.WinForm.dll
+C:\Users\Gayoung\Documents\GitHub\CardioRehab\CardioRehab\CardioRehab\bin\Debug\Microsoft.Kinect.Toolkit.Interaction.dll

@@ -78,12 +78,17 @@ namespace CardioRehab
             int Ipcounter = 0;
             foreach (IPAddress addr in localIPs)
             {
+                // if connected to wireless and ethernet --> then the length is 2 with
+                // wireless IP address on index 1 and LAN on index 0 (only need wireless)
                 if (addr.AddressFamily == AddressFamily.InterNetwork)
                 {
+                    if(Ipcounter == 0)
+                    {
+                        localIP = addr.ToString();
+                    }
                     if (Ipcounter == 1)
                     {
                         localIP = addr.ToString();
-                        Console.WriteLine("Ip address: " + localIP);
 
                     }
                     break;

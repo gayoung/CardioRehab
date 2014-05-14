@@ -12,6 +12,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+using Microsoft.Kinect;
+using Coding4Fun.Kinect.WinForm;
+
 namespace CardioRehab
 {
     public partial class PatientMain : Form
@@ -38,6 +41,10 @@ namespace CardioRehab
         int[] bpdata = new int[1000];
         public int hrcount, oxcount, bpcount;
 
+        KinectSensor _sensor;
+
+        bool _isInit;
+
         /// <summary>
         /// Constructor for this class
         /// </summary>
@@ -52,11 +59,13 @@ namespace CardioRehab
             CheckRecord();
             InitializeComponent();
 
+            SetupKinect();
+
             //InitializeBioSockets();
-            CreateSocketConnection();
+            //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            InitTimer();
+            //InitTimer();
 
             this.SizeChanged += new EventHandler(PatientMain_Resize);
         }
@@ -189,22 +198,22 @@ namespace CardioRehab
             panel1.Width = (int)(currentWidth * 0.70);
             panel1.Height = (int)(currentHeight * 0.9);
 
-            int newdoctorPanelX = panel1.Location.X + panel1.Width + 10;
-            int doctorPanelY = panel1.Location.Y;
+            int newdoctorFrameX = panel1.Location.X + panel1.Width + 10;
+            int doctorFrameY = panel1.Location.Y;
 
-            doctorPanel.Location = new Point(newdoctorPanelX, doctorPanelY);
-            doctorPanel.Width = (int)(currentWidth * 0.25);
-            doctorPanel.Height = (int)(currentHeight * 0.23);
+            doctorFrame.Location = new Point(newdoctorFrameX, doctorFrameY);
+            doctorFrame.Width = (int)(currentWidth * 0.25);
+            doctorFrame.Height = (int)(currentHeight * 0.23);
 
-            int patientPanelY = doctorPanelY + doctorPanel.Height + 10;
+            int patientFrameY = doctorFrameY + doctorFrame.Height + 10;
 
-            patientPanel.Location = new Point(newdoctorPanelX, patientPanelY);
-            patientPanel.Width = (int)(currentWidth * 0.25);
-            patientPanel.Height = (int)(currentHeight * 0.23);
+            patientFrame.Location = new Point(newdoctorFrameX, patientFrameY);
+            patientFrame.Width = (int)(currentWidth * 0.25);
+            patientFrame.Height = (int)(currentHeight * 0.23);
 
-            int BiostatPanellY = patientPanelY + patientPanel.Height + 10;
+            int BiostatPanellY = patientFrameY + patientFrame.Height + 10;
 
-            BiostatPanel.Location = new Point(newdoctorPanelX, BiostatPanellY);
+            BiostatPanel.Location = new Point(newdoctorFrameX, BiostatPanellY);
             BiostatPanel.Width = (int)(currentWidth * 0.25);
             BiostatPanel.Height = (int)(currentHeight * 0.42);
 
@@ -478,7 +487,7 @@ namespace CardioRehab
                 //GetDoctoIP();
                 
                 // TESTING CODE --> delete this code when the db server is running
-                doctorIp = "142.244.213.000";
+                doctorIp = "xxx.xxx.xxx.xxx";
                 //create a new client socket
                 socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -502,6 +511,95 @@ namespace CardioRehab
             }
         }
 
+        #endregion
+
+        #region kinect functions
+
+        /// <summary>
+        /// Code taken from
+        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
+        /// </summary>
+        private void SetupKinect()
+        {
+            if (_isInit)
+                StopKinect();
+
+            if (KinectSensor.KinectSensors.Count > 0)
+            {
+                //pull the first Kinect
+                _sensor = KinectSensor.KinectSensors[0];
+            }
+            if (_sensor.Status != KinectStatus.Connected || KinectSensor.KinectSensors.Count == 0)
+            {
+                MessageBox.Show("No Kinect connected");
+                return;
+            }
+
+            _sensor.SkeletonStream.Enable();
+            _sensor.DepthStream.Enable(DepthImageFormat.Resolution320x240Fps30);
+            _sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
+
+            _sensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(_sensor_AllFramesReady);
+
+            _sensor.Start();
+            _isInit = true;
+        }
+
+        /// <summary>
+        /// Code modified from
+        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        void _sensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
+        {
+            RuntimeColorFrameReady(e);
+            // add function here if want depth/skeleton frames
+        }
+
+        /// <summary>
+        /// Code modified from
+        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
+        /// </summary>
+        /// <param name="e"></param>
+        void RuntimeColorFrameReady(AllFramesReadyEventArgs e)
+        {
+
+            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+            {
+                if (colorFrame == null)
+                {
+                    return;
+                }
+
+                patientFrame.Image = colorFrame.ToBitmap();
+            }
+        }
+
+        /// <summary>
+        /// Code modified from
+        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
+        /// </summary>
+        public void StopKinect()
+        {
+            if (_sensor != null)
+            {
+                _sensor.Stop();
+            }
+
+            _isInit = false;
+        }
+
+        /// <summary>
+        /// Code modified from
+        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void PatientMain_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            StopKinect();
+        }
         #endregion
 
     }

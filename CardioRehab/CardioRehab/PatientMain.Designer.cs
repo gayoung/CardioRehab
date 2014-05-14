@@ -34,8 +34,6 @@ namespace CardioRehab
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PatientMain));
             this.panel1 = new System.Windows.Forms.Panel();
-            this.doctorPanel = new System.Windows.Forms.Panel();
-            this.patientPanel = new System.Windows.Forms.Panel();
             this.hrLabel = new System.Windows.Forms.Label();
             this.BiostatPanel = new System.Windows.Forms.Panel();
             this.oxiValue = new System.Windows.Forms.Label();
@@ -43,7 +41,11 @@ namespace CardioRehab
             this.bpValue = new System.Windows.Forms.Label();
             this.bpLabel = new System.Windows.Forms.Label();
             this.hrValue = new System.Windows.Forms.Label();
+            this.doctorFrame = new System.Windows.Forms.PictureBox();
+            this.patientFrame = new System.Windows.Forms.PictureBox();
             this.BiostatPanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.doctorFrame)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patientFrame)).BeginInit();
             this.SuspendLayout();
             // 
             // panel1
@@ -54,23 +56,6 @@ namespace CardioRehab
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(586, 587);
             this.panel1.TabIndex = 0;
-            // 
-            // doctorPanel
-            // 
-            this.doctorPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.doctorPanel.Location = new System.Drawing.Point(616, 12);
-            this.doctorPanel.Name = "doctorPanel";
-            this.doctorPanel.Size = new System.Drawing.Size(202, 151);
-            this.doctorPanel.TabIndex = 1;
-            // 
-            // patientPanel
-            // 
-            this.patientPanel.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.patientPanel.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.patientPanel.Location = new System.Drawing.Point(616, 169);
-            this.patientPanel.Name = "patientPanel";
-            this.patientPanel.Size = new System.Drawing.Size(202, 151);
-            this.patientPanel.TabIndex = 2;
             // 
             // hrLabel
             // 
@@ -160,21 +145,43 @@ namespace CardioRehab
             this.hrValue.TabIndex = 2;
             this.hrValue.Text = "--";
             // 
+            // doctorFrame
+            // 
+            this.doctorFrame.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.doctorFrame.Location = new System.Drawing.Point(616, 12);
+            this.doctorFrame.Name = "doctorFrame";
+            this.doctorFrame.Size = new System.Drawing.Size(195, 148);
+            this.doctorFrame.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.doctorFrame.TabIndex = 5;
+            this.doctorFrame.TabStop = false;
+            // 
+            // patientFrame
+            // 
+            this.patientFrame.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.patientFrame.Location = new System.Drawing.Point(616, 166);
+            this.patientFrame.Name = "patientFrame";
+            this.patientFrame.Size = new System.Drawing.Size(196, 152);
+            this.patientFrame.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.patientFrame.TabIndex = 6;
+            this.patientFrame.TabStop = false;
+            // 
             // PatientMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(829, 611);
+            this.Controls.Add(this.patientFrame);
+            this.Controls.Add(this.doctorFrame);
             this.Controls.Add(this.BiostatPanel);
-            this.Controls.Add(this.patientPanel);
-            this.Controls.Add(this.doctorPanel);
             this.Controls.Add(this.panel1);
             this.Name = "PatientMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Welcome to CardioRehab Application!";
             this.BiostatPanel.ResumeLayout(false);
             this.BiostatPanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.doctorFrame)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.patientFrame)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -182,8 +189,6 @@ namespace CardioRehab
         #endregion
 
         private Panel panel1;
-        private Panel doctorPanel;
-        private Panel patientPanel;
         private Label hrLabel;
         private Panel BiostatPanel;
         private Label hrValue;
@@ -191,5 +196,7 @@ namespace CardioRehab
         private Label bpValue;
         private Label oxiLabel;
         private Label oxiValue;
+        private PictureBox doctorFrame;
+        private PictureBox patientFrame;
     }
 }
