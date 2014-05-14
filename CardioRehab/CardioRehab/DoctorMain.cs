@@ -80,9 +80,11 @@ namespace CardioRehab
             {
                 if (addr.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    if (Ipcounter == 0)
+                    if (Ipcounter == 1)
                     {
                         localIP = addr.ToString();
+                        Console.WriteLine("Ip address: " + localIP);
+
                     }
                     break;
                 }
@@ -114,6 +116,8 @@ namespace CardioRehab
         #endregion
 
         #region socket connection with patient for Bio information
+        // code for this section was modified from 
+        // http://social.msdn.microsoft.com/Forums/en-US/f3151296-8064-4358-98a3-7ecf3d2c474b/multiple-ports-listening-on-c?forum=ncl
 
         private void InitializeBioSockets(int[] portArray)
         {

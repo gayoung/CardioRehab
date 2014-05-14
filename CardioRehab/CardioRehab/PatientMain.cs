@@ -478,7 +478,7 @@ namespace CardioRehab
                 //GetDoctoIP();
                 
                 // TESTING CODE --> delete this code when the db server is running
-                doctorIp = "192.168.184.39";
+                doctorIp = "142.244.213.000";
                 //create a new client socket
                 socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
