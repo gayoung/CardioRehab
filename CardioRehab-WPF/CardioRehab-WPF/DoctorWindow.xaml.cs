@@ -1,4 +1,7 @@
-﻿using System;
+﻿using Coding4Fun.Kinect.KinectService.Common;
+using Coding4Fun.Kinect.KinectService.WpfClient;
+using Microsoft.Kinect;
+using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
 using System.Linq;
@@ -16,6 +19,10 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 
+using ColorImageFormat = Microsoft.Kinect.ColorImageFormat;
+using ColorImageFrame = Microsoft.Kinect.ColorImageFrame;
+using DepthImageFormat = Microsoft.Kinect.DepthImageFormat;
+
 namespace CardioRehab_WPF
 {
     /// <summary>
@@ -32,6 +39,15 @@ namespace CardioRehab_WPF
         private AsyncCallback socketBioWorkerCallback;
         private List<Socket> bioSockets_list = new List<Socket>();
         private List<Socket> bioSocketWorkers_list = new List<Socket>();
+
+        KinectSensor _sensor;
+
+        bool _isInit;
+        private WriteableBitmap outputImage;
+        private byte[] pixels = new byte[0];
+
+        private ColorClient _videoClient;
+        private AudioClient _audioClient;
 
         public DoctorWindow(int currentuser, DatabaseClass openDB)
         {
@@ -379,6 +395,86 @@ namespace CardioRehab_WPF
                     bioSocketWorkers_list[i] = null;
                 }
             }
+        }
+        #endregion
+
+        #region kinect functions
+
+        /// <summary>
+        /// Code taken from
+        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
+        /// </summary>
+        private void SetupKinect()
+        {
+            if (_isInit)
+                StopKinect();
+
+            if (KinectSensor.KinectSensors.Count > 0)
+            {
+                //pull the first Kinect
+                _sensor = KinectSensor.KinectSensors[0];
+            }
+            if (_sensor.Status != KinectStatus.Connected || KinectSensor.KinectSensors.Count == 0)
+            {
+                MessageBox.Show("No Kinect connected");
+                return;
+            }
+
+            _sensor.SkeletonStream.Enable();
+            _sensor.DepthStream.Enable(DepthImageFormat.Resolution320x240Fps30);
+            _sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
+
+           // _sensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(_sensor_AllFramesReady);
+
+            _sensor.Start();
+            _isInit = true;
+
+            _videoClient = new ColorClient();
+            _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
+            _videoClient.Connect(localIP, 4530);
+
+            _audioClient = new AudioClient();
+            _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+            _audioClient.Connect(localIP, 4540);
+        }
+
+        void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
+        {
+            this.patientFrame1.Source = e.ColorFrame.BitmapImage;
+        }
+
+        void _audioClient_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
+        {
+            if (mybufferwp != null)
+            {
+                mybufferwp.AddSamples(e.AudioFrame.AudioData, 0, e.AudioFrame.AudioData.Length);
+            }
+        }
+
+        /// <summary>
+        /// Code modified from
+        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
+        /// </summary>
+        public void StopKinect()
+        {
+            if (_sensor != null)
+            {
+                _sensor.Stop();
+            }
+
+            _isInit = false;
+        }
+
+
+        /// <summary>
+        /// Code modified from
+        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        /// </summary>
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            StopKinect();
         }
         #endregion
     }

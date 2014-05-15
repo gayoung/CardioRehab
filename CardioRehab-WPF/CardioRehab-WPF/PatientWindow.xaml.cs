@@ -1,4 +1,6 @@
-﻿using Microsoft.Kinect;
+﻿using Coding4Fun.Kinect.KinectService.Common;
+using Coding4Fun.Kinect.KinectService.Listeners;
+using Microsoft.Kinect;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -17,6 +19,10 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+
+using ColorImageFormat = Microsoft.Kinect.ColorImageFormat;
+using ColorImageFrame = Microsoft.Kinect.ColorImageFrame;
+using DepthImageFormat = Microsoft.Kinect.DepthImageFormat;
 
 namespace CardioRehab_WPF
 {
@@ -553,6 +559,18 @@ namespace CardioRehab_WPF
 
             _sensor.Start();
             _isInit = true;
+
+            ColorListener colorListener = new ColorListener(_sensor, 4530 + patientIndex - 1, ImageFormat.Jpeg);
+            colorListener.Start();
+
+            //DepthListener depthListener = new DepthListener(_sensor, 4531);
+            //depthListener.Start();
+
+            //SkeletonListener skeletonListener = new SkeletonListener(_sensor, 4532);
+            //skeletonListener.Start();
+
+            AudioListener audioListener = new AudioListener(_sensor, 4540 + patientIndex - 1);
+            audioListener.Start();
         }
 
         /// <summary>
