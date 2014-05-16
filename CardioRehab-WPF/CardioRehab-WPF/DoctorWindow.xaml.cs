@@ -320,10 +320,10 @@ namespace CardioRehab_WPF
             patientid = Convert.ToInt32(name[1]);
 
             Console.WriteLine(patientid);
-            
-            for(int i = 1; i < name.Length; i++)
+
+            for (int i = 1; i < sentData.Length; i++)
             {
-                String[] data = name[i].Split(' ');
+                String[] data = sentData[i].Split(' ');
 
                 // Set the UI in the main thread.
                 this.Dispatcher.Invoke((Action)(() =>
