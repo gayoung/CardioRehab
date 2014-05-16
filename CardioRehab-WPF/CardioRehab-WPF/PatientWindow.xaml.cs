@@ -37,7 +37,7 @@ namespace CardioRehab_WPF
         private int user;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp;
+        private String doctorIp = "142.244.213.55";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -87,7 +87,7 @@ namespace CardioRehab_WPF
             InitializeComponent();
 
             //InitializeBioSockets();
-            //CreateSocketConnection();
+            CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
             InitTimer();
@@ -329,15 +329,15 @@ namespace CardioRehab_WPF
 
             try
             {
-                data = patientLabel + "|" + "HR " + heartRate.ToString() + "\n";
+                data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
                 dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
                 socketToClinician.Send(dataToClinician);
 
-                data = patientLabel + "|" + "OX " + oxygen.ToString() + "\n";
+                data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
                 dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
                 socketToClinician.Send(dataToClinician);
 
-                data = patientLabel + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
+                data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
                 dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
                 socketToClinician.Send(dataToClinician);
             }
@@ -445,8 +445,9 @@ namespace CardioRehab_WPF
                 if (!tmp.Contains('|'))
                 {
                     // MessageBox.Show(tmp);
-                    tmp = string.Concat("patient" + patientIndex.ToString() + "-"+user+"|", tmp);
+                    tmp = string.Concat("patient" + patientIndex.ToString() + "-" +user.ToString()+"|", tmp);
                 }
+
                 System.String[] name = tmp.Split('|');
 
                 System.String[] fakeECG = new String[1] { "ECG" };
@@ -516,8 +517,6 @@ namespace CardioRehab_WPF
             {
                 //GetDoctoIP();
 
-                // TESTING CODE --> delete this code when the db server is running
-                doctorIp = "142.244.212.19";
                 //create a new client socket
                 socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -557,12 +556,9 @@ namespace CardioRehab_WPF
                 Console.WriteLine("kinect is not null");
                 //trying to get the video from the clinician -- this can fail
                 _videoClient = new ColorClient();
-                _videoClient.ColorFrameReady +=new EventHandler<ColorFrameReadyEventArgs>(_videoClient_ColorFrameReady);
+                _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
+                _videoClient.Connect(doctorIp, 4531);
 
-                while(!_videoClient.IsConnected)
-                {
-                    _videoClient.Connect(doctorIp, 4531);
-                }
 
                 // Streaming video out on port 4555
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555, ImageFormat.Jpeg);
@@ -594,6 +590,7 @@ namespace CardioRehab_WPF
                 }
                 catch (InvalidOperationException)
                 {
+                    Console.Write("here?");
                     // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
                     // E.g.: sensor might be abruptly unplugged.
 
@@ -610,23 +607,11 @@ namespace CardioRehab_WPF
                     e.NewSensor.ColorFrameReady += NewSensor_ColorFrameReady;
 
 
-                    try
-                    {
-                        e.NewSensor.DepthStream.Range = DepthRange.Near;
-                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = true;
-
-                        //seated mode could come in handy on the bike -- uncomment below
-                        //e.NewSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // Non Kinect for Windows devices do not support Near mode, so reset back to default mode.
-                        e.NewSensor.DepthStream.Range = DepthRange.Default;
-                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = false;
-                    }
+                    
                 }
                 catch (InvalidOperationException)
                 {
+                    Console.Write("here?2");
                     // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
                     // E.g.: sensor might be abruptly unplugged.
                 }

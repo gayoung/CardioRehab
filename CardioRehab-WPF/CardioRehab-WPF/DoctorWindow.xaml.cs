@@ -34,7 +34,7 @@ namespace CardioRehab_WPF
 
         private int userid;
         private int patientid;
-        private String patientIP;
+        private String patientIP = "142.244.115.209";
         private String localIP;
 
         const int MAX_CLIENTS = 6;
@@ -72,6 +72,8 @@ namespace CardioRehab_WPF
             // patients send the biodata from port 5000-5005
             int[] ports = new int[6]{5000,5001,5002,5003,5004,5005};
             InitializeBioSockets(ports);
+
+            InitializeKinect();
         }
 
         /// <summary>
@@ -318,110 +320,104 @@ namespace CardioRehab_WPF
             patientid = Convert.ToInt32(name[1]);
 
             Console.WriteLine(patientid);
-            if (patientid != null)
+            
+            for(int i = 1; i < name.Length; i++)
             {
-                Console.WriteLine("patientid isnot null");
-                Console.WriteLine(patientid);
-                InitializeKinect();
-            }
+                String[] data = name[i].Split(' ');
 
-                for(int i = 1; i < name.Length; i++)
+                // Set the UI in the main thread.
+                this.Dispatcher.Invoke((Action)(() =>
                 {
-                    String[] data = name[i].Split(' ');
-
-                    // Set the UI in the main thread.
-                    this.Dispatcher.Invoke((Action)(() =>
+                    switch (name[0].Trim())
                     {
-                        switch (name[0].Trim())
-                        {
-                            case "patient1":
-                                if (data[0].Trim() == "HR")
-                                {
-                                    hrValue1.Content = data[1] + " bpm";
-                                }
-                                else if (data[0].Trim() == "OX")
-                                {
-                                    oxiValue1.Content = data[1] + "%";
-                                }
-                                else if (data[0].Trim() == "BP")
-                                {
-                                    bpValue1.Content = data[1] + "/" + data[2];
-                                }
-                                break;
-                            case "patient2":
-                                if (data[0].Trim() == "HR")
-                                {
-                                    hrValue2.Content = data[1] + " bpm";
-                                }
-                                else if (data[0].Trim() == "OX")
-                                {
-                                    oxiValue2.Content = data[1] + "%";
-                                }
-                                else if (data[0].Trim() == "BP")
-                                {
-                                    bpValue2.Content = data[1] + "/" + data[2];
-                                }
-                                break;
-                            case "patient3":
-                                if (data[0].Trim() == "HR")
-                                {
-                                    hrValue3.Content = data[1] + " bpm";
-                                }
-                                else if (data[0].Trim() == "OX")
-                                {
-                                    oxiValue3.Content = data[1] + "%";
-                                }
-                                else if (data[0].Trim() == "BP")
-                                {
-                                    bpValue3.Content = data[1] + "/" + data[2];
-                                }
-                                break;
-                            case "patient4":
-                                if (data[0].Trim() == "HR")
-                                {
-                                    hrValue4.Content = data[1] + " bpm";
-                                }
-                                else if (data[0].Trim() == "OX")
-                                {
-                                    oxiValue4.Content = data[1] + "%";
-                                }
-                                else if (data[0].Trim() == "BP")
-                                {
-                                    bpValue4.Content = data[1] + "/" + data[2];
-                                }
-                                break;
-                            case "patient5":
-                                if (data[0].Trim() == "HR")
-                                {
-                                    hrValue5.Content = data[1] + " bpm";
-                                }
-                                else if (data[0].Trim() == "OX")
-                                {
-                                    oxiValue5.Content = data[1] + "%";
-                                }
-                                else if (data[0].Trim() == "BP")
-                                {
-                                    bpValue5.Content = data[1] + "/" + data[2];
-                                }
-                                break;
-                            case "patient6":
-                                if (data[0].Trim() == "HR")
-                                {
-                                    hrValue6.Content = data[1] + " bpm";
-                                }
-                                else if (data[0].Trim() == "OX")
-                                {
-                                    oxiValue6.Content = data[1] + "%";
-                                }
-                                else if (data[0].Trim() == "BP")
-                                {
-                                    bpValue6.Content = data[1] + "/" + data[2];
-                                }
-                                break;
-                        }
+                        case "patient1":
+                            if (data[0].Trim() == "HR")
+                            {
+                                hrValue1.Content = data[1] + " bpm";
+                            }
+                            else if (data[0].Trim() == "OX")
+                            {
+                                oxiValue1.Content = data[1] + "%";
+                            }
+                            else if (data[0].Trim() == "BP")
+                            {
+                                bpValue1.Content = data[1] + "/" + data[2];
+                            }
+                            break;
+                        case "patient2":
+                            if (data[0].Trim() == "HR")
+                            {
+                                hrValue2.Content = data[1] + " bpm";
+                            }
+                            else if (data[0].Trim() == "OX")
+                            {
+                                oxiValue2.Content = data[1] + "%";
+                            }
+                            else if (data[0].Trim() == "BP")
+                            {
+                                bpValue2.Content = data[1] + "/" + data[2];
+                            }
+                            break;
+                        case "patient3":
+                            if (data[0].Trim() == "HR")
+                            {
+                                hrValue3.Content = data[1] + " bpm";
+                            }
+                            else if (data[0].Trim() == "OX")
+                            {
+                                oxiValue3.Content = data[1] + "%";
+                            }
+                            else if (data[0].Trim() == "BP")
+                            {
+                                bpValue3.Content = data[1] + "/" + data[2];
+                            }
+                            break;
+                        case "patient4":
+                            if (data[0].Trim() == "HR")
+                            {
+                                hrValue4.Content = data[1] + " bpm";
+                            }
+                            else if (data[0].Trim() == "OX")
+                            {
+                                oxiValue4.Content = data[1] + "%";
+                            }
+                            else if (data[0].Trim() == "BP")
+                            {
+                                bpValue4.Content = data[1] + "/" + data[2];
+                            }
+                            break;
+                        case "patient5":
+                            if (data[0].Trim() == "HR")
+                            {
+                                hrValue5.Content = data[1] + " bpm";
+                            }
+                            else if (data[0].Trim() == "OX")
+                            {
+                                oxiValue5.Content = data[1] + "%";
+                            }
+                            else if (data[0].Trim() == "BP")
+                            {
+                                bpValue5.Content = data[1] + "/" + data[2];
+                            }
+                            break;
+                        case "patient6":
+                            if (data[0].Trim() == "HR")
+                            {
+                                hrValue6.Content = data[1] + " bpm";
+                            }
+                            else if (data[0].Trim() == "OX")
+                            {
+                                oxiValue6.Content = data[1] + "%";
+                            }
+                            else if (data[0].Trim() == "BP")
+                            {
+                                bpValue6.Content = data[1] + "/" + data[2];
+                            }
+                            break;
+                    }
 
-                    }));
-                }
+                }));
+            }
         }
 
         public void CloseSockets()
@@ -458,11 +454,8 @@ namespace CardioRehab_WPF
             {
                 //// Receiving video from patient1.
                 _videoClient = new ColorClient();
-                _videoClient.ColorFrameReady += new EventHandler<ColorFrameReadyEventArgs>(_videoClient_ColorFrameReady);
-                while(!_videoClient.IsConnected)
-                {
-                    _videoClient.Connect(patientIP, 4555);
-                }
+                _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
+                _videoClient.Connect(patientIP, 4555);
 
                 //_videoClient2 = new ColorClient();
                 //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
