@@ -90,7 +90,7 @@ namespace CardioRehab_WPF
             //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            //InitTimer();
+            InitTimer();
 
             //this.SizeChanged += new EventHandler(PatientMain_Resize);
 
@@ -445,7 +445,7 @@ namespace CardioRehab_WPF
                 if (!tmp.Contains('|'))
                 {
                     // MessageBox.Show(tmp);
-                    tmp = string.Concat("patient" + patientIndex.ToString() + "|", tmp);
+                    tmp = string.Concat("patient" + patientIndex.ToString() + "-"+user+"|", tmp);
                 }
                 System.String[] name = tmp.Split('|');
 
@@ -554,10 +554,15 @@ namespace CardioRehab_WPF
             // Don't try this unless there is a kinect
             if (this.sensorChooser.Kinect != null)
             {
+                Console.WriteLine("kinect is not null");
                 //trying to get the video from the clinician -- this can fail
-                //_videoClient = new ColorClient();
-                //_videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                //_videoClient.Connect("192.168.184.39", 4531);
+                _videoClient = new ColorClient();
+                _videoClient.ColorFrameReady +=new EventHandler<ColorFrameReadyEventArgs>(_videoClient_ColorFrameReady);
+
+                while(!_videoClient.IsConnected)
+                {
+                    _videoClient.Connect(doctorIp, 4531);
+                }
 
                 // Streaming video out on port 4555
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555, ImageFormat.Jpeg);

@@ -33,6 +33,8 @@ namespace CardioRehab_WPF
     { private DatabaseClass db;
 
         private int userid;
+        private int patientid;
+        private String patientIP;
         private String localIP;
 
         const int MAX_CLIENTS = 6;
@@ -56,6 +58,8 @@ namespace CardioRehab_WPF
         private ColorClient _videoClient;
         //private AudioClient _audioClient;
 
+        private static ColorListener _videoListener;
+
         public DoctorWindow(int currentuser, DatabaseClass openDB)
         {
             db = openDB;
@@ -68,8 +72,6 @@ namespace CardioRehab_WPF
             // patients send the biodata from port 5000-5005
             int[] ports = new int[6]{5000,5001,5002,5003,5004,5005};
             InitializeBioSockets(ports);
-
-            InitializeKinect();
         }
 
         /// <summary>
@@ -148,6 +150,30 @@ namespace CardioRehab_WPF
             cmd.Dispose();
         }
 
+        /// <summary>
+        /// Retrieves the local IP address of the patient from the
+        /// patient database table.
+        /// </summary>
+        private void GetPatientIP()
+        {
+            String query = "SELECT wireless_ip FROM patient WHERE patient_id=" + patientid;
+            SQLiteCommand cmd = new SQLiteCommand(query, db.m_dbconnection);
+
+            SQLiteDataReader reader = cmd.ExecuteReader();
+
+            // current user does not have any IP addresses in the database record
+            if (reader.HasRows)
+            {
+                while (reader.Read())
+                {
+                    patientIP = reader["wireless_ip"].ToString();
+                    break;
+                }
+            }
+            reader.Dispose();
+            cmd.Dispose();
+        }
+
         #endregion
 
         #region socket connection with patient for Bio information
@@ -183,6 +209,7 @@ namespace CardioRehab_WPF
                     MessageBox.Show(e.Message);
                 }
             }
+
         }
 
         /// <summary>
@@ -286,7 +313,17 @@ namespace CardioRehab_WPF
 
         private void processData(String tmp)
         {
-            String[] name = tmp.Split('|');
+            String[] sentData = tmp.Split('|');
+            String[] name = sentData[0].Split('-');
+            patientid = Convert.ToInt32(name[1]);
+
+            Console.WriteLine(patientid);
+            if (patientid != null)
+            {
+                Console.WriteLine("patientid isnot null");
+                Console.WriteLine(patientid);
+                InitializeKinect();
+            }
 
                 for(int i = 1; i < name.Length; i++)
                 {
@@ -410,18 +447,22 @@ namespace CardioRehab_WPF
        #region Kinect
         private void InitializeKinect()
         {
+            Console.WriteLine("InitializeKinect");
             this.sensorChooser = new KinectSensorChooser();
             this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
             this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
             this.sensorChooser.Start();
 
             // Don't try this unless there is a kinect.
-            if (sensorChooser.Kinect != null)
+            if ((sensorChooser.Kinect != null) && (patientIP != null))
             {
                 //// Receiving video from patient1.
                 _videoClient = new ColorClient();
-                _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.9", 4555);
+                _videoClient.ColorFrameReady += new EventHandler<ColorFrameReadyEventArgs>(_videoClient_ColorFrameReady);
+                while(!_videoClient.IsConnected)
+                {
+                    _videoClient.Connect(patientIP, 4555);
+                }
 
                 //_videoClient2 = new ColorClient();
                 //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
@@ -429,8 +470,8 @@ namespace CardioRehab_WPF
 
 
                 // kinect sending video out on port 4531
-                //_videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
-                //_videoListener.Start();
+                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
+                _videoListener.Start();
 
                 /*/ Recieving audio from patient.
                 _audioClient = new AudioClient();
