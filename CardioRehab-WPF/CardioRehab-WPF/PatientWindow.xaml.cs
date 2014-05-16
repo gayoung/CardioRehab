@@ -1,6 +1,8 @@
 ﻿using Coding4Fun.Kinect.KinectService.Common;
 using Coding4Fun.Kinect.KinectService.Listeners;
+using Coding4Fun.Kinect.KinectService.WpfClient;
 using Microsoft.Kinect;
+using Microsoft.Kinect.Toolkit;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -19,7 +21,6 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Windows.Threading;
-
 using ColorImageFormat = Microsoft.Kinect.ColorImageFormat;
 using ColorImageFrame = Microsoft.Kinect.ColorImageFrame;
 using DepthImageFormat = Microsoft.Kinect.DepthImageFormat;
@@ -53,9 +54,21 @@ namespace CardioRehab_WPF
         int[] bpdata = new int[1000];
         public int hrcount, oxcount, bpcount;
 
-        KinectSensor _sensor;
+        //kinect sensor 
+        private KinectSensorChooser sensorChooser;
 
-        bool _isInit;
+        //kinect listeners
+        private static DepthListener _depthListener;
+        private static ColorListener _videoListener;
+        private static SkeletonListener _skeletonListener;
+        private static AudioListener _audioListener;
+
+        //kinect clients
+        private ColorClient _videoClient;
+        private AudioClient _audioClient;
+        private SkeletonClient _skeletonClient;
+        private DepthClient _depthClient;
+
         private WriteableBitmap outputImage;
         private byte[] pixels = new byte[0];
 
@@ -73,8 +86,6 @@ namespace CardioRehab_WPF
             CheckRecord();
             InitializeComponent();
 
-            SetupKinect();
-
             //InitializeBioSockets();
             //CreateSocketConnection();
 
@@ -82,6 +93,9 @@ namespace CardioRehab_WPF
             //InitTimer();
 
             //this.SizeChanged += new EventHandler(PatientMain_Resize);
+
+            InitializeKinect();
+
         }
 
         /// <summary>
@@ -503,7 +517,7 @@ namespace CardioRehab_WPF
                 //GetDoctoIP();
 
                 // TESTING CODE --> delete this code when the db server is running
-                doctorIp = "xxx.xxx.xxx.xxx";
+                doctorIp = "142.244.212.19";
                 //create a new client socket
                 socketToClinician = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
 
@@ -529,118 +543,126 @@ namespace CardioRehab_WPF
 
         #endregion
 
-        #region kinect functions
-
-        /// <summary>
-        /// Code taken from
-        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
-        /// </summary>
-        private void SetupKinect()
+        #region Kinect
+        private void InitializeKinect()
         {
-            if (_isInit)
-                StopKinect();
+            this.sensorChooser = new KinectSensorChooser();
+            this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
+            this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
+            this.sensorChooser.Start();
 
-            if (KinectSensor.KinectSensors.Count > 0)
+            // Don't try this unless there is a kinect
+            if (this.sensorChooser.Kinect != null)
             {
-                //pull the first Kinect
-                _sensor = KinectSensor.KinectSensors[0];
+                //trying to get the video from the clinician -- this can fail
+                //_videoClient = new ColorClient();
+                //_videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
+                //_videoClient.Connect("192.168.184.39", 4531);
+
+                // Streaming video out on port 4555
+                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555, ImageFormat.Jpeg);
+                _videoListener.Start();
+
             }
-            if (_sensor.Status != KinectStatus.Connected || KinectSensor.KinectSensors.Count == 0)
-            {
-                MessageBox.Show("No Kinect connected");
-                return;
-            }
 
-            _sensor.SkeletonStream.Enable();
-            _sensor.DepthStream.Enable(DepthImageFormat.Resolution320x240Fps30);
-            _sensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
-
-            _sensor.AllFramesReady += new EventHandler<AllFramesReadyEventArgs>(_sensor_AllFramesReady);
-
-            _sensor.Start();
-            _isInit = true;
-
-            ColorListener colorListener = new ColorListener(_sensor, 4530 + patientIndex - 1, ImageFormat.Jpeg);
-            colorListener.Start();
-
-            //DepthListener depthListener = new DepthListener(_sensor, 4531);
-            //depthListener.Start();
-
-            //SkeletonListener skeletonListener = new SkeletonListener(_sensor, 4532);
-            //skeletonListener.Start();
-
-            AudioListener audioListener = new AudioListener(_sensor, 4540 + patientIndex - 1);
-            audioListener.Start();
         }
 
         /// <summary>
-        /// Code modified from
-        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
+        /// Called when the KinectSensorChooser gets a new sensor
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        void _sensor_AllFramesReady(object sender, AllFramesReadyEventArgs e)
+        /// <param name="sender">sender of the event</param>
+        /// <param name="e">event arguments</param>
+        void sensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
         {
-            RuntimeColorFrameReady(e);
-            // add function here if want depth/skeleton frames
+
+            //MessageBox.Show(e.NewSensor == null ? "No Kinect" : e.NewSensor.Status.ToString());
+
+            if (e.OldSensor != null)
+            {
+                try
+                {
+                    e.OldSensor.DepthStream.Range = DepthRange.Default;
+                    e.OldSensor.SkeletonStream.EnableTrackingInNearRange = false;
+                    e.OldSensor.DepthStream.Disable();
+                    e.OldSensor.SkeletonStream.Disable();
+                    e.OldSensor.ColorStream.Disable();
+                }
+                catch (InvalidOperationException)
+                {
+                    // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
+                    // E.g.: sensor might be abruptly unplugged.
+
+                }
+            }
+
+            if (e.NewSensor != null)
+            {
+                try
+                {
+                    e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
+                    //e.NewSensor.SkeletonStream.Enable();
+                    e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
+                    e.NewSensor.ColorFrameReady += NewSensor_ColorFrameReady;
+
+
+                    try
+                    {
+                        e.NewSensor.DepthStream.Range = DepthRange.Near;
+                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = true;
+
+                        //seated mode could come in handy on the bike -- uncomment below
+                        //e.NewSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
+                    }
+                    catch (InvalidOperationException)
+                    {
+                        // Non Kinect for Windows devices do not support Near mode, so reset back to default mode.
+                        e.NewSensor.DepthStream.Range = DepthRange.Default;
+                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = false;
+                    }
+                }
+                catch (InvalidOperationException)
+                {
+                    // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
+                    // E.g.: sensor might be abruptly unplugged.
+                }
+            }
         }
 
-        /// <summary>
-        /// Code modified from
-        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
-        /// </summary>
-        /// <param name="e"></param>
-        void RuntimeColorFrameReady(AllFramesReadyEventArgs e)
-        {
 
-            using (ColorImageFrame colorFrame = e.OpenColorImageFrame())
+        void NewSensor_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        {
+            using (ColorImageFrame frame = e.OpenColorImageFrame())
             {
-                if (colorFrame == null)
+
+                if (frame == null)
                 {
                     return;
                 }
 
                 if (pixels.Length == 0)
                 {
-                    this.pixels = new byte[colorFrame.PixelDataLength];
+                    this.pixels = new byte[frame.PixelDataLength];
                 }
+                frame.CopyPixelDataTo(this.pixels);
 
-                colorFrame.CopyPixelDataTo(this.pixels);
-
-                outputImage = new WriteableBitmap(colorFrame.Width, colorFrame.Height, 172, 172, PixelFormats.Bgr32, null);
+                outputImage = new WriteableBitmap(frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
 
                 outputImage.WritePixels(
-                    new Int32Rect(0, 0, colorFrame.Width, colorFrame.Height), this.pixels, colorFrame.Width * 4, 0);
+                    new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
 
-                patientFrame.Source = outputImage;
-            }
+                this.patientFrame.Source = outputImage;
+
+            };
+
         }
 
-        /// <summary>
-        /// Code modified from
-        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
-        /// </summary>
-        public void StopKinect()
+        //called when a video frame from the client is ready
+        void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
-            if (_sensor != null)
-            {
-                _sensor.Stop();
-            }
-
-            _isInit = false;
+            this.doctorFrame.Source = e.ColorFrame.BitmapImage;
         }
 
 
-        /// <summary>
-        /// Code modified from
-        /// http://c4fkinect.codeplex.com/SourceControl/latest#Coding4Fun.Kinect.WinForm.TestApplication/Form1.Designer.cs
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /// </summary>
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            StopKinect();
-        }
         #endregion
     }
 

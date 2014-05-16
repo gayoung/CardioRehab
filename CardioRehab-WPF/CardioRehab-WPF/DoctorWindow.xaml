@@ -1,158 +1,163 @@
 ﻿<Window x:Class="CardioRehab_WPF.DoctorWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:k="http://schemas.microsoft.com/kinect/2013"
         Title="DoctorWindow" Height="780" Width="1024" WindowStartupLocation="CenterScreen">
     <Grid>
-        <Border x:Name="border1" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="10,10,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
-            <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
-                <Image x:Name="patientFrame1" Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
-                <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
-                <Label x:Name="hrLabel1" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiLabel1" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
-                <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
-                <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
-                <Label x:Name="bpLabel1" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                <Label x:Name="hrValue1" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiValue1" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                <Label x:Name="bpValue1" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                <Button x:Name="memo1" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
-                    <Image Source="note.png" Width="29"/>
-                </Button>
-                <Button x:Name="mute1" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
-                    <Image Source="mic.png" Width="35"/>
-                </Button>
-                <Button x:Name="expand1" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
-                    <Image Source="expand.png" Width="29"/>
-                </Button>
-                <Label x:Name="warning1" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
+        <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" Name="sensorChooserUi" />
+            <Grid>
+                <Border x:Name="border1" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="10,10,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
+                    <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
+                        <Image x:Name="patientFrame1" Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
+                        <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
+                        <Label x:Name="hrLabel1" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiLabel1" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
+                        <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
+                        <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
+                        <Label x:Name="bpLabel1" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
+                        <Label x:Name="hrValue1" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiValue1" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
+                        <Label x:Name="bpValue1" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                        <Button x:Name="memo1" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
+                            <Image Source="note.png" Width="29"/>
+                        </Button>
+                        <Button x:Name="mute1" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
+                            <Image Source="mic.png" Width="35"/>
+                        </Button>
+                        <Button x:Name="expand1" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
+                            <Image Source="expand.png" Width="29"/>
+                        </Button>
+                        <Label x:Name="warning1" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
 
-            </Canvas>
-        </Border>
-        <Border x:Name="border2" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="343,10,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
-            <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
-                <Image Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
-                <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
-                <Label x:Name="hrLabel2" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiLabel2" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
-                <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
-                <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
-                <Label x:Name="bpLabel2" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                <Label x:Name="hrValue2" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiValue2" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                <Label x:Name="bpValue2" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                <Button x:Name="memo2" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
-                    <Image Source="note.png" Width="29"/>
-                </Button>
-                <Button x:Name="mute2" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
-                    <Image Source="mic.png" Width="35"/>
-                </Button>
-                <Button x:Name="expand2" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
-                    <Image Source="expand.png" Width="29"/>
-                </Button>
-                <Label x:Name="warning2" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
+                    </Canvas>
+                </Border>
+                <Border x:Name="border2" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="343,10,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
+                    <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
+                        <Image x:Name="patientFrame2" Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
+                        <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
+                        <Label x:Name="hrLabel2" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiLabel2" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
+                        <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
+                        <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
+                        <Label x:Name="bpLabel2" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
+                        <Label x:Name="hrValue2" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiValue2" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
+                        <Label x:Name="bpValue2" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                        <Button x:Name="memo2" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
+                            <Image Source="note.png" Width="29"/>
+                        </Button>
+                        <Button x:Name="mute2" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
+                            <Image Source="mic.png" Width="35"/>
+                        </Button>
+                        <Button x:Name="expand2" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
+                            <Image Source="expand.png" Width="29"/>
+                        </Button>
+                        <Label x:Name="warning2" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
 
-            </Canvas>
-        </Border>
-        <Border x:Name="border3" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="676,10,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
-            <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
-                <Image Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
-                <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
-                <Label x:Name="hrLabel3" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiLabel3" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
-                <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
-                <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
-                <Label x:Name="bpLabel3" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                <Label x:Name="hrValue3" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiValue3" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                <Label x:Name="bpValue3" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                <Button x:Name="memo3" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
-                    <Image Source="note.png" Width="29"/>
-                </Button>
-                <Button x:Name="mute3" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
-                    <Image Source="mic.png" Width="35"/>
-                </Button>
-                <Button x:Name="expand3" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
-                    <Image Source="expand.png" Width="29"/>
-                </Button>
-                <Label x:Name="warning3" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
+                    </Canvas>
+                </Border>
+                <Border x:Name="border3" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="676,10,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
+                    <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
+                        <Image x:Name="patientFrame3" Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
+                        <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
+                        <Label x:Name="hrLabel3" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiLabel3" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
+                        <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
+                        <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
+                        <Label x:Name="bpLabel3" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
+                        <Label x:Name="hrValue3" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiValue3" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
+                        <Label x:Name="bpValue3" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                        <Button x:Name="memo3" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
+                            <Image Source="note.png" Width="29"/>
+                        </Button>
+                        <Button x:Name="mute3" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
+                            <Image Source="mic.png" Width="35"/>
+                        </Button>
+                        <Button x:Name="expand3" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
+                            <Image Source="expand.png" Width="29"/>
+                        </Button>
+                        <Label x:Name="warning3" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
 
-            </Canvas>
-        </Border>
-        <Border x:Name="border4" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="10,375,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
-            <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
-                <Image Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
-                <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
-                <Label x:Name="hrLabel4" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiLabel4" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
-                <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
-                <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
-                <Label x:Name="bpLabel4" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                <Label x:Name="hrValue4" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiValue4" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                <Label x:Name="bpValue4" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                <Button x:Name="memo4" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
-                    <Image Source="note.png" Width="29"/>
-                </Button>
-                <Button x:Name="mute4" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
-                    <Image Source="mic.png" Width="35"/>
-                </Button>
-                <Button x:Name="expand4" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
-                    <Image Source="expand.png" Width="29"/>
-                </Button>
-                <Label x:Name="warning4" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
+                    </Canvas>
+                </Border>
+                <Border x:Name="border4" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="10,375,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
+                    <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
+                        <Image x:Name="patientFrame4" Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
+                        <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
+                        <Label x:Name="hrLabel4" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiLabel4" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
+                        <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
+                        <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
+                        <Label x:Name="bpLabel4" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
+                        <Label x:Name="hrValue4" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiValue4" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
+                        <Label x:Name="bpValue4" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                        <Button x:Name="memo4" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
+                            <Image Source="note.png" Width="29"/>
+                        </Button>
+                        <Button x:Name="mute4" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
+                            <Image Source="mic.png" Width="35"/>
+                        </Button>
+                        <Button x:Name="expand4" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
+                            <Image Source="expand.png" Width="29"/>
+                        </Button>
+                        <Label x:Name="warning4" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
 
-            </Canvas>
-        </Border>
-        <Border x:Name="border5" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="343,375,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
-            <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
-                <Image Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
-                <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
-                <Label x:Name="hrLabel5" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiLabel5" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
-                <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
-                <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
-                <Label x:Name="bpLabel5" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                <Label x:Name="hrValue5" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiValue5" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                <Label x:Name="bpValue5" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                <Button x:Name="memo5" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
-                    <Image Source="note.png" Width="29"/>
-                </Button>
-                <Button x:Name="mute5" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
-                    <Image Source="mic.png" Width="35"/>
-                </Button>
-                <Button x:Name="expand5" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
-                    <Image Source="expand.png" Width="29"/>
-                </Button>
-                <Label x:Name="warning5" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
+                    </Canvas>
+                </Border>
+                <Border x:Name="border5" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="343,375,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
+                    <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
+                        <Image x:Name="patientFrame5" Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
+                        <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
+                        <Label x:Name="hrLabel5" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiLabel5" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
+                        <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
+                        <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
+                        <Label x:Name="bpLabel5" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
+                        <Label x:Name="hrValue5" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiValue5" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
+                        <Label x:Name="bpValue5" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                        <Button x:Name="memo5" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
+                            <Image Source="note.png" Width="29"/>
+                        </Button>
+                        <Button x:Name="mute5" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
+                            <Image Source="mic.png" Width="35"/>
+                        </Button>
+                        <Button x:Name="expand5" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
+                            <Image Source="expand.png" Width="29"/>
+                        </Button>
+                        <Label x:Name="warning5" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
 
-            </Canvas>
-        </Border>
-        <Border x:Name="border6" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="678,375,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
-            <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
-                <Image Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
-                <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
-                <Label x:Name="hrLabel6" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiLabel6" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
-                <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
-                <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
-                <Label x:Name="bpLabel6" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                <Label x:Name="hrValue6" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                <Label x:Name="oxiValue6" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                <Label x:Name="bpValue6" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                <Button x:Name="memo6" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
-                    <Image Source="note.png" Width="29"/>
-                </Button>
-                <Button x:Name="mute6" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
-                    <Image Source="mic.png" Width="35"/>
-                </Button>
-                <Button x:Name="expand6" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
-                    <Image Source="expand.png" Width="29"/>
-                </Button>
-                <Label x:Name="warning6" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
+                    </Canvas>
+                </Border>
+                <Border x:Name="border6" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Left" Height="360" Margin="678,375,0,0" VerticalAlignment="Top" Width="328" CornerRadius="5">
+                    <Canvas HorizontalAlignment="Left" Height="340" Margin="5,5,0,0" VerticalAlignment="Top" Width="308">
+                        <Image x:Name="patientFrame6" Height="141" Canvas.Left="10" Canvas.Top="10" Width="288"/>
+                        <Image Height="24" Canvas.Left="10" Source="heart.png" Stretch="Fill" Canvas.Top="156" Width="24"/>
+                        <Label x:Name="hrLabel6" Content="HR : " Canvas.Left="39" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiLabel6" Content="OX : " Canvas.Left="39" Canvas.Top="187" FontWeight="Bold"/>
+                        <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
+                        <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
+                        <Label x:Name="bpLabel6" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
+                        <Label x:Name="hrValue6" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
+                        <Label x:Name="oxiValue6" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
+                        <Label x:Name="bpValue6" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                        <Button x:Name="memo6" Height="48" Canvas.Left="39" Canvas.Top="282" Width="47">
+                            <Image Source="note.png" Width="29"/>
+                        </Button>
+                        <Button x:Name="mute6" Height="48" Canvas.Left="112" Canvas.Top="282" Width="52">
+                            <Image Source="mic.png" Width="35"/>
+                        </Button>
+                        <Button x:Name="expand6" Height="48" Canvas.Left="193" Canvas.Top="282" Width="52">
+                            <Image Source="expand.png" Width="29"/>
+                        </Button>
+                        <Label x:Name="warning6" Content="Warning" Canvas.Left="10" Canvas.Top="242" Foreground="#FFFD0707" Width="288" FontSize="16" FontWeight="Bold"/>
 
-            </Canvas>
-        </Border>
+                    </Canvas>
+                </Border>
+
+            </Grid>
 
     </Grid>
 </Window>
