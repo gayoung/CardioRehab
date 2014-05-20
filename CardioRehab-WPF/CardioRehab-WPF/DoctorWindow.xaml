@@ -42,7 +42,7 @@
                             <d3:HorizontalLine Value="{Binding MinVoltage}" Stroke="Red" StrokeThickness="2"/>
                         </d3:ChartPlotter>
                     </Border>
-                    <Button x:Name="connect1" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24"/>
+                    <Button x:Name="connect1" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24" Click="connect1_Click"/>
 
                 </Canvas>
             </Border>

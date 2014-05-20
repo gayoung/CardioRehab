@@ -618,5 +618,19 @@ namespace CardioRehab_WPF
         }
 
         #endregion
+
+        #region Connect button triggers
+        private void connect1_Click(object sender, RoutedEventArgs e)
+        {
+           if (sensorChooser.Kinect != null)
+            {
+                if (!_videoClient.IsConnected)
+                {
+                    _videoClient.Connect(patientIP, 4555);
+                }
+            }
+        }
+        }
+        #endregion
     }
 }
