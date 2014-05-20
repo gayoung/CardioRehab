@@ -489,6 +489,11 @@ namespace CardioRehab_WPF
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
                 _videoClient.Connect(patientIP, 4555);
 
+                if (_videoClient.IsConnected)
+                {
+                    connect1.Visibility = System.Windows.Visibility.Hidden;
+                }
+
                 //_videoClient2 = new ColorClient();
                 //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
                 //_videoClient2.Connect("192.168.184.39", 4556);
@@ -548,7 +553,7 @@ namespace CardioRehab_WPF
                 {
                     // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
                     // E.g.: sensor might be abruptly unplugged.
-
+                    Console.WriteLine("InvalidOperation Exception was thrown1.");
                 }
             }
 
@@ -557,7 +562,7 @@ namespace CardioRehab_WPF
                 try
                 {
                     e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-                    //e.NewSensor.SkeletonStream.Enable();
+                    e.NewSensor.SkeletonStream.Enable();
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
 
                     try
@@ -579,6 +584,7 @@ namespace CardioRehab_WPF
                 {
                     // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
                     // E.g.: sensor might be abruptly unplugged.
+                    Console.WriteLine("InvalidOperation Exception was thrown2.");
                 }
             }
         }
@@ -628,8 +634,12 @@ namespace CardioRehab_WPF
                 {
                     _videoClient.Connect(patientIP, 4555);
                 }
+
+               if(_videoClient.IsConnected)
+               {
+                   connect1.Visibility = System.Windows.Visibility.Hidden;
+               }
             }
-        }
         }
         #endregion
     }
