@@ -20,17 +20,24 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using ColorImageFormat = Microsoft.Kinect.ColorImageFormat;
 using ColorImageFrame = Microsoft.Kinect.ColorImageFrame;
 using DepthImageFormat = Microsoft.Kinect.DepthImageFormat;
+
+using DynamicDataDisplaySample.ECGViewModel;
+using Microsoft.Research.DynamicDataDisplay;
+using Microsoft.Research.DynamicDataDisplay.DataSources;
+using System.ComponentModel;
 
 namespace CardioRehab_WPF
 {
     /// <summary>
     /// Interaction logic for DoctorWindow.xaml
     /// </summary>
-    public partial class DoctorWindow : Window
-    { private DatabaseClass db;
+    public partial class DoctorWindow : Window, INotifyPropertyChanged
+    { 
+        private DatabaseClass db;
 
         private int userid;
         private int patientid;
@@ -60,6 +67,27 @@ namespace CardioRehab_WPF
 
         private static ColorListener _videoListener;
 
+        private Random _Random;
+        private int _maxECG;
+
+        public int MaxECG
+        {
+            get { return _maxECG; }
+            set { _maxECG = value; this.OnPropertyChanged("MaxECG"); }
+        }
+
+        private int _minECG;
+        public int MinECG
+        {
+            get { return _minECG; }
+            set { _minECG = value; this.OnPropertyChanged("MinECG"); }
+        }
+
+        public ECGPointCollection ecgPointCollection;
+        DispatcherTimer updateCollectionTimer;
+        private int i = 0;
+
+
         public DoctorWindow(int currentuser, DatabaseClass openDB)
         {
             db = openDB;
@@ -74,6 +102,10 @@ namespace CardioRehab_WPF
             InitializeBioSockets(ports);
 
             InitializeKinect();
+
+            InitializeECG();
+
+            this.DataContext = this;
         }
 
         /// <summary>
@@ -525,7 +557,7 @@ namespace CardioRehab_WPF
                 try
                 {
                     e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-                    e.NewSensor.SkeletonStream.Enable();
+                    //e.NewSensor.SkeletonStream.Enable();
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
 
                     try
@@ -550,6 +582,41 @@ namespace CardioRehab_WPF
                 }
             }
         }
+        #endregion
+
+        #region mockECG
+
+        public void InitializeECG()
+        {
+            ecgPointCollection = new ECGPointCollection();
+
+            updateCollectionTimer = new DispatcherTimer();
+            updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(100);
+            updateCollectionTimer.Tick += new EventHandler(updateCollectionTimer_Tick);
+            updateCollectionTimer.Start();
+
+            var ds = new EnumerableDataSource<ECGPoint>(ecgPointCollection);
+            ds.SetXMapping(x => dateAxis.ConvertToDouble(x.Date));
+            ds.SetYMapping(y => y.ECG);
+            plotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
+            plotter.VerticalAxis.Remove();
+            MaxECG = 1;
+            MinECG = -1;
+        }
+
+        void updateCollectionTimer_Tick(object sender, EventArgs e)
+        {
+            i++;
+            _Random = new Random();
+            ecgPointCollection.Add(new ECGPoint(_Random.NextDouble(), DateTime.Now));
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void OnPropertyChanged(string propertyName)
+        {
+            if (PropertyChanged != null)
+                this.PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+        }
+
         #endregion
     }
 }
