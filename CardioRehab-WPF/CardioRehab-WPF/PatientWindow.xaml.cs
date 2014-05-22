@@ -525,6 +525,12 @@ namespace CardioRehab_WPF
                     System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse(doctorIp);
                     System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000 + patientIndex - 1);
                     socketToClinician.Connect(remoteEndPoint);
+
+                    if(socketToClinician.Connected)
+                    {
+                        byte[] startData = System.Text.Encoding.ASCII.GetBytes("start|" + patientIndex.ToString() + "-" + user.ToString() + "-" + wirelessIP);
+                        socketToClinician.Send(startData);
+                    }
                 }
                 else
                 {
@@ -557,11 +563,11 @@ namespace CardioRehab_WPF
                 //trying to get the video from the clinician -- this can fail
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect(doctorIp, 4531);
+                _videoClient.Connect(doctorIp, 4531+patientIndex);
 
 
                 // Streaming video out on port 4555
-                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555, ImageFormat.Jpeg);
+                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555+patientIndex, ImageFormat.Jpeg);
                 _videoListener.Start();
 
             }

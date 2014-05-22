@@ -69,7 +69,7 @@
                     </Button>
                     <Label x:Name="warning2" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
                     <Border x:Name="EcgBorder2" BorderBrush="Black" BorderThickness="3" Height="83" Canvas.Left="10" Canvas.Top="247" Width="288"/>
-                    <Button x:Name="connect2" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24"/>
+                    <Button x:Name="connect2" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24" Click="connect2_Click"/>
 
                 </Canvas>
             </Border>

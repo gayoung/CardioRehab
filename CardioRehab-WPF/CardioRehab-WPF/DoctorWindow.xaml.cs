@@ -41,7 +41,9 @@ namespace CardioRehab_WPF
 
         private int userid;
         private int patientid;
-        private String patientIP = "142.244.115.209";
+        private int patientIndex;
+        private List<String> patientIPCollection = new List<String>();
+
         private String localIP;
 
         const int MAX_CLIENTS = 6;
@@ -65,7 +67,10 @@ namespace CardioRehab_WPF
         private ColorClient _videoClient;
         //private AudioClient _audioClient;
 
-        private static ColorListener _videoListener;
+        private List<ColorListener> videoListenerCollection = new List<ColorListener>();
+
+        //private static ColorListener _videoListener1;
+        //private static ColorListener _videoListener2;
 
         private Random _Random;
         private int _maxECG;
@@ -93,15 +98,17 @@ namespace CardioRehab_WPF
             db = openDB;
             userid = currentuser;
 
+
             GetLocalIP();
             CheckRecord();
             InitializeComponent();
 
             // patients send the biodata from port 5000-5005
-            int[] ports = new int[6]{5000,5001,5002,5003,5004,5005};
+            int[] ports = new int[6] { 5000, 5001, 5002, 5003, 5004, 5005 };
             InitializeBioSockets(ports);
 
-            InitializeKinect();
+            int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
+            InitializeKinect(kinectOutPorts);
 
             InitializeECG();
 
@@ -150,14 +157,16 @@ namespace CardioRehab_WPF
                 {
                     if(Ipcounter == 0)
                     {
+                        Console.WriteLine("localIP1: " + addr.ToString());
                         localIP = addr.ToString();
                     }
                     if (Ipcounter == 1)
                     {
+                        Console.WriteLine("localIP2: " + addr.ToString());
                         localIP = addr.ToString();
 
                     }
-                    break;
+                    Ipcounter++;
                 }
             }
         }
@@ -187,26 +196,30 @@ namespace CardioRehab_WPF
         /// <summary>
         /// Retrieves the local IP address of the patient from the
         /// patient database table.
+        /// 
+        /// MIGHT NOT BE NEEDED!
+        /// Also might not need IP fields in DB
+        /// 
         /// </summary>
-        private void GetPatientIP()
-        {
-            String query = "SELECT wireless_ip FROM patient WHERE patient_id=" + patientid;
-            SQLiteCommand cmd = new SQLiteCommand(query, db.m_dbconnection);
+        //private void GetPatientIP()
+        //{
+        //    String query = "SELECT wireless_ip FROM patient WHERE patient_id=" + patientid;
+        //    SQLiteCommand cmd = new SQLiteCommand(query, db.m_dbconnection);
 
-            SQLiteDataReader reader = cmd.ExecuteReader();
+        //    SQLiteDataReader reader = cmd.ExecuteReader();
 
-            // current user does not have any IP addresses in the database record
-            if (reader.HasRows)
-            {
-                while (reader.Read())
-                {
-                    patientIP = reader["wireless_ip"].ToString();
-                    break;
-                }
-            }
-            reader.Dispose();
-            cmd.Dispose();
-        }
+        //    // current user does not have any IP addresses in the database record
+        //    if (reader.HasRows)
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            patientIP = reader["wireless_ip"].ToString();
+        //            break;
+        //        }
+        //    }
+        //    reader.Dispose();
+        //    cmd.Dispose();
+        //}
 
         #endregion
 
@@ -227,6 +240,7 @@ namespace CardioRehab_WPF
 
                     //create listening socket
                     Socket currentSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                    Console.WriteLine("listening on :  " + localIP);
                     IPAddress addy = IPAddress.Parse(localIP);
                     IPEndPoint iplocal = new IPEndPoint(addy, portNum);
                     //bind to local IP Address
@@ -349,11 +363,8 @@ namespace CardioRehab_WPF
         {
             String[] sentData = tmp.Split('|');
             String[] name = sentData[0].Split('-');
-            patientid = Convert.ToInt32(name[1]);
 
-            Console.WriteLine(patientid);
-
-            for (int i = 1; i < sentData.Length; i++)
+            for (int i = 2; i < sentData.Length; i++)
             {
                 String[] data = sentData[i].Split(' ');
 
@@ -362,6 +373,12 @@ namespace CardioRehab_WPF
                 {
                     switch (name[0].Trim())
                     {
+                        case "start":
+                            String[] restofData = sentData[1].Split('-');
+                            patientIPCollection.Insert(Convert.ToInt32(restofData[0]), restofData[2].Trim());
+                            patientid = Convert.ToInt32(restofData[1]);
+                            break;
+
                         case "patient1":
                             if (data[0].Trim() == "HR")
                             {
@@ -376,6 +393,7 @@ namespace CardioRehab_WPF
                                 bpValue1.Content = data[1] + "/" + data[2];
                             }
                             break;
+
                         case "patient2":
                             if (data[0].Trim() == "HR")
                             {
@@ -390,6 +408,7 @@ namespace CardioRehab_WPF
                                 bpValue2.Content = data[1] + "/" + data[2];
                             }
                             break;
+
                         case "patient3":
                             if (data[0].Trim() == "HR")
                             {
@@ -404,6 +423,7 @@ namespace CardioRehab_WPF
                                 bpValue3.Content = data[1] + "/" + data[2];
                             }
                             break;
+
                         case "patient4":
                             if (data[0].Trim() == "HR")
                             {
@@ -432,6 +452,7 @@ namespace CardioRehab_WPF
                                 bpValue5.Content = data[1] + "/" + data[2];
                             }
                             break;
+
                         case "patient6":
                             if (data[0].Trim() == "HR")
                             {
@@ -473,7 +494,7 @@ namespace CardioRehab_WPF
         #endregion
 
        #region Kinect
-        private void InitializeKinect()
+        private void InitializeKinect(int[] ports)
         {
             Console.WriteLine("InitializeKinect");
             this.sensorChooser = new KinectSensorChooser();
@@ -482,26 +503,33 @@ namespace CardioRehab_WPF
             this.sensorChooser.Start();
 
             // Don't try this unless there is a kinect.
-            if ((sensorChooser.Kinect != null) && (patientIP != null))
+            if (sensorChooser.Kinect != null)
             {
-                //// Receiving video from patient1.
-                _videoClient = new ColorClient();
-                _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect(patientIP, 4555);
+                //if(patientIP != null)
+                //{
+                //    // Receiving video from patient1.
+                //    _videoClient = new ColorClient();
+                //    _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
+                //    _videoClient.Connect(patientIP, 4555);
 
-                if (_videoClient.IsConnected)
-                {
-                    connect1.Visibility = System.Windows.Visibility.Hidden;
-                }
+                //    if (_videoClient.IsConnected)
+                //    {
+                //        connect1.Visibility = System.Windows.Visibility.Hidden;
+                //    }
+                //}
+                
 
                 //_videoClient2 = new ColorClient();
                 //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
                 //_videoClient2.Connect("192.168.184.39", 4556);
 
 
-                // kinect sending video out on port 4531
-                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
-                _videoListener.Start();
+                foreach(int portNum in ports)
+                {
+                    ColorListener _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
+                    _videoListener.Start();
+                    videoListenerCollection.Add(_videoListener);
+                }
 
                 /*/ Recieving audio from patient.
                 _audioClient = new AudioClient();
@@ -628,17 +656,30 @@ namespace CardioRehab_WPF
         #region Connect button triggers
         private void connect1_Click(object sender, RoutedEventArgs e)
         {
-           if (sensorChooser.Kinect != null)
-            {
-                if (!_videoClient.IsConnected)
-                {
-                    _videoClient.Connect(patientIP, 4555);
-                }
+           EstablishConnection(1);
+        }
 
-               if(_videoClient.IsConnected)
-               {
-                   connect1.Visibility = System.Windows.Visibility.Hidden;
-               }
+        private void connect2_Click(object sender, RoutedEventArgs e)
+        {
+            EstablishConnection(2);
+        }
+
+        private void EstablishConnection(int index)
+        {
+            if (sensorChooser.Kinect != null)
+            {
+                if (patientIPCollection[1] != null)
+                {
+                    // Receiving video from patient1.
+                    _videoClient = new ColorClient();
+                    _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
+                    _videoClient.Connect(patientIPCollection[index], 4555 + index - 1);
+
+                    if (_videoClient.IsConnected)
+                    {
+                        connect1.Visibility = System.Windows.Visibility.Hidden;
+                    }
+                }
             }
         }
         #endregion
