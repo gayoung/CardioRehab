@@ -37,7 +37,7 @@ namespace CardioRehab_WPF
         private int user;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "192.168.184.39";
+        private String doctorIp = "142.244.214.100";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -522,12 +522,17 @@ namespace CardioRehab_WPF
 
                 if (doctorIp != null)
                 {
+                    Console.WriteLine(doctorIp);
+
                     System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse(doctorIp);
                     System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000 + patientIndex - 1);
                     socketToClinician.Connect(remoteEndPoint);
 
+                    Console.WriteLine(socketToClinician.Connected);
+
                     if(socketToClinician.Connected)
                     {
+                        Console.WriteLine("start message formation");
                         byte[] startData = System.Text.Encoding.ASCII.GetBytes("start|" + patientIndex.ToString() + "-" + user.ToString() + "-" + wirelessIP);
                         socketToClinician.Send(startData);
                     }
@@ -567,7 +572,7 @@ namespace CardioRehab_WPF
 
 
                 // Streaming video out on port 4555
-                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555+patientIndex, ImageFormat.Jpeg);
+                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555+patientIndex-1, ImageFormat.Jpeg);
                 _videoListener.Start();
 
             }

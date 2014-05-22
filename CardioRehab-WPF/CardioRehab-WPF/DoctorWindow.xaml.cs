@@ -36,7 +36,7 @@ namespace CardioRehab_WPF
     /// Interaction logic for DoctorWindow.xaml
     /// </summary>
     public partial class DoctorWindow : Window, INotifyPropertyChanged
-    { 
+    {
         private DatabaseClass db;
 
         private int userid;
@@ -65,6 +65,7 @@ namespace CardioRehab_WPF
         private byte[] pixels = new byte[0];
 
         private ColorClient _videoClient;
+        private ColorClient _videoClient2;
         //private AudioClient _audioClient;
 
         private List<ColorListener> videoListenerCollection = new List<ColorListener>();
@@ -155,7 +156,7 @@ namespace CardioRehab_WPF
                 // wireless IP address on index 1 and LAN on index 0 (only need wireless)
                 if (addr.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    if(Ipcounter == 0)
+                    if (Ipcounter == 0)
                     {
                         Console.WriteLine("localIP1: " + addr.ToString());
                         localIP = addr.ToString();
@@ -230,7 +231,7 @@ namespace CardioRehab_WPF
         private void InitializeBioSockets(int[] portArray)
         {
             int index = 0;
-            foreach(int portNum in portArray)
+            foreach (int portNum in portArray)
             {
                 try
                 {
@@ -240,7 +241,7 @@ namespace CardioRehab_WPF
 
                     //create listening socket
                     Socket currentSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    Console.WriteLine("listening on :  " + localIP);
+                    Console.WriteLine("listening on :  " + localIP + ":" + portNum.ToString());
                     IPAddress addy = IPAddress.Parse(localIP);
                     IPEndPoint iplocal = new IPEndPoint(addy, portNum);
                     //bind to local IP Address
@@ -253,7 +254,7 @@ namespace CardioRehab_WPF
                 }
                 catch (SocketException e)
                 {
-                     Console.WriteLine("error at InitializeBioSockets");
+                    Console.WriteLine("error at InitializeBioSockets");
                     MessageBox.Show(e.Message);
                 }
             }
@@ -269,7 +270,7 @@ namespace CardioRehab_WPF
             var state = asyn.AsyncState as State;
             var port = state.port;
             var currentSocket = bioSockets_list[state.state_index];
-            
+
             try
             {
                 bioSocketWorkers_list.Add(currentSocket.EndAccept(asyn));
@@ -290,8 +291,8 @@ namespace CardioRehab_WPF
             {
                 Console.WriteLine("argument exception at OnBioSocketConnection");
                 Console.WriteLine(ex.Message);
-                this.Close() ;
- 
+                this.Close();
+
             }
 
         }
@@ -340,7 +341,7 @@ namespace CardioRehab_WPF
                 int len = d.GetChars(socketData.dataBuffer, 0, end, chars, 0);
                 String receivedData = new String(chars);
                 receivedData = Regex.Replace(receivedData, @"\t|\n|\r", " ");
-                
+
                 // DEBUGGING
                 Console.WriteLine("data passed");
                 Console.WriteLine(receivedData);
@@ -361,21 +362,27 @@ namespace CardioRehab_WPF
 
         private void processData(String tmp)
         {
+            Console.WriteLine("processData");
             String[] sentData = tmp.Split('|');
             String[] name = sentData[0].Split('-');
 
-            for (int i = 2; i < sentData.Length; i++)
+            Console.WriteLine(sentData[0]);
+            Console.WriteLine(sentData[1]);
+
+            for (int i = 1; i < sentData.Length; i++)
             {
                 String[] data = sentData[i].Split(' ');
 
                 // Set the UI in the main thread.
                 this.Dispatcher.Invoke((Action)(() =>
                 {
+                    Console.WriteLine(name[0]);
                     switch (name[0].Trim())
                     {
                         case "start":
                             String[] restofData = sentData[1].Split('-');
-                            patientIPCollection.Insert(Convert.ToInt32(restofData[0]), restofData[2].Trim());
+                            int index = Convert.ToInt32(restofData[0].Trim());
+                            patientIPCollection.Insert(index - 1, restofData[2].Trim());
                             patientid = Convert.ToInt32(restofData[1]);
                             break;
 
@@ -493,7 +500,7 @@ namespace CardioRehab_WPF
         }
         #endregion
 
-       #region Kinect
+        #region Kinect
         private void InitializeKinect(int[] ports)
         {
             Console.WriteLine("InitializeKinect");
@@ -505,26 +512,14 @@ namespace CardioRehab_WPF
             // Don't try this unless there is a kinect.
             if (sensorChooser.Kinect != null)
             {
-                //if(patientIP != null)
-                //{
-                //    // Receiving video from patient1.
-                //    _videoClient = new ColorClient();
-                //    _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                //    _videoClient.Connect(patientIP, 4555);
+                _videoClient = new ColorClient();
+                _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
+                _videoClient.Connect("142.244.114.198", 4555);
 
-                //    if (_videoClient.IsConnected)
-                //    {
-                //        connect1.Visibility = System.Windows.Visibility.Hidden;
-                //    }
-                //}
-                
+                _videoClient2 = new ColorClient();
+                _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
 
-                //_videoClient2 = new ColorClient();
-                //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
-                //_videoClient2.Connect("192.168.184.39", 4556);
-
-
-                foreach(int portNum in ports)
+                foreach (int portNum in ports)
                 {
                     ColorListener _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
                     _videoListener.Start();
@@ -538,24 +533,13 @@ namespace CardioRehab_WPF
             }
         }
 
-        void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
-        {
-            this.patientFrame1.Source = e.ColorFrame.BitmapImage;
-        }
-
-        void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
-        {
-            this.patientFrame2.Source = e.ColorFrame.BitmapImage;
-            
-        }
-
-       /* private void InitializeAudio()
-        {
-            mybufferwp = new BufferedWaveProvider(wf);
-            mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
-            wo.Init(mybufferwp);
-            wo.Play();
-        }*/
+        /* private void InitializeAudio()
+         {
+             mybufferwp = new BufferedWaveProvider(wf);
+             mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
+             wo.Init(mybufferwp);
+             wo.Play();
+         }*/
 
         /// <summary>
         /// Called when the KinectSensorChooser gets a new sensor
@@ -656,32 +640,54 @@ namespace CardioRehab_WPF
         #region Connect button triggers
         private void connect1_Click(object sender, RoutedEventArgs e)
         {
-           EstablishConnection(1);
+            Console.WriteLine("connect1 button triggered");
+            if (sensorChooser.Kinect != null)
+            {
+                Console.WriteLine("sensorChooser is not null");
+                if (patientIPCollection[0] != null)
+                {
+                    Console.WriteLine("attempt to connect at " + patientIPCollection[0] + ":4555");
+                    _videoClient.Connect(patientIPCollection[0], 4555);
+                }
+            }
+            connect1.Visibility = System.Windows.Visibility.Hidden;
         }
 
         private void connect2_Click(object sender, RoutedEventArgs e)
         {
-            EstablishConnection(2);
-        }
-
-        private void EstablishConnection(int index)
-        {
             if (sensorChooser.Kinect != null)
             {
+                Console.WriteLine("sensorChooser is not null");
                 if (patientIPCollection[1] != null)
                 {
+                    Console.WriteLine("IP exists");
                     // Receiving video from patient1.
-                    _videoClient = new ColorClient();
-                    _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                    _videoClient.Connect(patientIPCollection[index], 4555 + index - 1);
+                    _videoClient2 = new ColorClient();
+                    _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
+                    _videoClient2.Connect(patientIPCollection[1], 4556);
 
-                    if (_videoClient.IsConnected)
-                    {
-                        connect1.Visibility = System.Windows.Visibility.Hidden;
-                    }
                 }
             }
+            if (_videoClient2.IsConnected)
+            {
+                connect2.Visibility = System.Windows.Visibility.Hidden;
+            }
         }
+
+        void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
+        {
+            Console.WriteLine("videoClient color frame is ready");
+            this.patientFrame1.Source = e.ColorFrame.BitmapImage;
+        }
+
+        void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
+        {
+            this.patientFrame2.Source = e.ColorFrame.BitmapImage;
+
+        }
+
         #endregion
     }
 }
+
+
