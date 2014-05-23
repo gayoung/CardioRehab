@@ -37,7 +37,7 @@ namespace CardioRehab_WPF
         private int user;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "142.244.214.100";
+        private String doctorIp = "192.168.0.101";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -546,7 +546,7 @@ namespace CardioRehab_WPF
 
             catch (SocketException e)
             {
-                Console.WriteLine("SocketException thrown at CreateSocketConnection");
+                Console.WriteLine("SocketException thrown at CreateSocketConnection: "+e.ErrorCode.ToString());
                 MessageBox.Show(e.Message);
             }
         }

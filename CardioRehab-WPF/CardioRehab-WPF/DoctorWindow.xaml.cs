@@ -514,7 +514,7 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("142.244.114.198", 4555);
+                _videoClient.Connect("192.168.0.101", 4555);
 
                 _videoClient2 = new ColorClient();
                 _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
@@ -574,7 +574,7 @@ namespace CardioRehab_WPF
                 try
                 {
                     e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-                    e.NewSensor.SkeletonStream.Enable();
+                    //e.NewSensor.SkeletonStream.Enable();
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
 
                     try
@@ -646,8 +646,9 @@ namespace CardioRehab_WPF
                 Console.WriteLine("sensorChooser is not null");
                 if (patientIPCollection[0] != null)
                 {
-                    Console.WriteLine("attempt to connect at " + patientIPCollection[0] + ":4555");
-                    _videoClient.Connect(patientIPCollection[0], 4555);
+                    Console.WriteLine("attempt to connect at "+patientIPCollection[0]);
+                    Console.WriteLine("?");
+                    _videoClient.Connect("192.168.0.101", 4555);
                 }
             }
             connect1.Visibility = System.Windows.Visibility.Hidden;
@@ -676,7 +677,6 @@ namespace CardioRehab_WPF
 
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
-            Console.WriteLine("videoClient color frame is ready");
             this.patientFrame1.Source = e.ColorFrame.BitmapImage;
         }
 
