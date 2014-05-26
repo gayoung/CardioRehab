@@ -3,6 +3,7 @@ using Coding4Fun.Kinect.KinectService.Listeners;
 using Coding4Fun.Kinect.KinectService.WpfClient;
 using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit;
+using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
@@ -37,7 +38,7 @@ namespace CardioRehab_WPF
         private int user;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "192.168.0.101";
+        private String doctorIp = "142.244.212.226";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -65,12 +66,17 @@ namespace CardioRehab_WPF
 
         //kinect clients
         private ColorClient _videoClient;
-        private AudioClient _audioClient;
         private SkeletonClient _skeletonClient;
         private DepthClient _depthClient;
 
         private WriteableBitmap outputImage;
         private byte[] pixels = new byte[0];
+
+        WaveOut wo = new WaveOut();
+        WaveFormat wf = new WaveFormat(16000, 1);
+        BufferedWaveProvider mybufferwp = null;
+
+        private AudioClient _audioClient;
 
         /// <summary>
         /// Constructor for this class
@@ -100,6 +106,7 @@ namespace CardioRehab_WPF
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeKinect();
+            InitializeAudio();
 
         }
 
@@ -580,6 +587,14 @@ namespace CardioRehab_WPF
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555+patientIndex-1, ImageFormat.Jpeg);
                 _videoListener.Start();
 
+                _audioClient = new AudioClient();
+                _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+                _audioClient.Connect(doctorIp, 4543);
+
+                //for sending audio
+                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4533);
+                _audioListener.Start();
+
             }
 
         }
@@ -665,7 +680,24 @@ namespace CardioRehab_WPF
         //called when a video frame from the client is ready
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
+            Console.WriteLine("new frame!");
             this.doctorFrame.Source = e.ColorFrame.BitmapImage;
+        }
+
+        private void InitializeAudio()
+        {
+            mybufferwp = new BufferedWaveProvider(wf);
+            mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
+            wo.Init(mybufferwp);
+            wo.Play();
+        }
+
+        void _audioClient_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
+        {
+            if (mybufferwp != null)
+            {
+                mybufferwp.AddSamples(e.AudioFrame.AudioData, 0, e.AudioFrame.AudioData.Length);
+            }
         }
 
 

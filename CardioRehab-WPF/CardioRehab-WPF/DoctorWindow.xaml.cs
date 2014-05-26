@@ -29,6 +29,7 @@ using DynamicDataDisplaySample.ECGViewModel;
 using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using System.ComponentModel;
+using NAudio.Wave;
 
 namespace CardioRehab_WPF
 {
@@ -73,6 +74,13 @@ namespace CardioRehab_WPF
         //private static ColorListener _videoListener1;
         //private static ColorListener _videoListener2;
 
+        WaveOut wo = new WaveOut();
+        WaveFormat wf = new WaveFormat(16000, 1);
+        BufferedWaveProvider mybufferwp = null;
+
+        private AudioClient _audioClient;
+        private static AudioListener _audioListener;
+
         private Random _Random;
         private int _maxECG;
 
@@ -114,6 +122,7 @@ namespace CardioRehab_WPF
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
             InitializeKinect(kinectOutPorts);
+            InitializeAudio();
 
             InitializeECG();
 
@@ -518,7 +527,7 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.0.101", 4555);
+                _videoClient.Connect("142.244.212.226", 4555);
 
                 _videoClient2 = new ColorClient();
                 _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
@@ -530,10 +539,14 @@ namespace CardioRehab_WPF
                     videoListenerCollection.Add(_videoListener);
                 }
 
-                /*/ Recieving audio from patient.
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("192.168.184.19", 4533); */
+                _audioClient.Connect("142.244.212.226", 4533);
+
+                //for sending audio
+                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4543);
+                _audioListener.Start();
+
             }
         }
 
@@ -644,15 +657,12 @@ namespace CardioRehab_WPF
         #region Connect button triggers
         private void connect1_Click(object sender, RoutedEventArgs e)
         {
-            Console.WriteLine("connect1 button triggered");
             if (sensorChooser.Kinect != null)
             {
-                Console.WriteLine("sensorChooser is not null");
                 if (patientIPCollection[0] != null)
                 {
-                    Console.WriteLine("attempt to connect at "+patientIPCollection[0]);
-                    Console.WriteLine("?");
-                    _videoClient.Connect("192.168.0.101", 4555);
+                    _videoClient.Connect("142.244.212.226", 4555);
+                    _audioClient.Connect("142.244.212.226", 4533);
                 }
             }
             connect1.Visibility = System.Windows.Visibility.Hidden;
@@ -677,10 +687,12 @@ namespace CardioRehab_WPF
             {
                 connect2.Visibility = System.Windows.Visibility.Hidden;
             }
+
         }
 
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
+            Console.WriteLine("new frame!");
             this.patientFrame1.Source = e.ColorFrame.BitmapImage;
         }
 
@@ -688,6 +700,22 @@ namespace CardioRehab_WPF
         {
             this.patientFrame2.Source = e.ColorFrame.BitmapImage;
 
+        }
+
+        private void InitializeAudio()
+        {
+            mybufferwp = new BufferedWaveProvider(wf);
+            mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
+            wo.Init(mybufferwp);
+            wo.Play();
+        }
+
+        void _audioClient_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
+        {
+            if (mybufferwp != null)
+            {
+                mybufferwp.AddSamples(e.AudioFrame.AudioData, 0, e.AudioFrame.AudioData.Length);
+            }
         }
 
         #endregion
