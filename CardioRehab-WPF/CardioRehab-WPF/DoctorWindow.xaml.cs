@@ -108,6 +108,10 @@ namespace CardioRehab_WPF
             int[] ports = new int[6] { 5000, 5001, 5002, 5003, 5004, 5005 };
             InitializeBioSockets(ports);
 
+        }
+
+        private void DoctorWindow_Loaded(object sender, RoutedEventArgs e)
+        {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
             InitializeKinect(kinectOutPorts);
 

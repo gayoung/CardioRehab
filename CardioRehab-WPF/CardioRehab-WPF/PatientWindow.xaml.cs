@@ -94,6 +94,11 @@ namespace CardioRehab_WPF
 
             //this.SizeChanged += new EventHandler(PatientMain_Resize);
 
+
+        }
+
+        private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
+        {
             InitializeKinect();
 
         }
