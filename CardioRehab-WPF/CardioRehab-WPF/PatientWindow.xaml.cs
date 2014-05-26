@@ -38,7 +38,7 @@ namespace CardioRehab_WPF
         private int user;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "142.244.212.226";
+        private String doctorIp = "142.244.214.236";
         private String patientLocalIp;
         private String wirelessIP;
 

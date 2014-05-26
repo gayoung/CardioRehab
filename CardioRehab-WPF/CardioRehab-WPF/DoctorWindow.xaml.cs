@@ -79,7 +79,10 @@ namespace CardioRehab_WPF
         BufferedWaveProvider mybufferwp = null;
 
         private AudioClient _audioClient;
-        private static AudioListener _audioListener;
+        private AudioClient _audioClient2;
+
+        private List<AudioListener> audioListenerCollection = new List<AudioListener>();
+        //private static AudioListener _audioListener;
 
         private Random _Random;
         private int _maxECG;
@@ -527,10 +530,11 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("142.244.212.226", 4555);
+                _videoClient.Connect("192.168.184.57", 4555);
 
                 _videoClient2 = new ColorClient();
                 _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
+                _videoClient2.Connect("192.168.184.19", 4556);
 
                 foreach (int portNum in ports)
                 {
@@ -541,11 +545,22 @@ namespace CardioRehab_WPF
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("142.244.212.226", 4533);
+                _audioClient.Connect("192.168.184.57", 4533);
+
+                _audioClient2 = new AudioClient();
+                _audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
+                _audioClient2.Connect("192.168.184.19", 4534);
 
                 //for sending audio
-                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4543);
-                _audioListener.Start();
+                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4543);
+                //_audioListener.Start();
+
+                foreach (int portNum in ports)
+                {
+                    AudioListener _audioListener = new AudioListener(this.sensorChooser.Kinect, portNum + 10);
+                    _audioListener.Start();
+                    audioListenerCollection.Add(_audioListener);
+                }
 
             }
         }
@@ -661,8 +676,8 @@ namespace CardioRehab_WPF
             {
                 if (patientIPCollection[0] != null)
                 {
-                    _videoClient.Connect("142.244.212.226", 4555);
-                    _audioClient.Connect("142.244.212.226", 4533);
+                    _videoClient.Connect("192.168.184.57", 4555);
+                    _audioClient.Connect("192.168.184.57", 4533);
                 }
             }
             connect1.Visibility = System.Windows.Visibility.Hidden;
@@ -672,27 +687,19 @@ namespace CardioRehab_WPF
         {
             if (sensorChooser.Kinect != null)
             {
-                Console.WriteLine("sensorChooser is not null");
-                if (patientIPCollection[1] != null)
+                if (patientIPCollection[0] != null)
                 {
-                    Console.WriteLine("IP exists");
-                    // Receiving video from patient1.
-                    _videoClient2 = new ColorClient();
-                    _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
-                    _videoClient2.Connect(patientIPCollection[1], 4556);
-
+                    _videoClient2.Connect("192.168.184.19", 4556);
+                    _audioClient2.Connect("192.168.184.19", 4534);
                 }
             }
-            if (_videoClient2.IsConnected)
-            {
-                connect2.Visibility = System.Windows.Visibility.Hidden;
-            }
+            connect2.Visibility = System.Windows.Visibility.Hidden;
 
         }
 
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
-            Console.WriteLine("new frame!");
+            //Console.WriteLine("new frame!");
             this.patientFrame1.Source = e.ColorFrame.BitmapImage;
         }
 
@@ -718,8 +725,18 @@ namespace CardioRehab_WPF
             }
         }
 
+        void _audioClient2_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
+        {
+            if (mybufferwp != null)
+            {
+                mybufferwp.AddSamples(e.AudioFrame.AudioData, 0, e.AudioFrame.AudioData.Length);
+            }
+        }
+
         #endregion
     }
 }
+
+
 
 
