@@ -7,10 +7,12 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,6 +35,7 @@ namespace CardioRehab_WPF
     /// </summary>
     public partial class PatientWindow : Window
     {
+        static string fname = string.Format("Tiny Tim-{0:yyyy-MM-dd hh.mm.ss.tt}.txt", DateTime.Now);
         private DatabaseClass db;
 
         private int user;
@@ -467,13 +470,14 @@ namespace CardioRehab_WPF
 
                 if (name.Length == 2)
                 {
-                    Console.WriteLine(name[1]);
-                    System.String[] data = name[1].Split(' ');
+                    System.String[] data = name[1].Trim().Split(' ');
                     String timeStamp = GetTimestamp(DateTime.Now);
 
                     byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
                     socketToClinician.Send(dataToClinician);
+
+                    var regexlimit = new Regex("^[0-9 ]*$");
 
                     // Decide on what encouragement text should be displayed based on heart rate.
                     if (data[0] == "HR")
@@ -483,9 +487,15 @@ namespace CardioRehab_WPF
                         bool result = Int32.TryParse(data[1], out number);
                         if(result)
                         {
-                            hrdata[hrcount] = Convert.ToInt32(data[1].Trim());
+                            hrdata[hrcount] = Convert.ToInt32(data[1]);
                             hrcount++;
-                            hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1] + " bpm"));
+                            // remove null char
+                            hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "") + " bpm"));
+                        }
+
+                        using (StreamWriter sw = File.AppendText(fname))
+                        {
+                            sw.WriteLine(timeStamp + " |" + "HR " + data[1]);
                         }
                     }
 
@@ -499,7 +509,7 @@ namespace CardioRehab_WPF
                         if (data[1] != null && data[2] != null)
                         {
                             oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = data[1] + " %"));
-                            hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2] + " bpm"));
+                           // hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2] + " bpm"));
                         }
                     }
 

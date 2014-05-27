@@ -558,6 +558,7 @@ namespace CardioRehab_WPF
 
                 foreach (int portNum in ports)
                 {
+                    Console.WriteLine("send audio to: " + Convert.ToInt32(portNum + 10));
                     AudioListener _audioListener = new AudioListener(this.sensorChooser.Kinect, portNum + 10);
                     _audioListener.Start();
                     audioListenerCollection.Add(_audioListener);
@@ -678,6 +679,9 @@ namespace CardioRehab_WPF
                 if (patientIPCollection[0] != null)
                 {
                     _videoClient.Connect("192.168.184.14", 4555);
+                }
+                if(patientIPCollection[0] != null)
+                {
                     _audioClient.Connect("192.168.184.14", 4537);
                 }
             }
