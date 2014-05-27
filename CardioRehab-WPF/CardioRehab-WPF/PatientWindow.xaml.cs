@@ -35,7 +35,7 @@ namespace CardioRehab_WPF
     /// </summary>
     public partial class PatientWindow : Window
     {
-        static string fname = string.Format("Tiny Tim-{0:yyyy-MM-dd hh.mm.ss.tt}.txt", DateTime.Now);
+        //static string fname = string.Format("Tiny Tim-{0:yyyy-MM-dd hh.mm.ss.tt}.txt", DateTime.Now);
         private DatabaseClass db;
 
         private int user;
@@ -168,7 +168,7 @@ namespace CardioRehab_WPF
             // current user does not have any IP addresses in the database record
             if (reader.HasRows)
             {
-                Console.WriteLine("at update");
+                //Console.WriteLine("at update");
                 SQLiteCommand updatecmd = new SQLiteCommand(db.m_dbconnection);
                 updatecmd.CommandText = "UPDATE patient SET wireless_ip = @wireless, local_ip = @local where patient_id = @id";
 
@@ -325,7 +325,7 @@ namespace CardioRehab_WPF
         /// </summary>
         private void PhoneTestMethod()
         {
-            Console.WriteLine("phone test method");
+            //Console.WriteLine("phone test method");
             String data;
             byte[] dataToClinician;
 
@@ -493,10 +493,12 @@ namespace CardioRehab_WPF
                             hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "") + " bpm"));
                         }
 
+                        /*/
                         using (StreamWriter sw = File.AppendText(fname))
                         {
                             sw.WriteLine(timeStamp + " |" + "HR " + data[1]);
                         }
+                         * /*/
                     }
 
                     // Change the Sats display in the UI thread.
@@ -550,17 +552,17 @@ namespace CardioRehab_WPF
 
                 if (doctorIp != null)
                 {
-                    Console.WriteLine(doctorIp);
+                    //Console.WriteLine(doctorIp);
 
                     System.Net.IPAddress remoteIPAddy = System.Net.IPAddress.Parse(doctorIp);
                     System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000 + patientIndex - 1);
                     socketToClinician.Connect(remoteEndPoint);
 
-                    Console.WriteLine(socketToClinician.Connected);
+                    //Console.WriteLine(socketToClinician.Connected);
 
                     if(socketToClinician.Connected)
                     {
-                        Console.WriteLine("start message formation");
+                        //Console.WriteLine("start message formation");
                         byte[] startData = System.Text.Encoding.ASCII.GetBytes("start|" + patientIndex.ToString() + "-" + user.ToString() + "-" + wirelessIP);
                         socketToClinician.Send(startData);
                     }
@@ -592,7 +594,7 @@ namespace CardioRehab_WPF
             // Don't try this unless there is a kinect
             if (this.sensorChooser.Kinect != null)
             {
-                Console.WriteLine("kinect is not null");
+                //Console.WriteLine("kinect is not null");
                 //trying to get the video from the clinician -- this can fail
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
@@ -696,7 +698,7 @@ namespace CardioRehab_WPF
         //called when a video frame from the client is ready
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
-            Console.WriteLine("new frame!");
+            //Console.WriteLine("new frame!");
             this.doctorFrame.Source = e.ColorFrame.BitmapImage;
         }
 
