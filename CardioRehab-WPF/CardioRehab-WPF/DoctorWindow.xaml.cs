@@ -530,12 +530,13 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.57", 4555);
+                _videoClient.Connect("192.168.184.14", 4555);
 
                 _videoClient2 = new ColorClient();
                 _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
                 _videoClient2.Connect("192.168.184.19", 4556);
 
+                //4531-4536
                 foreach (int portNum in ports)
                 {
                     ColorListener _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
@@ -545,11 +546,11 @@ namespace CardioRehab_WPF
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("192.168.184.57", 4533);
+                _audioClient.Connect("192.168.184.14", 4537);
 
                 _audioClient2 = new AudioClient();
                 _audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
-                _audioClient2.Connect("192.168.184.19", 4534);
+                _audioClient2.Connect("192.168.184.19", 4538);
 
                 //for sending audio
                 //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4543);
@@ -676,8 +677,8 @@ namespace CardioRehab_WPF
             {
                 if (patientIPCollection[0] != null)
                 {
-                    _videoClient.Connect("192.168.184.57", 4555);
-                    _audioClient.Connect("192.168.184.57", 4533);
+                    _videoClient.Connect("192.168.184.14", 4555);
+                    _audioClient.Connect("192.168.184.14", 4537);
                 }
             }
             connect1.Visibility = System.Windows.Visibility.Hidden;
@@ -690,7 +691,7 @@ namespace CardioRehab_WPF
                 if (patientIPCollection[0] != null)
                 {
                     _videoClient2.Connect("192.168.184.19", 4556);
-                    _audioClient2.Connect("192.168.184.19", 4534);
+                    _audioClient2.Connect("192.168.184.19", 4538);
                 }
             }
             connect2.Visibility = System.Windows.Visibility.Hidden;

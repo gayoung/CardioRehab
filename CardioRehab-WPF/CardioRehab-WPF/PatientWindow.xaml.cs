@@ -38,7 +38,7 @@ namespace CardioRehab_WPF
         private int user;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "142.244.214.236";
+        private String doctorIp = "192.168.184.43";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -92,11 +92,11 @@ namespace CardioRehab_WPF
             CheckRecord();
             InitializeComponent();
 
-            //InitializeBioSockets();
+            InitializeBioSockets();
             CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            InitTimer();
+            //InitTimer();
 
             //this.SizeChanged += new EventHandler(PatientMain_Resize);
 
@@ -467,6 +467,7 @@ namespace CardioRehab_WPF
 
                 if (name.Length == 2)
                 {
+                    Console.WriteLine(name[1]);
                     System.String[] data = name[1].Split(' ');
                     String timeStamp = GetTimestamp(DateTime.Now);
 
@@ -478,9 +479,14 @@ namespace CardioRehab_WPF
                     if (data[0] == "HR")
                     {
                         //BT
-                        hrdata[hrcount] = Convert.ToInt32(data[1]);
-                        hrcount++;
-                        hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1] + " bpm"));
+                        int number;
+                        bool result = Int32.TryParse(data[1], out number);
+                        if(result)
+                        {
+                            hrdata[hrcount] = Convert.ToInt32(data[1].Trim());
+                            hrcount++;
+                            hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1] + " bpm"));
+                        }
                     }
 
                     // Change the Sats display in the UI thread.
@@ -589,10 +595,10 @@ namespace CardioRehab_WPF
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect(doctorIp, 4543);
+                _audioClient.Connect(doctorIp, 4541);
 
                 //for sending audio
-                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4533);
+                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4537);
                 _audioListener.Start();
 
             }
