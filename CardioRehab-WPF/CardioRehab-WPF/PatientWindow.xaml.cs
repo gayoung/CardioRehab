@@ -27,7 +27,6 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using ColorImageFormat = Microsoft.Kinect.ColorImageFormat;
 using ColorImageFrame = Microsoft.Kinect.ColorImageFrame;
-using DepthImageFormat = Microsoft.Kinect.DepthImageFormat;
 
 namespace CardioRehab_WPF
 {
@@ -63,7 +62,6 @@ namespace CardioRehab_WPF
         private KinectSensorChooser sensorChooser;
 
         //kinect listeners
-        private static DepthListener _depthListener;
         private static ColorListener _videoListener;
         private static AudioListener _audioListener;
 
@@ -601,7 +599,7 @@ namespace CardioRehab_WPF
                 //trying to get the video from the clinician -- this can fail
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect(doctorIp, 4531+patientIndex);
+                _videoClient.Connect(doctorIp, 4531+patientIndex-1);
 
 
                 // Streaming video out on port 4555
@@ -634,8 +632,6 @@ namespace CardioRehab_WPF
             {
                 try
                 {
-                    e.OldSensor.DepthStream.Range = DepthRange.Default;
-                    e.OldSensor.DepthStream.Disable();
                     e.OldSensor.ColorStream.Disable();
                 }
                 catch (InvalidOperationException)
@@ -651,11 +647,8 @@ namespace CardioRehab_WPF
             {
                 try
                 {
-                    e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
                     e.NewSensor.ColorFrameReady += NewSensor_ColorFrameReady;
-
-
                     
                 }
                 catch (InvalidOperationException)
@@ -704,6 +697,7 @@ namespace CardioRehab_WPF
 
         private void InitializeAudio()
         {
+            wo.DesiredLatency = 100;
             mybufferwp = new BufferedWaveProvider(wf);
             mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
             wo.Init(mybufferwp);

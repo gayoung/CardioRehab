@@ -23,7 +23,6 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using ColorImageFormat = Microsoft.Kinect.ColorImageFormat;
 using ColorImageFrame = Microsoft.Kinect.ColorImageFrame;
-using DepthImageFormat = Microsoft.Kinect.DepthImageFormat;
 
 using DynamicDataDisplaySample.ECGViewModel;
 using Microsoft.Research.DynamicDataDisplay;
@@ -66,12 +65,12 @@ namespace CardioRehab_WPF
         private byte[] pixels = new byte[0];
 
         private ColorClient _videoClient;
-        private ColorClient _videoClient2;
+        //private ColorClient _videoClient2;
         //private AudioClient _audioClient;
 
-        private List<ColorListener> videoListenerCollection = new List<ColorListener>();
+        //private List<ColorListener> videoListenerCollection = new List<ColorListener>();
 
-        //private static ColorListener _videoListener1;
+        private static ColorListener _videoListener;
         //private static ColorListener _videoListener2;
 
         WaveOut wo = new WaveOut();
@@ -79,10 +78,10 @@ namespace CardioRehab_WPF
         BufferedWaveProvider mybufferwp = null;
 
         private AudioClient _audioClient;
-        private AudioClient _audioClient2;
+        //private AudioClient _audioClient2;
 
-        private List<AudioListener> audioListenerCollection = new List<AudioListener>();
-        //private static AudioListener _audioListener;
+        //private List<AudioListener> audioListenerCollection = new List<AudioListener>();
+        private static AudioListener _audioListener;
 
         private Random _Random;
         private int _maxECG;
@@ -530,50 +529,45 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.14", 4555);
+                _videoClient.Connect("192.168.184.43", 4555);
 
-                _videoClient2 = new ColorClient();
-                _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
-                _videoClient2.Connect("192.168.184.19", 4556);
+                //_videoClient2 = new ColorClient();
+               // _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
+                //_videoClient2.Connect("192.168.184.19", 4556);
 
                 //4531-4536
-                foreach (int portNum in ports)
-                {
-                    ColorListener _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
-                    _videoListener.Start();
-                    videoListenerCollection.Add(_videoListener);
-                }
+                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
+                _videoListener.Start();
+
+                //foreach (int portNum in ports)
+                //{
+                //    ColorListener _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
+                //    _videoListener.Start();
+                //    videoListenerCollection.Add(_videoListener);
+                //}
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("192.168.184.14", 4537);
+                _audioClient.Connect("192.168.184.43", 4537);
 
-                _audioClient2 = new AudioClient();
-                _audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
-                _audioClient2.Connect("192.168.184.19", 4538);
+                //_audioClient2 = new AudioClient();
+                //_audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
+                //_audioClient2.Connect("192.168.184.19", 4538);
 
                 //for sending audio
-                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4543);
-                //_audioListener.Start();
+                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4541);
+                _audioListener.Start();
 
-                foreach (int portNum in ports)
-                {
-                    Console.WriteLine("send audio to: " + Convert.ToInt32(portNum + 10));
-                    AudioListener _audioListener = new AudioListener(this.sensorChooser.Kinect, portNum + 10);
-                    _audioListener.Start();
-                    audioListenerCollection.Add(_audioListener);
-                }
+                //foreach (int portNum in ports)
+                //{
+                //    Console.WriteLine("send audio to: " + Convert.ToInt32(portNum + 10));
+                //    AudioListener _audioListener = new AudioListener(this.sensorChooser.Kinect, portNum + 10);
+                //    _audioListener.Start();
+                //    audioListenerCollection.Add(_audioListener);
+                //}
 
             }
         }
-
-        /* private void InitializeAudio()
-         {
-             mybufferwp = new BufferedWaveProvider(wf);
-             mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
-             wo.Init(mybufferwp);
-             wo.Play();
-         }*/
 
         /// <summary>
         /// Called when the KinectSensorChooser gets a new sensor
@@ -589,8 +583,6 @@ namespace CardioRehab_WPF
             {
                 try
                 {
-                    e.OldSensor.DepthStream.Range = DepthRange.Default;
-                    e.OldSensor.DepthStream.Disable();
                     e.OldSensor.ColorStream.Disable();
                 }
                 catch (InvalidOperationException)
@@ -605,18 +597,7 @@ namespace CardioRehab_WPF
             {
                 try
                 {
-                    e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
-
-                    try
-                    {
-                        e.NewSensor.DepthStream.Range = DepthRange.Near;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // Non Kinect for Windows devices do not support Near mode, so reset back to default mode.
-                        e.NewSensor.DepthStream.Range = DepthRange.Default;
-                    }
                 }
                 catch (InvalidOperationException)
                 {
@@ -668,14 +649,14 @@ namespace CardioRehab_WPF
         {
             if (sensorChooser.Kinect != null)
             {
-                if (patientIPCollection[0] != null)
-                {
-                    _videoClient.Connect("192.168.184.14", 4555);
-                }
-                if(patientIPCollection[0] != null)
-                {
-                    _audioClient.Connect("192.168.184.14", 4537);
-                }
+                //if (patientIPCollection[0] != null)
+                //{
+                    _videoClient.Connect("192.168.184.43", 4555);
+                //}
+                //if(patientIPCollection[0] != null)
+                //{
+                    _audioClient.Connect("192.168.184.43", 4537);
+                //}
             }
             connect1.Visibility = System.Windows.Visibility.Hidden;
         }
@@ -686,8 +667,8 @@ namespace CardioRehab_WPF
             {
                 if (patientIPCollection[0] != null)
                 {
-                    _videoClient2.Connect("192.168.184.19", 4556);
-                    _audioClient2.Connect("192.168.184.19", 4538);
+                    //_videoClient2.Connect("192.168.184.19", 4556);
+                    //_audioClient2.Connect("192.168.184.19", 4538);
                 }
             }
             connect2.Visibility = System.Windows.Visibility.Hidden;
@@ -700,14 +681,15 @@ namespace CardioRehab_WPF
             this.patientFrame1.Source = e.ColorFrame.BitmapImage;
         }
 
-        void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
-        {
-            this.patientFrame2.Source = e.ColorFrame.BitmapImage;
+        //void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
+        //{
+        //    this.patientFrame2.Source = e.ColorFrame.BitmapImage;
 
-        }
+        //}
 
         private void InitializeAudio()
         {
+            wo.DesiredLatency = 100;
             mybufferwp = new BufferedWaveProvider(wf);
             mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
             wo.Init(mybufferwp);
@@ -722,13 +704,13 @@ namespace CardioRehab_WPF
             }
         }
 
-        void _audioClient2_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
-        {
-            if (mybufferwp != null)
-            {
-                mybufferwp.AddSamples(e.AudioFrame.AudioData, 0, e.AudioFrame.AudioData.Length);
-            }
-        }
+        //void _audioClient2_AudioFrameReady(object sender, AudioFrameReadyEventArgs e)
+        //{
+        //    if (mybufferwp != null)
+        //    {
+        //        mybufferwp.AddSamples(e.AudioFrame.AudioData, 0, e.AudioFrame.AudioData.Length);
+        //    }
+        //}
 
         #endregion
     }
