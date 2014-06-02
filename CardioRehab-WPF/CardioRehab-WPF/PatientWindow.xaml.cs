@@ -7,6 +7,7 @@ using NAudio.Wave;
 using System;
 using System.Collections.Generic;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -64,12 +65,10 @@ namespace CardioRehab_WPF
         //kinect listeners
         private static DepthListener _depthListener;
         private static ColorListener _videoListener;
-        private static SkeletonListener _skeletonListener;
         private static AudioListener _audioListener;
 
         //kinect clients
         private ColorClient _videoClient;
-        private SkeletonClient _skeletonClient;
         private DepthClient _depthClient;
 
         private WriteableBitmap outputImage;
@@ -96,7 +95,7 @@ namespace CardioRehab_WPF
             InitializeComponent();
 
             InitializeBioSockets();
-            CreateSocketConnection();
+            //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
             //InitTimer();
@@ -302,6 +301,8 @@ namespace CardioRehab_WPF
             {
                 if (addr.AddressFamily == AddressFamily.InterNetwork)
                 {
+                    Console.WriteLine("All the IP addresses read: ");
+                    Console.WriteLine(addr.ToString());
                     if (Ipcounter == 0)
                     {
                         patientLocalIp = addr.ToString();
@@ -532,6 +533,8 @@ namespace CardioRehab_WPF
             catch (SocketException e)
             {
                 Console.WriteLine("SocketException at OnBioDataReceived");
+                // this error is thrown when the doctor disconnects
+                // need to add code to close sockets and close the application
                 MessageBox.Show(e.Message);
             }
 
@@ -632,9 +635,7 @@ namespace CardioRehab_WPF
                 try
                 {
                     e.OldSensor.DepthStream.Range = DepthRange.Default;
-                    e.OldSensor.SkeletonStream.EnableTrackingInNearRange = false;
                     e.OldSensor.DepthStream.Disable();
-                    e.OldSensor.SkeletonStream.Disable();
                     e.OldSensor.ColorStream.Disable();
                 }
                 catch (InvalidOperationException)
@@ -651,7 +652,6 @@ namespace CardioRehab_WPF
                 try
                 {
                     e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-                    //e.NewSensor.SkeletonStream.Enable();
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
                     e.NewSensor.ColorFrameReady += NewSensor_ColorFrameReady;
 

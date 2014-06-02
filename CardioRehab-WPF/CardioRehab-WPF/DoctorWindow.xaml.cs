@@ -590,9 +590,7 @@ namespace CardioRehab_WPF
                 try
                 {
                     e.OldSensor.DepthStream.Range = DepthRange.Default;
-                    e.OldSensor.SkeletonStream.EnableTrackingInNearRange = false;
                     e.OldSensor.DepthStream.Disable();
-                    e.OldSensor.SkeletonStream.Disable();
                     e.OldSensor.ColorStream.Disable();
                 }
                 catch (InvalidOperationException)
@@ -608,22 +606,16 @@ namespace CardioRehab_WPF
                 try
                 {
                     e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-                    //e.NewSensor.SkeletonStream.Enable();
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
 
                     try
                     {
                         e.NewSensor.DepthStream.Range = DepthRange.Near;
-                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = true;
-
-                        //seated mode could come in handy on the bike -- uncomment below
-                        //e.NewSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
                     }
                     catch (InvalidOperationException)
                     {
                         // Non Kinect for Windows devices do not support Near mode, so reset back to default mode.
                         e.NewSensor.DepthStream.Range = DepthRange.Default;
-                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = false;
                     }
                 }
                 catch (InvalidOperationException)

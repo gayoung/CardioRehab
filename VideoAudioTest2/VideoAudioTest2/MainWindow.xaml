@@ -1,0 +1,12 @@
+﻿<Window x:Class="VideoAudioTest2.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:k="http://schemas.microsoft.com/kinect/2013"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi" />
+        <Image x:Name="MyImage"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill"  Height="143" Margin="10,10,285,167" Width="222"/>
+        <Image x:Name="OtherImage"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill"  Height="143" Margin="285,10,10,167" Width="222"/>
+
+    </Grid>
+</Window>
