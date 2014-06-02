@@ -19,7 +19,6 @@ using Coding4Fun.Kinect.KinectService.Common;
 using Coding4Fun.Kinect.KinectService.WpfClient;
 using ColorImageFormat = Microsoft.Kinect.ColorImageFormat;
 using ColorImageFrame = Microsoft.Kinect.ColorImageFrame;
-using DepthImageFormat = Microsoft.Kinect.DepthImageFormat;
 using System.Diagnostics;
 using System.Threading;
 //for regular sockets
@@ -51,16 +50,12 @@ namespace VideoAudioTest
         private KinectSensorChooser sensorChooser;
 
         //kinect listeners
-        private static DepthListener _depthListener;
         private static ColorListener _videoListener;
-        private static SkeletonListener _skeletonListener;
         private static AudioListener _audioListener;
 
         //kinect clients
         private ColorClient _videoClient;
         private AudioClient _audioClient;
-        private SkeletonClient _skeletonClient;
-        private DepthClient _depthClient;
 
         #endregion
 
@@ -69,6 +64,7 @@ namespace VideoAudioTest
             InitializeComponent();
             //start the kinect
             InitializeKinect();
+            InitializeAudio();
 
         }
 
@@ -108,6 +104,7 @@ namespace VideoAudioTest
 
         private void InitializeAudio()
         {
+            wo.DesiredLatency = 100;
             mybufferwp = new BufferedWaveProvider(wf);
             mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
             wo.Init(mybufferwp);
@@ -127,10 +124,6 @@ namespace VideoAudioTest
             {
                 try
                 {
-                    e.OldSensor.DepthStream.Range = DepthRange.Default;
-                    e.OldSensor.SkeletonStream.EnableTrackingInNearRange = false;
-                    e.OldSensor.DepthStream.Disable();
-                    e.OldSensor.SkeletonStream.Disable();
                     e.OldSensor.ColorStream.Disable();
                 }
                 catch (InvalidOperationException)
@@ -145,26 +138,9 @@ namespace VideoAudioTest
             {
                 try
                 {
-                    e.NewSensor.DepthStream.Enable(DepthImageFormat.Resolution640x480Fps30);
-                    //e.NewSensor.SkeletonStream.Enable();
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
                     e.NewSensor.ColorFrameReady += NewSensor_ColorFrameReady;
 
-
-                    try
-                    {
-                        e.NewSensor.DepthStream.Range = DepthRange.Near;
-                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = true;
-
-                        //seated mode could come in handy on the bike -- uncomment below
-                        //e.NewSensor.SkeletonStream.TrackingMode = SkeletonTrackingMode.Seated;
-                    }
-                    catch (InvalidOperationException)
-                    {
-                        // Non Kinect for Windows devices do not support Near mode, so reset back to default mode.
-                        e.NewSensor.DepthStream.Range = DepthRange.Default;
-                        e.NewSensor.SkeletonStream.EnableTrackingInNearRange = false;
-                    }
                 }
                 catch (InvalidOperationException)
                 {

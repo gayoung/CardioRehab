@@ -69,6 +69,7 @@ namespace VideoAudioTest2
             InitializeComponent();
             //start the kinect
             InitializeKinect();
+            InitializeAudio();
 
         }
 
@@ -107,6 +108,7 @@ namespace VideoAudioTest2
 
         private void InitializeAudio()
         {
+            wo.DesiredLatency = 100;
             mybufferwp = new BufferedWaveProvider(wf);
             mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
             wo.Init(mybufferwp);
