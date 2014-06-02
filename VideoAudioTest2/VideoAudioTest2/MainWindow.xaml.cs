@@ -86,7 +86,7 @@ namespace VideoAudioTest2
                 //trying to get the video from the clinician -- this can fail
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.39", 4555);
+                _videoClient.Connect("192.168.184.14", 4555);
 
                 // Streaming video out on port 4555
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
@@ -95,7 +95,7 @@ namespace VideoAudioTest2
                 //trying to get the audio from the client -- this can fail
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("192.168.184.9", 4535);
+                _audioClient.Connect("192.168.184.14", 4535);
 
                 //for sending audio
                 _audioListener = new AudioListener(this.sensorChooser.Kinect, 4533);
