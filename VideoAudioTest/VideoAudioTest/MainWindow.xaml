@@ -7,6 +7,7 @@
         <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi" />
         <Image x:Name="MyImage"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill"  Height="143" Margin="10,10,285,167" Width="222"/>
         <Image x:Name="OtherImage"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill"  Height="143" Margin="285,10,10,167" Width="222"/>
+        <Button x:Name="connect_button" Content="Connect" HorizontalAlignment="Left" Height="45" Margin="203,217,0,0" VerticalAlignment="Top" Width="143" Click="connect_button_Click"/>
 
     </Grid>
 </Window>

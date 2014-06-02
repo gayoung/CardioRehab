@@ -87,7 +87,7 @@ namespace VideoAudioTest
                 //trying to get the video from the clinician -- this can fail
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.39", 4531);
+                _videoClient.Connect("192.168.184.43", 4531);
 
                 // Streaming video out on port 4555
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555, ImageFormat.Jpeg);
@@ -96,7 +96,7 @@ namespace VideoAudioTest
                 //trying to get the audio from the client -- this can fail
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("192.168.184.9", 4533);
+                _audioClient.Connect("192.168.184.43", 4533);
 
                 //for sending audio
                 _audioListener = new AudioListener(this.sensorChooser.Kinect, 4535);
@@ -216,6 +216,12 @@ namespace VideoAudioTest
             {
                 mybufferwp.AddSamples(e.AudioFrame.AudioData, 0, e.AudioFrame.AudioData.Length);
             }
+        }
+
+        private void connect_button_Click(object sender, RoutedEventArgs e)
+        {
+            _videoClient.Connect("192.168.184.43", 4531);
+            _audioClient.Connect("192.168.184.43", 4533);
         }
         #endregion
 
