@@ -65,12 +65,11 @@ namespace CardioRehab_WPF
         private byte[] pixels = new byte[0];
 
         private ColorClient _videoClient;
-        //private ColorClient _videoClient2;
-        //private AudioClient _audioClient;
+        private ColorClient _videoClient2;
 
-        //private List<ColorListener> videoListenerCollection = new List<ColorListener>();
+        private List<ColorListener> videoListenerCollection = new List<ColorListener>();
 
-        private static ColorListener _videoListener;
+        //private static ColorListener _videoListener;
         //private static ColorListener _videoListener2;
 
         WaveOut wo = new WaveOut();
@@ -395,9 +394,13 @@ namespace CardioRehab_WPF
                     switch (name[0].Trim())
                     {
                         case "start":
+                            Console.WriteLine("start message");
                             String[] restofData = sentData[1].Split('-');
                             int index = Convert.ToInt32(restofData[0].Trim());
+                            Console.WriteLine("index: " + index.ToString());
                             patientIPCollection.Insert(index - 1, restofData[2].Trim());
+                            Console.WriteLine("IP: " + patientIPCollection[index - 1]);
+                            Console.WriteLine("restofData value: " + restofData[2].Trim());
                             patientid = Convert.ToInt32(restofData[1]);
                             break;
 
@@ -531,20 +534,20 @@ namespace CardioRehab_WPF
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
                 _videoClient.Connect("192.168.184.43", 4555);
 
-                //_videoClient2 = new ColorClient();
-               // _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
-                //_videoClient2.Connect("192.168.184.19", 4556);
+                _videoClient2 = new ColorClient();
+                _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
+                _videoClient2.Connect("192.168.184.19", 4556);
 
                 //4531-4536
-                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
-                _videoListener.Start();
+                //_videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
+                //_videoListener.Start();
 
-                //foreach (int portNum in ports)
-                //{
-                //    ColorListener _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
-                //    _videoListener.Start();
-                //    videoListenerCollection.Add(_videoListener);
-                //}
+                foreach (int portNum in ports)
+                {
+                    ColorListener _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
+                    _videoListener.Start();
+                    videoListenerCollection.Add(_videoListener);
+                }
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
@@ -649,6 +652,7 @@ namespace CardioRehab_WPF
         {
             if (sensorChooser.Kinect != null)
             {
+                Console.WriteLine("patient IP: " + patientIPCollection[0]);
                 //if (patientIPCollection[0] != null)
                 //{
                     _videoClient.Connect("192.168.184.43", 4555);
@@ -681,11 +685,11 @@ namespace CardioRehab_WPF
             this.patientFrame1.Source = e.ColorFrame.BitmapImage;
         }
 
-        //void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
-        //{
-        //    this.patientFrame2.Source = e.ColorFrame.BitmapImage;
+        void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
+        {
+            this.patientFrame2.Source = e.ColorFrame.BitmapImage;
 
-        //}
+        }
 
         private void InitializeAudio()
         {
