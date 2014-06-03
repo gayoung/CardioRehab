@@ -102,15 +102,15 @@ namespace CardioRehab_WPF
 
             // patients send the biodata from port 5000-5005
             int[] ports = new int[6] { 5000, 5001, 5002, 5003, 5004, 5005 };
-            InitializeBioSockets(ports);
+            //InitializeBioSockets(ports);
 
         }
 
         private void DoctorWindow_Loaded(object sender, RoutedEventArgs e)
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
-            InitializeKinect(kinectOutPorts);
-            InitializeAudio();
+            //InitializeKinect(kinectOutPorts);
+            //InitializeAudio();
 
             InitializeECG();
 
@@ -696,6 +696,15 @@ namespace CardioRehab_WPF
         //    }
         //}
 
+        #endregion
+
+        #region MemoButton trigger
+
+        private void memo1_Click(object sender, RoutedEventArgs e)
+        {
+            PopupWindow popup = new PopupWindow();
+            popup.ShowDialog();
+        }
         #endregion
     }
 }

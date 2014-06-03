@@ -21,13 +21,13 @@
                     <Label x:Name="hrValue1" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
                     <Label x:Name="oxiValue1" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
                     <Label x:Name="bpValue1" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                    <Button x:Name="memo1" Height="47" Canvas.Left="147" Canvas.Top="156" Width="47">
+                    <Button x:Name="memo1" Height="38" Canvas.Left="156" Canvas.Top="156" Width="38" Click="memo1_Click">
                         <Image Source="note.png" Width="29"/>
                     </Button>
-                    <Button x:Name="mute1" Height="47" Canvas.Left="199" Canvas.Top="156" Width="47">
+                    <Button x:Name="mute1" Height="38" Canvas.Left="208" Canvas.Top="156" Width="38">
                         <Image Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand1" Height="47" Canvas.Left="251" Canvas.Top="156" Width="47">
+                    <Button x:Name="expand1" Height="38" Canvas.Left="260" Canvas.Top="156" Width="38">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning1" Content="Warning" Canvas.Left="217" Canvas.Top="10" Foreground="#FFFD0707" Width="81" FontSize="16" FontWeight="Bold"/>
@@ -59,13 +59,13 @@
                     <Label x:Name="hrValue2" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
                     <Label x:Name="oxiValue2" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
                     <Label x:Name="bpValue2" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                    <Button x:Name="memo2" Height="47" Canvas.Left="147" Canvas.Top="156" Width="47">
+                    <Button x:Name="memo2" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38">
                         <Image Source="note.png" Width="29"/>
                     </Button>
-                    <Button x:Name="mute2" Height="47" Canvas.Left="199" Canvas.Top="156" Width="47">
+                    <Button x:Name="mute2" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38">
                         <Image Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand2" Height="47" Canvas.Left="251" Canvas.Top="156" Width="47">
+                    <Button x:Name="expand2" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning2" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
@@ -86,13 +86,13 @@
                     <Label x:Name="hrValue3" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
                     <Label x:Name="oxiValue3" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
                     <Label x:Name="bpValue3" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                    <Button x:Name="memo3" Height="47" Canvas.Left="147" Canvas.Top="156" Width="47">
+                    <Button x:Name="memo3" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38">
                         <Image Source="note.png" Width="29"/>
                     </Button>
-                    <Button x:Name="mute3" Height="47" Canvas.Left="199" Canvas.Top="156" Width="47">
+                    <Button x:Name="mute3" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38">
                         <Image Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand3" Height="47" Canvas.Left="251" Canvas.Top="156" Width="47">
+                    <Button x:Name="expand3" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning3" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
@@ -113,13 +113,13 @@
                     <Label x:Name="hrValue4" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
                     <Label x:Name="oxiValue4" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
                     <Label x:Name="bpValue4" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                    <Button x:Name="memo4" Height="47" Canvas.Left="147" Canvas.Top="156" Width="47">
+                    <Button x:Name="memo4" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38">
                         <Image Source="note.png" Width="29"/>
                     </Button>
-                    <Button x:Name="mute4" Height="47" Canvas.Left="199" Canvas.Top="156" Width="47">
+                    <Button x:Name="mute4" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38">
                         <Image Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand4" Height="47" Canvas.Left="251" Canvas.Top="156" Width="47">
+                    <Button x:Name="expand4" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning4" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
@@ -140,13 +140,13 @@
                     <Label x:Name="hrValue5" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
                     <Label x:Name="oxiValue5" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
                     <Label x:Name="bpValue5" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                    <Button x:Name="memo5" Height="47" Canvas.Left="147" Canvas.Top="156" Width="47">
+                    <Button x:Name="memo5" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38">
                         <Image Source="note.png" Width="29"/>
                     </Button>
-                    <Button x:Name="mute5" Height="47" Canvas.Left="199" Canvas.Top="156" Width="47">
+                    <Button x:Name="mute5" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38">
                         <Image Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand5" Height="47" Canvas.Left="251" Canvas.Top="156" Width="47">
+                    <Button x:Name="expand5" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning5" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
@@ -167,13 +167,13 @@
                     <Label x:Name="hrValue6" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
                     <Label x:Name="oxiValue6" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
                     <Label x:Name="bpValue6" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
-                    <Button x:Name="memo6" Height="47" Canvas.Left="147" Canvas.Top="156" Width="47">
+                    <Button x:Name="memo6" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38">
                         <Image Source="note.png" Width="29"/>
                     </Button>
-                    <Button x:Name="mute6" Height="47" Canvas.Left="199" Canvas.Top="156" Width="47">
+                    <Button x:Name="mute6" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38">
                         <Image Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand6" Height="47" Canvas.Left="251" Canvas.Top="156" Width="47">
+                    <Button x:Name="expand6" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning6" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
