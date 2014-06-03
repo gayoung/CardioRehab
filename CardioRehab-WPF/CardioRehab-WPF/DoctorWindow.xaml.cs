@@ -116,7 +116,7 @@ namespace CardioRehab_WPF
 
             // patients send the biodata from port 5000-5005
             int[] ports = new int[6] { 5000, 5001, 5002, 5003, 5004, 5005 };
-            //InitializeBioSockets(ports);
+            InitializeBioSockets(ports);
 
         }
 

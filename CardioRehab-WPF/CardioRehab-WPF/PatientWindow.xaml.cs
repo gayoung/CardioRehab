@@ -92,7 +92,7 @@ namespace CardioRehab_WPF
             CheckRecord();
             InitializeComponent();
 
-            //InitializeBioSockets();
+            InitializeBioSockets();
             //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
