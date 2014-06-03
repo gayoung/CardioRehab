@@ -41,7 +41,6 @@ namespace CardioRehab_WPF
 
         private int userid;
         private int patientid;
-        private int patientIndex;
         private List<String> patientIPCollection = new List<String>();
 
         private String localIP;
@@ -54,23 +53,12 @@ namespace CardioRehab_WPF
 
         private KinectSensorChooser sensorChooser;
 
-        bool _isInit;
-        private WriteableBitmap outputImage;
-        private WriteableBitmap inputImage1;
-        private WriteableBitmap inputImage2;
-        private WriteableBitmap inputImage3;
-        private WriteableBitmap inputImage4;
-        private WriteableBitmap inputImage5;
-        private WriteableBitmap inputImage6;
         private byte[] pixels = new byte[0];
 
         private ColorClient _videoClient;
         private ColorClient _videoClient2;
 
         private List<ColorListener> videoListenerCollection = new List<ColorListener>();
-
-        //private static ColorListener _videoListener;
-        //private static ColorListener _videoListener2;
 
         WaveOut wo = new WaveOut();
         WaveFormat wf = new WaveFormat(16000, 1);
@@ -107,7 +95,6 @@ namespace CardioRehab_WPF
         {
             db = openDB;
             userid = currentuser;
-
 
             GetLocalIP();
             CheckRecord();
@@ -357,8 +344,8 @@ namespace CardioRehab_WPF
                 receivedData = Regex.Replace(receivedData, @"\t|\n|\r", " ");
 
                 // DEBUGGING
-                Console.WriteLine("data passed");
-                Console.WriteLine(receivedData);
+                //Console.WriteLine("data passed");
+                //Console.WriteLine(receivedData);
 
                 processData(receivedData);
                 WaitForBioData(socketData.packetSocket, state.port);
@@ -376,12 +363,8 @@ namespace CardioRehab_WPF
 
         private void processData(String tmp)
         {
-            Console.WriteLine("processData");
             String[] sentData = tmp.Split('|');
             String[] name = sentData[0].Split('-');
-
-            Console.WriteLine(sentData[0]);
-            Console.WriteLine(sentData[1]);
 
             for (int i = 1; i < sentData.Length; i++)
             {
@@ -390,106 +373,107 @@ namespace CardioRehab_WPF
                 // Set the UI in the main thread.
                 this.Dispatcher.Invoke((Action)(() =>
                 {
+                    String currentLabel = name[0].Trim();
+                    Console.WriteLine("name at processData");
                     Console.WriteLine(name[0]);
-                    switch (name[0].Trim())
+                    switch (currentLabel)
                     {
-                        case "start":
-                            Console.WriteLine("start message");
-                            String[] restofData = sentData[1].Split('-');
-                            int index = Convert.ToInt32(restofData[0].Trim());
-                            Console.WriteLine("index: " + index.ToString());
-                            patientIPCollection.Insert(index - 1, restofData[2].Trim());
-                            Console.WriteLine("IP: " + patientIPCollection[index - 1]);
-                            Console.WriteLine("restofData value: " + restofData[2].Trim());
-                            patientid = Convert.ToInt32(restofData[1]);
-                            break;
-
                         case "patient1":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue1.Content = data[1] + " bpm";
+                                hrValue1.Content = data[1].Trim() + " bpm";
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue1.Content = data[1] + "%";
+                                oxiValue1.Content = data[1].Trim() + "%";
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue1.Content = data[1] + "/" + data[2];
+                                bpValue1.Content = data[1].Trim() + "/" + data[2];
                             }
                             break;
 
                         case "patient2":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue2.Content = data[1] + " bpm";
+                                hrValue2.Content = data[1].Trim() + " bpm";
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue2.Content = data[1] + "%";
+                                oxiValue2.Content = data[1].Trim() + "%";
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue2.Content = data[1] + "/" + data[2];
+                                bpValue2.Content = data[1].Trim() + "/" + data[2];
                             }
                             break;
 
                         case "patient3":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue3.Content = data[1] + " bpm";
+                                hrValue3.Content = data[1].Trim() + " bpm";
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue3.Content = data[1] + "%";
+                                oxiValue3.Content = data[1].Trim() + "%";
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue3.Content = data[1] + "/" + data[2];
+                                bpValue3.Content = data[1].Trim() + "/" + data[2];
                             }
                             break;
 
                         case "patient4":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue4.Content = data[1] + " bpm";
+                                hrValue4.Content = data[1].Trim() + " bpm";
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue4.Content = data[1] + "%";
+                                oxiValue4.Content = data[1].Trim() + "%";
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue4.Content = data[1] + "/" + data[2];
+                                bpValue4.Content = data[1].Trim() + "/" + data[2];
                             }
                             break;
+
                         case "patient5":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue5.Content = data[1] + " bpm";
+                                hrValue5.Content = data[1].Trim() + " bpm";
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue5.Content = data[1] + "%";
+                                oxiValue5.Content = data[1].Trim() + "%";
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue5.Content = data[1] + "/" + data[2];
+                                bpValue5.Content = data[1].Trim() + "/" + data[2];
                             }
                             break;
 
                         case "patient6":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue6.Content = data[1] + " bpm";
+                                hrValue6.Content = data[1].Trim() + " bpm";
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue6.Content = data[1] + "%";
+                                oxiValue6.Content = data[1].Trim() + "%";
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue6.Content = data[1] + "/" + data[2];
+                                bpValue6.Content = data[1].Trim() + "/" + data[2];
+                            }
+                            break;
+                        default:
+                            if (name[0].Contains("start"))
+                            {
+                                String[] restofData = sentData[1].Split('-');
+                                int index = Convert.ToInt32(restofData[0].Trim());
+                                patientIPCollection.Insert(index - 1, restofData[2].Trim());
+                                patientid = Convert.ToInt32(restofData[1]);
                             }
                             break;
                     }
@@ -532,15 +516,11 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.43", 4555);
+                _videoClient.Connect("192.168.184.14", 4555);
 
                 _videoClient2 = new ColorClient();
                 _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
                 _videoClient2.Connect("192.168.184.19", 4556);
-
-                //4531-4536
-                //_videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
-                //_videoListener.Start();
 
                 foreach (int portNum in ports)
                 {
@@ -551,7 +531,7 @@ namespace CardioRehab_WPF
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("192.168.184.43", 4537);
+                _audioClient.Connect("192.168.184.14", 4537);
 
                 //_audioClient2 = new AudioClient();
                 //_audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
@@ -653,14 +633,14 @@ namespace CardioRehab_WPF
             if (sensorChooser.Kinect != null)
             {
                 Console.WriteLine("patient IP: " + patientIPCollection[0]);
-                //if (patientIPCollection[0] != null)
-                //{
-                    _videoClient.Connect("192.168.184.43", 4555);
-                //}
-                //if(patientIPCollection[0] != null)
-                //{
-                    _audioClient.Connect("192.168.184.43", 4537);
-                //}
+                if (patientIPCollection[0] != null)
+                {
+                    _videoClient.Connect(patientIPCollection[0], 4555);
+                }
+                if(patientIPCollection[0] != null)
+                {
+                    _audioClient.Connect(patientIPCollection[0], 4537);
+                }
             }
             connect1.Visibility = System.Windows.Visibility.Hidden;
         }
