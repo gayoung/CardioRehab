@@ -6,10 +6,10 @@
         <Label Content="Add any additional information" HorizontalAlignment="Left" Height="37" Margin="28,10,0,0" VerticalAlignment="Top" Width="243" FontFamily="Century" FontSize="16"/>
         <Label Content="about the patient here." HorizontalAlignment="Left" Height="33" Margin="60,37,0,0" VerticalAlignment="Top" Width="174" FontFamily="Century" FontSize="16"/>
         <Label Content="Note for: " HorizontalAlignment="Left" Height="33" Margin="10,70,0,0" VerticalAlignment="Top" Width="78" FontFamily="Century" FontSize="16"/>
-        <Label x:Name="PatientLabel" Content="---" HorizontalAlignment="Left" Height="33" Margin="104,70,0,0" VerticalAlignment="Top" Width="78" FontFamily="Century" FontSize="16"/>
+        <Label x:Name="PatientLabel" Content="---" HorizontalAlignment="Left" Height="33" Margin="88,70,0,0" VerticalAlignment="Top" Width="78" FontFamily="Century" FontSize="16" Foreground="#FF0A5B15"/>
         <TextBox HorizontalAlignment="Left" Height="107" Margin="10,108,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="272"/>
-        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Height="27" Margin="28,233,0,0" VerticalAlignment="Top" Width="91" Background="#FF0A5B15" FontFamily="Century" FontSize="14" Foreground="#FFF9F9F9"/>
-        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Height="27" Margin="180,233,0,0" VerticalAlignment="Top" Width="91" Foreground="#FFF7FBF7" FontFamily="Century" FontSize="14" Background="#FF0A5B15"/>
-        <Label x:Name="NoteTime" Content="--:--:--" HorizontalAlignment="Left" Height="33" Margin="187,70,0,0" VerticalAlignment="Top" Width="95" FontFamily="Century" FontSize="16"/>
+        <Button x:Name="SaveButton" Content="Save" HorizontalAlignment="Left" Height="27" Margin="28,233,0,0" VerticalAlignment="Top" Width="91" Background="#FF0A5B15" FontFamily="Century" FontSize="14" Foreground="#FFF9F9F9" Click="SaveButton_Click"/>
+        <Button x:Name="CancelButton" Content="Cancel" HorizontalAlignment="Left" Height="27" Margin="180,233,0,0" VerticalAlignment="Top" Width="91" Foreground="#FFF7FBF7" FontFamily="Century" FontSize="14" Background="#FF0A5B15" Click="CancelButton_Click"/>
+        <Label x:Name="NoteTime" Content="--:--:--" HorizontalAlignment="Left" Height="33" Margin="187,70,0,0" VerticalAlignment="Top" Width="95" FontFamily="Century" FontSize="16" Foreground="#FF0A5B15"/>
     </Grid>
 </Window>

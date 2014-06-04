@@ -29,6 +29,7 @@ using Microsoft.Research.DynamicDataDisplay;
 using Microsoft.Research.DynamicDataDisplay.DataSources;
 using System.ComponentModel;
 using NAudio.Wave;
+using System.Drawing;
 
 namespace CardioRehab_WPF
 {
@@ -222,6 +223,31 @@ namespace CardioRehab_WPF
         //    reader.Dispose();
         //    cmd.Dispose();
         //}
+
+        private void CreateMemoPopup(int index)
+        {
+            PopupWindow popup = new PopupWindow();
+            popup.PatientLabel.Content = "Patient " + index.ToString();
+            popup.NoteTime.Content = DateTime.Now.ToString("HH:mm:ss");
+            popup.ShowDialog();
+        }
+
+        private void ToggleMuteIcon(System.Windows.Controls.Image icon)
+        {
+            String currentIcon = icon.Source.ToString();
+            if (currentIcon.Contains("mute.png"))
+            {
+                icon.BeginInit();
+                icon.Source = new BitmapImage(new Uri("mic.png", UriKind.RelativeOrAbsolute));
+                icon.EndInit();
+            }
+            else
+            {
+                icon.BeginInit();
+                icon.Source = new BitmapImage(new Uri("mute.png", UriKind.RelativeOrAbsolute));
+                icon.EndInit();
+            }
+        }
 
         #endregion
 
@@ -702,9 +728,58 @@ namespace CardioRehab_WPF
 
         private void memo1_Click(object sender, RoutedEventArgs e)
         {
-            PopupWindow popup = new PopupWindow();
-            popup.ShowDialog();
+            CreateMemoPopup(1);
         }
+        private void memo2_Click(object sender, RoutedEventArgs e)
+        {
+            CreateMemoPopup(2);
+        }
+        private void memo3_Click(object sender, RoutedEventArgs e)
+        {
+            CreateMemoPopup(3);
+        }
+        private void memo4_Click(object sender, RoutedEventArgs e)
+        {
+            CreateMemoPopup(4);
+        }
+        private void memo5_Click(object sender, RoutedEventArgs e)
+        {
+            CreateMemoPopup(5);
+        }
+        private void memo6_Click(object sender, RoutedEventArgs e)
+        {
+            CreateMemoPopup(6);
+        }
+
+        #endregion
+
+        #region MuteButton Trigger
+
+        private void mute1_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMuteIcon(muteIcon1);
+        }
+        private void mute2_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMuteIcon(muteIcon2);
+        }
+        private void mute3_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMuteIcon(muteIcon3);
+        }
+        private void mute4_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMuteIcon(muteIcon4);
+        }
+        private void mute5_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMuteIcon(muteIcon5);
+        }
+        private void mute6_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleMuteIcon(muteIcon6);
+        }
+
         #endregion
     }
 }

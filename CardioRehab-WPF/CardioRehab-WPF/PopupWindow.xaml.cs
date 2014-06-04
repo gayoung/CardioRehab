@@ -23,5 +23,16 @@ namespace CardioRehab_WPF
         {
             InitializeComponent();
         }
+
+
+
+        private void SaveButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
     }
 }
