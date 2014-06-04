@@ -39,6 +39,7 @@ namespace CardioRehab_WPF
         private DatabaseClass db;
 
         private int user;
+        private int age;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
         private String doctorIp = "192.168.184.43";
@@ -67,7 +68,6 @@ namespace CardioRehab_WPF
 
         //kinect clients
         private ColorClient _videoClient;
-        private DepthClient _depthClient;
 
         private WriteableBitmap outputImage;
         private byte[] pixels = new byte[0];

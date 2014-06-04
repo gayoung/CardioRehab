@@ -54,6 +54,7 @@ namespace CardioRehab_WPF
 
         private KinectSensorChooser sensorChooser;
 
+        private WriteableBitmap outputImage;
         private byte[] pixels = new byte[0];
 
         private ColorClient _videoClient;
@@ -90,6 +91,8 @@ namespace CardioRehab_WPF
         public ECGPointCollection ecgPointCollection;
         DispatcherTimer updateCollectionTimer;
         private int i = 0;
+
+        private FullScreenWindow fullscreenview;
 
 
         public DoctorWindow(int currentuser, DatabaseClass openDB)
@@ -224,6 +227,12 @@ namespace CardioRehab_WPF
         //    cmd.Dispose();
         //}
 
+        /// <summary>
+        /// This method is called when the memo buttons are triggered and it 
+        /// calls the PopupWindow UI that allows the user to leave notes
+        /// about the selected patient during the session.
+        /// </summary>
+        /// <param name="index"> the index associated with the memo icon (which is associated with patients 1-6)</param>
         private void CreateMemoPopup(int index)
         {
             PopupWindow popup = new PopupWindow();
@@ -232,6 +241,12 @@ namespace CardioRehab_WPF
             popup.ShowDialog();
         }
 
+        /// <summary>
+        /// This method is called when the mute/unmute icons are clicked.  It
+        /// togglees the icon images and also mute/unmute the audio for the selected
+        /// patient.
+        /// </summary>
+        /// <param name="icon"> the selected muteIcon object </param>
         private void ToggleMuteIcon(System.Windows.Controls.Image icon)
         {
             String currentIcon = icon.Source.ToString();
@@ -240,12 +255,14 @@ namespace CardioRehab_WPF
                 icon.BeginInit();
                 icon.Source = new BitmapImage(new Uri("mic.png", UriKind.RelativeOrAbsolute));
                 icon.EndInit();
+                // add code to enable volume again
             }
             else
             {
                 icon.BeginInit();
                 icon.Source = new BitmapImage(new Uri("mute.png", UriKind.RelativeOrAbsolute));
                 icon.EndInit();
+                // add code to mute the patient
             }
         }
 
@@ -616,6 +633,7 @@ namespace CardioRehab_WPF
                 }
             }
         }
+
         #endregion
 
         #region mockECG
@@ -687,7 +705,6 @@ namespace CardioRehab_WPF
 
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
-            //Console.WriteLine("new frame!");
             this.patientFrame1.Source = e.ColorFrame.BitmapImage;
         }
 
@@ -724,7 +741,7 @@ namespace CardioRehab_WPF
 
         #endregion
 
-        #region MemoButton trigger
+        #region Memo Button Triggers
 
         private void memo1_Click(object sender, RoutedEventArgs e)
         {
@@ -753,7 +770,7 @@ namespace CardioRehab_WPF
 
         #endregion
 
-        #region MuteButton Trigger
+        #region Mute Button Triggers
 
         private void mute1_Click(object sender, RoutedEventArgs e)
         {
@@ -781,6 +798,18 @@ namespace CardioRehab_WPF
         }
 
         #endregion
+
+        #region Expand Button Triggers
+
+        private void expand1_Click(object sender, RoutedEventArgs e)
+        {
+           fullscreenview = new FullScreenWindow(userid, db);
+            this.Hide();
+            fullscreenview.Show();
+        }
+
+        #endregion
+
     }
 }
 

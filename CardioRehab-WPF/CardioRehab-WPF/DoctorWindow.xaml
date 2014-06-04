@@ -27,7 +27,7 @@
                     <Button x:Name="mute1" Height="38" Canvas.Left="208" Canvas.Top="156" Width="38" Click="mute1_Click">
                         <Image x:Name="muteIcon1" Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand1" Height="38" Canvas.Left="260" Canvas.Top="156" Width="38">
+                    <Button x:Name="expand1" Height="38" Canvas.Left="260" Canvas.Top="156" Width="38" Click="expand1_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning1" Content="Warning" Canvas.Left="217" Canvas.Top="10" Foreground="#FFFD0707" Width="81" FontSize="16" FontWeight="Bold"/>
