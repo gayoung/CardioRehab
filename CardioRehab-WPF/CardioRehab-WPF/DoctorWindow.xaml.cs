@@ -42,6 +42,7 @@ namespace CardioRehab_WPF
 
         private int userid;
         private int patientid;
+        private int patientAge;
         private List<String> patientIPCollection = new List<String>();
 
         private String localIP;
@@ -200,6 +201,29 @@ namespace CardioRehab_WPF
 
                 updatecmd.ExecuteNonQuery();
                 updatecmd.Dispose();
+            }
+            reader.Dispose();
+            cmd.Dispose();
+        }
+
+        private void GetPatientInfo()
+        {
+            String query = "SELECT strftime('%Y', date_birth) as year FROM patient WHERE patient_id=" + patientid;
+
+            // sometimes the db connection is closed (when going from expand to collapse)
+            if (db.m_dbconnection.State != System.Data.ConnectionState.Open)
+            {
+                db.m_dbconnection.Open();
+            }
+            SQLiteCommand cmd = new SQLiteCommand(query, db.m_dbconnection);
+
+            SQLiteDataReader reader = cmd.ExecuteReader();
+
+            // current user does not have any IP addresses in the database record
+            if (reader.HasRows)
+            {
+                patientAge = System.DateTime.Now.Year - Convert.ToInt32(reader["year"]);
+                Console.WriteLine("age: " + patientAge.ToString());
             }
             reader.Dispose();
             cmd.Dispose();
@@ -586,6 +610,8 @@ namespace CardioRehab_WPF
                                 int index = Convert.ToInt32(restofData[0].Trim());
                                 patientIPCollection.Insert(index - 1, restofData[2].Trim());
                                 patientid = Convert.ToInt32(restofData[1]);
+
+                                GetPatientInfo();
                             }
                             break;
                     }
