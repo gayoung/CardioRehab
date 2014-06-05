@@ -114,8 +114,8 @@ namespace CardioRehab_WPF
         private void DoctorWindow_Loaded(object sender, RoutedEventArgs e)
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
-            InitializeKinect(kinectOutPorts);
-            InitializeAudio();
+            //InitializeKinect(kinectOutPorts);
+            //InitializeAudio();
 
             InitializeECG();
 
@@ -208,7 +208,7 @@ namespace CardioRehab_WPF
 
         private void GetPatientInfo()
         {
-            String query = "SELECT strftime('%Y', date_birth) as year FROM patient WHERE patient_id=" + patientid;
+            String query = "SELECT strftime('%Y', date_birth) AS year FROM patient WHERE patient_id=" + patientid;
 
             // sometimes the db connection is closed (when going from expand to collapse)
             if (db.m_dbconnection.State != System.Data.ConnectionState.Open)
@@ -222,8 +222,11 @@ namespace CardioRehab_WPF
             // current user does not have any IP addresses in the database record
             if (reader.HasRows)
             {
-                patientAge = System.DateTime.Now.Year - Convert.ToInt32(reader["year"]);
-                Console.WriteLine("age: " + patientAge.ToString());
+                while(reader.Read())
+                {
+                    patientAge = System.DateTime.Now.Year - Convert.ToInt32(reader["year"]);
+                }
+               
             }
             reader.Dispose();
             cmd.Dispose();
@@ -654,7 +657,7 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.43", 4555);
+                _videoClient.Connect("142.244.215.167", 4555);
 
                 _videoClient2 = new ColorClient();
                 _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
@@ -669,7 +672,7 @@ namespace CardioRehab_WPF
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("192.168.184.43", 4537);
+                _audioClient.Connect("142.244.215.167", 4537);
 
                 //_audioClient2 = new AudioClient();
                 //_audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
