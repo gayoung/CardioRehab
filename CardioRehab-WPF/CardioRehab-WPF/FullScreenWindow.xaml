@@ -14,7 +14,7 @@
             </RadialGradientBrush>
         </Grid.Background>
         <Border BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Left" Height="369" Margin="10,80,0,0" VerticalAlignment="Top" Width="739" CornerRadius="10">
-            <Image x:Name="patientFrame" HorizontalAlignment="Left" Height="349" Margin="5,5,0,0" VerticalAlignment="Top" Width="719"/>
+            <Image x:Name="patientFrame" HorizontalAlignment="Stretch" Height="349" Margin="5,5,0,0" VerticalAlignment="Stretch" Width="719"/>
         </Border>
         <Border x:Name="ecgBorder" BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Left" Height="202" Margin="10,525,0,0" VerticalAlignment="Top" Width="739" CornerRadius="10">
             <d3:ChartPlotter x:Name="plotter" Margin="0,0,0,0">
@@ -29,7 +29,7 @@
             </d3:ChartPlotter>
         </Border>
         <Border BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Left" Height="166" Margin="764,80,0,0" VerticalAlignment="Top" Width="229" CornerRadius="10">
-            <Image x:Name="doctorFrame" HorizontalAlignment="Left" Height="146" Margin="5,5,0,0" VerticalAlignment="Top" Width="209"/>
+            <Image x:Name="doctorFrame" HorizontalAlignment="Stretch" Height="146" Margin="5,5,0,0" VerticalAlignment="Stretch" Width="209"/>
         </Border>
         <Button x:Name="NoteButton" HorizontalAlignment="Left" Height="50" Margin="780,677,0,0" VerticalAlignment="Top" Width="50" Click="NoteButton_Click">
             <Image x:Name="NoteIcon" Height="28" Width="28" Source="note.png"/>

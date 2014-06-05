@@ -686,6 +686,10 @@ namespace CardioRehab_WPF
                     // E.g.: sensor might be abruptly unplugged.
                     Console.WriteLine("InvalidOperation Exception was thrown1.");
                 }
+                catch(ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("sensorChooser_kinectChanged1 argument out of range exception");
+                }
             }
 
             if (e.NewSensor != null)
@@ -693,6 +697,7 @@ namespace CardioRehab_WPF
                 try
                 {
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
+                    e.NewSensor.ColorFrameReady += NewSensor_ColorFrameReady;
                 }
                 catch (InvalidOperationException)
                 {
@@ -700,7 +705,39 @@ namespace CardioRehab_WPF
                     // E.g.: sensor might be abruptly unplugged.
                     Console.WriteLine("InvalidOperation Exception was thrown2.");
                 }
+                catch(ArgumentOutOfRangeException)
+                {
+                    Console.WriteLine("sensorChooser_kinectChanged2 argument out of range exception");
+                }
             }
+        }
+
+        void NewSensor_ColorFrameReady(object sender, ColorImageFrameReadyEventArgs e)
+        {
+            using (ColorImageFrame frame = e.OpenColorImageFrame())
+            {
+                if(fullscreenview != null)
+                {
+                    if (frame == null)
+                    {
+                        return;
+                    }
+
+                    if (pixels.Length == 0)
+                    {
+                        this.pixels = new byte[frame.PixelDataLength];
+                    }
+                    frame.CopyPixelDataTo(this.pixels);
+
+                    outputImage = new WriteableBitmap(frame.Width, frame.Height, 96, 96, PixelFormats.Bgr32, null);
+
+                    outputImage.WritePixels(
+                        new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
+
+                    fullscreenview.doctorFrame.Source = outputImage;
+                }
+            };
+
         }
 
         #endregion
