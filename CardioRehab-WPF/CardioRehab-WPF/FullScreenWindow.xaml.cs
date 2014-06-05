@@ -50,11 +50,12 @@ namespace CardioRehab_WPF
 
         private DoctorWindow currentSplitScreen;
 
-        public FullScreenWindow(int currentUser, int patientindex, DatabaseClass database)
+        public FullScreenWindow(int currentUser, int patientindex, DatabaseClass database, DoctorWindow hidden)
         {
             db = database;
             userid = currentUser;
             patientLabel = patientindex;
+            currentSplitScreen = hidden;
 
             InitializeComponent();
 
@@ -101,7 +102,6 @@ namespace CardioRehab_WPF
         private void CollapseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
-            currentSplitScreen = new DoctorWindow(userid, db);
             currentSplitScreen.Show();
         }
 

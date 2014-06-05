@@ -106,15 +106,15 @@ namespace CardioRehab_WPF
 
             // patients send the biodata from port 5000-5005
             int[] ports = new int[6] { 5000, 5001, 5002, 5003, 5004, 5005 };
-            //InitializeBioSockets(ports);
+            InitializeBioSockets(ports);
 
         }
 
         private void DoctorWindow_Loaded(object sender, RoutedEventArgs e)
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
-            //InitializeKinect(kinectOutPorts);
-            //InitializeAudio();
+            InitializeKinect(kinectOutPorts);
+            InitializeAudio();
 
             InitializeECG();
 
@@ -246,7 +246,7 @@ namespace CardioRehab_WPF
 
         private void ExpandedScreenView(int patient)
         {
-            fullscreenview = new FullScreenWindow(userid, patient, db);
+            fullscreenview = new FullScreenWindow(userid, patient, db, this);
             this.Hide();
             fullscreenview.Show();
             fullscreenview.Closed += new EventHandler(DoctorWindowClose);
@@ -628,7 +628,7 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.14", 4555);
+                _videoClient.Connect("192.168.184.43", 4555);
 
                 _videoClient2 = new ColorClient();
                 _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
@@ -643,7 +643,7 @@ namespace CardioRehab_WPF
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("192.168.184.14", 4537);
+                _audioClient.Connect("192.168.184.43", 4537);
 
                 //_audioClient2 = new AudioClient();
                 //_audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
