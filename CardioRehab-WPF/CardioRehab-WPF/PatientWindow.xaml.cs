@@ -489,7 +489,7 @@ namespace CardioRehab_WPF
                             hrdata[hrcount] = Convert.ToInt32(data[1]);
                             hrcount++;
                             // remove null char
-                            hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "").Replace("\n", "") + " bpm"));
+                            hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "").Trim() + " bpm"));
                         }
 
                         /*/

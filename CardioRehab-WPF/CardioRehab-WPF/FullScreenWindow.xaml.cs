@@ -26,6 +26,7 @@ namespace CardioRehab_WPF
     {
         private DatabaseClass db;
         private int userid;
+        private int patientLabel;
 
         private Random _Random;
         private int _maxECG;
@@ -49,12 +50,16 @@ namespace CardioRehab_WPF
 
         private DoctorWindow currentSplitScreen;
 
-        public FullScreenWindow(int currentUser, DatabaseClass database)
+        public FullScreenWindow(int currentUser, int patientindex, DatabaseClass database)
         {
             db = database;
             userid = currentUser;
+            patientLabel = patientindex;
 
             InitializeComponent();
+
+            this.pateintId.Content = "Patient " + patientindex.ToString();
+
             InitializeECG();
         }
 
@@ -98,6 +103,33 @@ namespace CardioRehab_WPF
             this.Hide();
             currentSplitScreen = new DoctorWindow(userid, db);
             currentSplitScreen.Show();
+        }
+
+        private void NoteButton_Click(object sender, RoutedEventArgs e)
+        {
+            PopupWindow popup = new PopupWindow();
+            popup.PatientLabel.Content = "Patient " + patientLabel.ToString();
+            popup.NoteTime.Content = DateTime.Now.ToString("HH:mm:ss");
+            popup.ShowDialog();
+        }
+
+        private void MuteButton_Click(object sender, RoutedEventArgs e)
+        {
+            String currentIcon = muteIcon.Source.ToString();
+            if (currentIcon.Contains("mute.png"))
+            {
+                muteIcon.BeginInit();
+                muteIcon.Source = new BitmapImage(new Uri("mic.png", UriKind.RelativeOrAbsolute));
+                muteIcon.EndInit();
+                // add code to enable volume again
+            }
+            else
+            {
+                muteIcon.BeginInit();
+                muteIcon.Source = new BitmapImage(new Uri("mute.png", UriKind.RelativeOrAbsolute));
+                muteIcon.EndInit();
+                // add code to mute the patient
+            }
         }
     }
 }

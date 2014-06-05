@@ -65,7 +65,7 @@
                     <Button x:Name="mute2" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38" Click="mute2_Click">
                         <Image x:Name="muteIcon2" Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand2" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
+                    <Button x:Name="expand2" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand2_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning2" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
@@ -92,7 +92,7 @@
                     <Button x:Name="mute3" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38" Click="mute3_Click">
                         <Image x:Name="muteIcon3" Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand3" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
+                    <Button x:Name="expand3" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand3_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning3" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
@@ -119,7 +119,7 @@
                     <Button x:Name="mute4" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38" Click="mute4_Click">
                         <Image x:Name="muteIcon4" Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand4" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
+                    <Button x:Name="expand4" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand4_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning4" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
@@ -146,7 +146,7 @@
                     <Button x:Name="mute5" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38" Click="mute5_Click">
                         <Image x:Name="muteIcon5" Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand5" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
+                    <Button x:Name="expand5" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand5_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning5" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
@@ -173,7 +173,7 @@
                     <Button x:Name="mute6" Height="38" Canvas.Left="199" Canvas.Top="156" Width="38" Click="mute6_Click">
                         <Image x:Name="muteIcon6" Source="mic.png" Width="35"/>
                     </Button>
-                    <Button x:Name="expand6" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38">
+                    <Button x:Name="expand6" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand6_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
                     <Label x:Name="warning6" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>

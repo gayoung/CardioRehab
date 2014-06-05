@@ -31,10 +31,10 @@
         <Border BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Left" Height="166" Margin="764,80,0,0" VerticalAlignment="Top" Width="229" CornerRadius="10">
             <Image x:Name="doctorFrame" HorizontalAlignment="Left" Height="146" Margin="5,5,0,0" VerticalAlignment="Top" Width="209"/>
         </Border>
-        <Button x:Name="NoteButton" HorizontalAlignment="Left" Height="50" Margin="780,677,0,0" VerticalAlignment="Top" Width="50">
+        <Button x:Name="NoteButton" HorizontalAlignment="Left" Height="50" Margin="780,677,0,0" VerticalAlignment="Top" Width="50" Click="NoteButton_Click">
             <Image x:Name="NoteIcon" Height="28" Width="28" Source="note.png"/>
         </Button>
-        <Label Content="Patient 1" HorizontalAlignment="Left" Height="65" Margin="285,10,0,0" VerticalAlignment="Top" Width="190" Foreground="#FFF7FBF7" FontFamily="Century" FontWeight="Bold" FontSize="36"/>
+        <Label x:Name="pateintId" Content="Patient 1" HorizontalAlignment="Left" Height="65" Margin="285,10,0,0" VerticalAlignment="Top" Width="190" Foreground="#FFF7FBF7" FontFamily="Century" FontWeight="Bold" FontSize="36"/>
         <Label x:Name="WarningLabel" Content="Warning" HorizontalAlignment="Left" Height="47" Margin="534,10,0,0" VerticalAlignment="Top" Width="444" Foreground="#FFFD0707" FontFamily="Century" FontSize="24" FontWeight="Bold" Background="#FFF7FBF7"/>
         <Border Background="#FFF5F3F3" BorderBrush="#FFF5F3F3" BorderThickness="5" HorizontalAlignment="Left" Height="392" Margin="764,264,0,0" VerticalAlignment="Top" Width="229" CornerRadius="10" Opacity="0.8">
             <Canvas HorizontalAlignment="Left" Height="279" Margin="5,5,0,0" VerticalAlignment="Top" Width="324">
@@ -51,7 +51,7 @@
         </Border>
         <Image HorizontalAlignment="Left" Height="40" Margin="25,480,0,0" VerticalAlignment="Top" Width="40" Source="pack://siteoforigin:,,,/ecg.png" OpacityMask="Black"/>
         <Label Content="ECG Graph" HorizontalAlignment="Left" Height="40" Margin="70,480,0,0" VerticalAlignment="Top" Width="158" Foreground="#FFF7FBF7" FontFamily="Century" FontWeight="Bold" FontSize="24"/>
-        <Button x:Name="MuteButton" HorizontalAlignment="Left" Height="50" Margin="854,677,0,0" VerticalAlignment="Top" Width="50">
+        <Button x:Name="MuteButton" HorizontalAlignment="Left" Height="50" Margin="854,677,0,0" VerticalAlignment="Top" Width="50" Click="MuteButton_Click">
             <Image x:Name="muteIcon" Source="mic.png" Width="35"/>
         </Button>
         <Button x:Name="CollapseButton" HorizontalAlignment="Left" Height="50" Margin="928,677,0,0" VerticalAlignment="Top" Width="50" Click="CollapseButton_Click">

@@ -92,7 +92,7 @@ namespace CardioRehab_WPF
         DispatcherTimer updateCollectionTimer;
         private int i = 0;
 
-        private FullScreenWindow fullscreenview;
+        private FullScreenWindow fullscreenview = null;
 
 
         public DoctorWindow(int currentuser, DatabaseClass openDB)
@@ -179,6 +179,12 @@ namespace CardioRehab_WPF
         private void CheckRecord()
         {
             String query = "SELECT local_ip FROM doctor WHERE doctor_id=" + userid;
+
+            // sometimes the db connection is closed (when going from expand to collapse)
+            if(db.m_dbconnection.State != System.Data.ConnectionState.Open)
+            {
+                db.m_dbconnection.Open();
+            }
             SQLiteCommand cmd = new SQLiteCommand(query, db.m_dbconnection);
 
             SQLiteDataReader reader = cmd.ExecuteReader();
@@ -198,34 +204,6 @@ namespace CardioRehab_WPF
             reader.Dispose();
             cmd.Dispose();
         }
-
-        /// <summary>
-        /// Retrieves the local IP address of the patient from the
-        /// patient database table.
-        /// 
-        /// MIGHT NOT BE NEEDED!
-        /// Also might not need IP fields in DB
-        /// 
-        /// </summary>
-        //private void GetPatientIP()
-        //{
-        //    String query = "SELECT wireless_ip FROM patient WHERE patient_id=" + patientid;
-        //    SQLiteCommand cmd = new SQLiteCommand(query, db.m_dbconnection);
-
-        //    SQLiteDataReader reader = cmd.ExecuteReader();
-
-        //    // current user does not have any IP addresses in the database record
-        //    if (reader.HasRows)
-        //    {
-        //        while (reader.Read())
-        //        {
-        //            patientIP = reader["wireless_ip"].ToString();
-        //            break;
-        //        }
-        //    }
-        //    reader.Dispose();
-        //    cmd.Dispose();
-        //}
 
         /// <summary>
         /// This method is called when the memo buttons are triggered and it 
@@ -264,6 +242,25 @@ namespace CardioRehab_WPF
                 icon.EndInit();
                 // add code to mute the patient
             }
+        }
+
+        private void ExpandedScreenView(int patient)
+        {
+            fullscreenview = new FullScreenWindow(userid, patient, db);
+            this.Hide();
+            fullscreenview.Show();
+            fullscreenview.Closed += new EventHandler(DoctorWindowClose);
+        }
+
+        /// <summary>
+        /// Close the doctor window when the user triggers to close the
+        /// application in fullscreen mode.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DoctorWindowClose(object sender, EventArgs e)
+        {
+            Application.Current.Shutdown();
         }
 
         #endregion
@@ -425,14 +422,26 @@ namespace CardioRehab_WPF
                             if (data[0].Trim() == "HR")
                             {
                                 hrValue1.Content = data[1].Trim() + " bpm";
+                                if(fullscreenview != null)
+                                {
+                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                }
                             }
                             else if (data[0].Trim() == "OX")
                             {
                                 oxiValue1.Content = data[1].Trim() + "%";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                }
                             }
                             else if (data[0].Trim() == "BP")
                             {
                                 bpValue1.Content = data[1].Trim() + "/" + data[2];
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                }
                             }
                             break;
 
@@ -440,14 +449,26 @@ namespace CardioRehab_WPF
                             if (data[0].Trim() == "HR")
                             {
                                 hrValue2.Content = data[1].Trim() + " bpm";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                }
                             }
                             else if (data[0].Trim() == "OX")
                             {
                                 oxiValue2.Content = data[1].Trim() + "%";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                }
                             }
                             else if (data[0].Trim() == "BP")
                             {
                                 bpValue2.Content = data[1].Trim() + "/" + data[2];
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                }
                             }
                             break;
 
@@ -455,14 +476,26 @@ namespace CardioRehab_WPF
                             if (data[0].Trim() == "HR")
                             {
                                 hrValue3.Content = data[1].Trim() + " bpm";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                }
                             }
                             else if (data[0].Trim() == "OX")
                             {
                                 oxiValue3.Content = data[1].Trim() + "%";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                }
                             }
                             else if (data[0].Trim() == "BP")
                             {
                                 bpValue3.Content = data[1].Trim() + "/" + data[2];
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                }
                             }
                             break;
 
@@ -470,14 +503,26 @@ namespace CardioRehab_WPF
                             if (data[0].Trim() == "HR")
                             {
                                 hrValue4.Content = data[1].Trim() + " bpm";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                }
                             }
                             else if (data[0].Trim() == "OX")
                             {
                                 oxiValue4.Content = data[1].Trim() + "%";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                }
                             }
                             else if (data[0].Trim() == "BP")
                             {
                                 bpValue4.Content = data[1].Trim() + "/" + data[2];
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                }
                             }
                             break;
 
@@ -485,14 +530,26 @@ namespace CardioRehab_WPF
                             if (data[0].Trim() == "HR")
                             {
                                 hrValue5.Content = data[1].Trim() + " bpm";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                }
                             }
                             else if (data[0].Trim() == "OX")
                             {
                                 oxiValue5.Content = data[1].Trim() + "%";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                }
                             }
                             else if (data[0].Trim() == "BP")
                             {
                                 bpValue5.Content = data[1].Trim() + "/" + data[2];
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                }
                             }
                             break;
 
@@ -500,14 +557,26 @@ namespace CardioRehab_WPF
                             if (data[0].Trim() == "HR")
                             {
                                 hrValue6.Content = data[1].Trim() + " bpm";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                }
                             }
                             else if (data[0].Trim() == "OX")
                             {
                                 oxiValue6.Content = data[1].Trim() + "%";
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                }
                             }
                             else if (data[0].Trim() == "BP")
                             {
                                 bpValue6.Content = data[1].Trim() + "/" + data[2];
+                                if (fullscreenview != null)
+                                {
+                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                }
                             }
                             break;
                         default:
@@ -706,11 +775,19 @@ namespace CardioRehab_WPF
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
             this.patientFrame1.Source = e.ColorFrame.BitmapImage;
+            if(fullscreenview != null)
+            {
+                fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
+            }
         }
 
         void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
             this.patientFrame2.Source = e.ColorFrame.BitmapImage;
+            if (fullscreenview != null)
+            {
+                fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
+            }
 
         }
 
@@ -803,10 +880,29 @@ namespace CardioRehab_WPF
 
         private void expand1_Click(object sender, RoutedEventArgs e)
         {
-           fullscreenview = new FullScreenWindow(userid, db);
-            this.Hide();
-            fullscreenview.Show();
+            ExpandedScreenView(1);
         }
+        private void expand2_Click(object sender, RoutedEventArgs e)
+        {
+            ExpandedScreenView(2);
+        }
+        private void expand3_Click(object sender, RoutedEventArgs e)
+        {
+            ExpandedScreenView(3);
+        }
+        private void expand4_Click(object sender, RoutedEventArgs e)
+        {
+            ExpandedScreenView(4);
+        }
+        private void expand5_Click(object sender, RoutedEventArgs e)
+        {
+            ExpandedScreenView(5);
+        }
+        private void expand6_Click(object sender, RoutedEventArgs e)
+        {
+            ExpandedScreenView(6);
+        }
+
 
         #endregion
 

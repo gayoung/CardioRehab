@@ -104,6 +104,7 @@ namespace CardioRehab_WPF
         // need this function to close the hidden login form
         private void MainWindowClosed(object sender, EventArgs e)
         {
+            Console.WriteLine("Closing loginwindow");
             this.Close();
         }
     }
