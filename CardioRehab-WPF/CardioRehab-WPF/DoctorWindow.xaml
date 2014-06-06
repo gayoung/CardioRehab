@@ -18,9 +18,9 @@
                     <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
                     <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
                     <Label x:Name="bpLabel1" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                    <Label x:Name="hrValue1" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                    <Label x:Name="oxiValue1" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                    <Label x:Name="bpValue1" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                    <Label x:Name="hrValue1" Content="--" Canvas.Left="81" Canvas.Top="156" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538"/>
+                    <Label x:Name="oxiValue1" Content="--" Canvas.Left="81" Canvas.Top="187" FontWeight="Bold"/>
+                    <Label x:Name="bpSysValue1" Content="--" Canvas.Left="81" Canvas.Top="213" FontWeight="Bold"/>
                     <Button x:Name="memo1" Height="38" Canvas.Left="156" Canvas.Top="156" Width="38" Click="memo1_Click">
                         <Image Source="note.png" Width="29"/>
                     </Button>
@@ -30,7 +30,6 @@
                     <Button x:Name="expand1" Height="38" Canvas.Left="260" Canvas.Top="156" Width="38" Click="expand1_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
-                    <Label x:Name="warning1" Content="Warning" Canvas.Left="217" Canvas.Top="10" Foreground="#FFFD0707" Width="81" FontSize="16" FontWeight="Bold"/>
                     <Border x:Name="EcgBorder1" BorderBrush="Black" BorderThickness="3" Height="83" Canvas.Left="10" Canvas.Top="247" Width="288">
                         <d3:ChartPlotter x:Name="plotter" Margin="0,0,0,0">
                             <d3:ChartPlotter.HorizontalAxis>
@@ -44,6 +43,11 @@
                         </d3:ChartPlotter>
                     </Border>
                     <Button x:Name="connect1" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24" Click="connect1_Click"/>
+                    <Image x:Name="hrWarning1" Height="24" Canvas.Left="116" Canvas.Top="156" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="oxiWarning1" Height="24" Canvas.Left="116" Canvas.Top="187" Width="25" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="bpWarning1" Height="24" Canvas.Left="151" Canvas.Top="218" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Label Content="/" Canvas.Left="106" Canvas.Top="213" FontWeight="Bold" RenderTransformOrigin="1.133,0.577"/>
+                    <Label x:Name="bpDiaValue1" Content="--" Canvas.Left="126" Canvas.Top="213" FontWeight="Bold"/>
 
                 </Canvas>
             </Border>
@@ -56,9 +60,9 @@
                     <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
                     <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
                     <Label x:Name="bpLabel2" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                    <Label x:Name="hrValue2" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                    <Label x:Name="oxiValue2" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                    <Label x:Name="bpValue2" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                    <Label x:Name="hrValue2" Content="--" Canvas.Left="81" Canvas.Top="156" FontWeight="Bold"/>
+                    <Label x:Name="oxiValue2" Content="--" Canvas.Left="81" Canvas.Top="187" FontWeight="Bold"/>
+                    <Label x:Name="bpSysValue2" Content="--" Canvas.Left="79" Canvas.Top="216" FontWeight="Bold"/>
                     <Button x:Name="memo2" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38" Click="memo2_Click">
                         <Image Source="note.png" Width="29"/>
                     </Button>
@@ -68,9 +72,13 @@
                     <Button x:Name="expand2" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand2_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
-                    <Label x:Name="warning2" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
                     <Border x:Name="EcgBorder2" BorderBrush="Black" BorderThickness="3" Height="83" Canvas.Left="10" Canvas.Top="247" Width="288"/>
                     <Button x:Name="connect2" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24" Click="connect2_Click"/>
+                    <Image x:Name="hrWarning2" Height="24" Canvas.Left="116" Canvas.Top="156" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="oxiWarning2" Height="24" Canvas.Left="116" Canvas.Top="187" Width="25" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="bpWarning2" Height="24" Canvas.Left="151" Canvas.Top="218" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Label Content="/" Canvas.Left="106" Canvas.Top="216" FontWeight="Bold" RenderTransformOrigin="1.133,0.577"/>
+                    <Label x:Name="bpDiaValue2" Content="--" Canvas.Left="126" Canvas.Top="216" FontWeight="Bold"/>
 
                 </Canvas>
             </Border>
@@ -83,9 +91,9 @@
                     <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
                     <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
                     <Label x:Name="bpLabel3" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                    <Label x:Name="hrValue3" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                    <Label x:Name="oxiValue3" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                    <Label x:Name="bpValue3" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                    <Label x:Name="hrValue3" Content="--" Canvas.Left="81" Canvas.Top="156" FontWeight="Bold"/>
+                    <Label x:Name="oxiValue3" Content="--" Canvas.Left="81" Canvas.Top="187" FontWeight="Bold"/>
+                    <Label x:Name="bpSysValue3" Content="--" Canvas.Left="81" Canvas.Top="216" FontWeight="Bold"/>
                     <Button x:Name="memo3" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38" Click="memo3_Click">
                         <Image Source="note.png" Width="29"/>
                     </Button>
@@ -95,9 +103,13 @@
                     <Button x:Name="expand3" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand3_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
-                    <Label x:Name="warning3" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
                     <Border x:Name="EcgBorder3" BorderBrush="Black" BorderThickness="3" Height="83" Canvas.Left="10" Canvas.Top="247" Width="288"/>
                     <Button x:Name="connect3" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24"/>
+                    <Image x:Name="hrWarning3" Height="24" Canvas.Left="114" Canvas.Top="156" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="oxiWarning3" Height="24" Canvas.Left="114" Canvas.Top="187" Width="25" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="bpWarning3" Height="24" Canvas.Left="151" Canvas.Top="218" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Label Content="/" Canvas.Left="106" Canvas.Top="216" FontWeight="Bold" RenderTransformOrigin="1.133,0.577"/>
+                    <Label x:Name="bpDiaValue3" Content="--" Canvas.Left="126" Canvas.Top="216" FontWeight="Bold"/>
 
                 </Canvas>
             </Border>
@@ -110,9 +122,9 @@
                     <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
                     <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
                     <Label x:Name="bpLabel4" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                    <Label x:Name="hrValue4" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                    <Label x:Name="oxiValue4" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                    <Label x:Name="bpValue4" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                    <Label x:Name="hrValue4" Content="--" Canvas.Left="81" Canvas.Top="156" FontWeight="Bold" RenderTransformOrigin="-0.6,0.462"/>
+                    <Label x:Name="oxiValue4" Content="--" Canvas.Left="81" Canvas.Top="187" FontWeight="Bold"/>
+                    <Label x:Name="bpSysValue4" Content="--" Canvas.Left="81" Canvas.Top="216" FontWeight="Bold"/>
                     <Button x:Name="memo4" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38" Click="memo4_Click">
                         <Image Source="note.png" Width="29"/>
                     </Button>
@@ -122,9 +134,13 @@
                     <Button x:Name="expand4" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand4_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
-                    <Label x:Name="warning4" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
                     <Border x:Name="EcgBorder4" BorderBrush="Black" BorderThickness="3" Height="83" Canvas.Left="10" Canvas.Top="247" Width="288"/>
                     <Button x:Name="connect4" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24"/>
+                    <Image x:Name="hrWarning4" Height="24" Canvas.Left="116" Canvas.Top="156" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="oxiWarning4" Height="24" Canvas.Left="116" Canvas.Top="187" Width="25" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="bpWarning4" Height="24" Canvas.Left="151" Canvas.Top="218" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Label Content="/" Canvas.Left="106" Canvas.Top="216" FontWeight="Bold" RenderTransformOrigin="1.133,0.577"/>
+                    <Label x:Name="bpDiaValue4" Content="--" Canvas.Left="126" Canvas.Top="216" FontWeight="Bold"/>
 
                 </Canvas>
             </Border>
@@ -137,9 +153,9 @@
                     <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
                     <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
                     <Label x:Name="bpLabel5" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                    <Label x:Name="hrValue5" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                    <Label x:Name="oxiValue5" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                    <Label x:Name="bpValue5" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                    <Label x:Name="hrValue5" Content="--" Canvas.Left="81" Canvas.Top="156" FontWeight="Bold"/>
+                    <Label x:Name="oxiValue5" Content="--" Canvas.Left="81" Canvas.Top="187" FontWeight="Bold"/>
+                    <Label x:Name="bpSysValue5" Content="--" Canvas.Left="81" Canvas.Top="216" FontWeight="Bold" RenderTransformOrigin="0.65,0.615"/>
                     <Button x:Name="memo5" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38" Click="memo5_Click">
                         <Image Source="note.png" Width="29"/>
                     </Button>
@@ -149,9 +165,13 @@
                     <Button x:Name="expand5" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand5_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
-                    <Label x:Name="warning5" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
                     <Border x:Name="EcgBorder5" BorderBrush="Black" BorderThickness="3" Height="83" Canvas.Left="10" Canvas.Top="247" Width="288"/>
                     <Button x:Name="connect5" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24"/>
+                    <Image x:Name="hrWarning5" Height="24" Canvas.Left="116" Canvas.Top="156" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="oxiWarning5" Height="24" Canvas.Left="116" Canvas.Top="187" Width="25" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="bpWarning5" Height="24" Canvas.Left="151" Canvas.Top="218" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Label Content="/" Canvas.Left="106" Canvas.Top="216" FontWeight="Bold" RenderTransformOrigin="1.133,0.577"/>
+                    <Label x:Name="bpDiaValue5" Content="--" Canvas.Left="126" Canvas.Top="216" FontWeight="Bold"/>
 
                 </Canvas>
             </Border>
@@ -164,9 +184,9 @@
                     <Image Height="24" Canvas.Left="10" Source="oxygen.png" Stretch="Fill" Canvas.Top="187" Width="24"/>
                     <Image Height="24" Canvas.Left="10" Source="bp.png" Stretch="Fill" Canvas.Top="218" Width="24"/>
                     <Label x:Name="bpLabel6" Content="BP : " Canvas.Left="39" Canvas.Top="216" RenderTransformOrigin="0.545,0.231" FontWeight="Bold"/>
-                    <Label x:Name="hrValue6" Content="--" Canvas.Left="91" Canvas.Top="156" FontWeight="Bold"/>
-                    <Label x:Name="oxiValue6" Content="--" Canvas.Left="91" Canvas.Top="187" FontWeight="Bold"/>
-                    <Label x:Name="bpValue6" Content="--" Canvas.Left="91" Canvas.Top="216" FontWeight="Bold"/>
+                    <Label x:Name="hrValue6" Content="--" Canvas.Left="81" Canvas.Top="156" FontWeight="Bold"/>
+                    <Label x:Name="oxiValue6" Content="--" Canvas.Left="81" Canvas.Top="187" FontWeight="Bold"/>
+                    <Label x:Name="bpSysValue6" Content="--" Canvas.Left="79" Canvas.Top="216" FontWeight="Bold"/>
                     <Button x:Name="memo6" Height="38" Canvas.Left="147" Canvas.Top="156" Width="38" Click="memo6_Click">
                         <Image Source="note.png" Width="29"/>
                     </Button>
@@ -176,9 +196,13 @@
                     <Button x:Name="expand6" Height="38" Canvas.Left="251" Canvas.Top="156" Width="38" Click="expand6_Click">
                         <Image Source="expand.png" Width="29"/>
                     </Button>
-                    <Label x:Name="warning6" Content="Warning" Canvas.Left="222" Canvas.Top="10" Foreground="#FFFD0707" Width="76" FontSize="16" FontWeight="Bold"/>
                     <Border x:Name="EcgBorder6" BorderBrush="Black" BorderThickness="3" Height="83" Canvas.Left="10" Canvas.Top="247" Width="288"/>
                     <Button x:Name="connect6" Content="Connect" Height="63" Canvas.Left="48" Canvas.Top="55" Width="214" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24"/>
+                    <Image x:Name="hrWarning6" Height="24" Canvas.Left="116" Canvas.Top="156" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="oxiWarning6" Height="24" Canvas.Left="116" Canvas.Top="185" Width="25" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Image x:Name="bpWarning6" Height="24" Canvas.Left="149" Canvas.Top="218" Width="25" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Visibility="Hidden"/>
+                    <Label Content="/" Canvas.Left="104" Canvas.Top="216" FontWeight="Bold" RenderTransformOrigin="1.133,0.577"/>
+                    <Label x:Name="bpDiaValue6" Content="--" Canvas.Left="124" Canvas.Top="216" FontWeight="Bold"/>
 
                 </Canvas>
             </Border>

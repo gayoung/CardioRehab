@@ -83,6 +83,16 @@ namespace CardioRehab_WPF.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap downarrow {
+            get {
+                object obj = ResourceManager.GetObject("downarrow", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap ecg {
             get {
                 object obj = ResourceManager.GetObject("ecg", resourceCulture);
@@ -156,6 +166,16 @@ namespace CardioRehab_WPF.Properties {
         internal static System.Drawing.Bitmap timer {
             get {
                 object obj = ResourceManager.GetObject("timer", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap uparrow {
+            get {
+                object obj = ResourceManager.GetObject("uparrow", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -43,6 +43,20 @@ namespace CardioRehab_WPF
         private int userid;
         private int patientid;
         private int patientAge;
+
+        // < 60% of max heart rate
+        private double minHrRange;
+        // > 80% of max heart rate
+        private double maxHrRange;
+        // maximum heart rate for the patient
+        // 220 - their age
+        private int maxHr;
+        // currently just set to 94%
+        private int minO2 = 94;
+        // max sys/dia bp currently just set to 170/110
+        private int maxSys = 170;
+        private int maxDia = 110;
+
         private List<String> patientIPCollection = new List<String>();
 
         private String localIP;
@@ -271,6 +285,22 @@ namespace CardioRehab_WPF
             }
         }
 
+        private void SetArrow(System.Windows.Controls.Image icon, Label currentLabel, String newimg)
+        {
+            if(newimg == "downarrow.png")
+            {
+                currentLabel.Foreground = System.Windows.Media.Brushes.RoyalBlue;
+            }
+            else
+            {
+                currentLabel.Foreground = System.Windows.Media.Brushes.OrangeRed;
+            }
+            icon.BeginInit();
+            icon.Source = new BitmapImage(new Uri(newimg, UriKind.RelativeOrAbsolute));
+            icon.EndInit();
+            icon.Visibility = Visibility.Visible;
+        }
+
         private void ExpandedScreenView(int patient)
         {
             fullscreenview = new FullScreenWindow(userid, patient, db, this);
@@ -449,25 +479,118 @@ namespace CardioRehab_WPF
                             if (data[0].Trim() == "HR")
                             {
                                 hrValue1.Content = data[1].Trim() + " bpm";
+                                if(Convert.ToInt32(data[1]) < minHrRange)
+                                {
+                                    SetArrow(hrWarning1, hrValue1, "downarrow.png");
+                                }
+                                else if (Convert.ToInt32(data[1]) > maxHrRange)
+                                {
+                                    SetArrow(hrWarning1, hrValue1, "uparrow.png");
+                                    border1.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+                                }
+                                else
+                                {
+                                    hrValue1.Foreground = System.Windows.Media.Brushes.Black;
+                                    border1.BorderBrush = System.Windows.Media.Brushes.White;
+                                    hrWarning1.Visibility = Visibility.Hidden;
+                                }
                                 if(fullscreenview != null)
                                 {
                                     fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                    if (Convert.ToInt32(data[1]) < minHrRange)
+                                    {
+                                        SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "downarrow.png");
+                                    }
+                                    else if (Convert.ToInt32(data[1]) > maxHrRange)
+                                    {
+                                        SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "uparrow.png");
+                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+                                    }
+                                    else
+                                    {
+                                        fullscreenview.hrValue.Foreground = System.Windows.Media.Brushes.Black;
+                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
+                                        fullscreenview.hrWarning.Visibility = Visibility.Hidden;
+                                    }
                                 }
                             }
                             else if (data[0].Trim() == "OX")
                             {
                                 oxiValue1.Content = data[1].Trim() + "%";
+
+                                if (Convert.ToInt32(data[1]) < minO2)
+                                {
+                                    SetArrow(oxiWarning1, oxiValue1, "downarrow.png");
+                                    border1.BorderBrush = System.Windows.Media.Brushes.RoyalBlue;
+                                }
+                                else
+                                {
+                                    oxiValue1.Foreground = System.Windows.Media.Brushes.Black;
+                                    border1.BorderBrush = System.Windows.Media.Brushes.White;
+                                    oxiWarning1.Visibility = Visibility.Hidden;
+                                }
+
                                 if (fullscreenview != null)
                                 {
                                     fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+
+                                    if (Convert.ToInt32(data[1]) < minO2)
+                                    {
+                                        SetArrow(fullscreenview.oxiWarning, fullscreenview.oxiValue, "downarrow.png");
+                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.RoyalBlue;
+                                    }
+                                    else
+                                    {
+                                        fullscreenview.oxiValue.Foreground = System.Windows.Media.Brushes.Black;
+                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
+                                        oxiWarning1.Visibility = Visibility.Hidden;
+                                    }
                                 }
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue1.Content = data[1].Trim() + "/" + data[2];
+                                bpSysValue1.Content = data[1].Trim();
+                                bpDiaValue1.Content = data[2].Trim();
+
+                                if (Convert.ToInt32(data[1]) > maxSys)
+                                {
+                                    SetArrow(bpWarning1, bpSysValue1, "uparrow.png");
+                                    border1.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+                                }
+                                else if(Convert.ToInt32(data[2]) > maxDia)
+                                {
+                                    SetArrow(bpWarning1, bpDiaValue1, "uparrow.png");
+                                    border1.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+                                }
+                                else
+                                {
+                                    bpSysValue1.Foreground = System.Windows.Media.Brushes.Black;
+                                    bpDiaValue1.Foreground = System.Windows.Media.Brushes.Black;
+                                    border1.BorderBrush = System.Windows.Media.Brushes.White;
+                                    bpWarning1.Visibility = Visibility.Hidden;
+                                }
+
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                    fullscreenview.bpSysValue.Content = data[1].Trim();
+                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
+                                    if (Convert.ToInt32(data[1]) > maxSys)
+                                    {
+                                        SetArrow(fullscreenview.bpWarning, fullscreenview.bpSysValue, "uparrow.png");
+                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+                                    }
+                                    else if (Convert.ToInt32(data[2]) > maxDia)
+                                    {
+                                        SetArrow(fullscreenview.bpWarning, fullscreenview.bpDiaValue, "uparrow.png");
+                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+                                    }
+                                    else
+                                    {
+                                        fullscreenview.bpSysValue.Foreground = System.Windows.Media.Brushes.Black;
+                                        fullscreenview.bpDiaValue.Foreground = System.Windows.Media.Brushes.Black;
+                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
+                                        fullscreenview.bpWarning.Visibility = Visibility.Hidden;
+                                    }
                                 }
                             }
                             break;
@@ -491,10 +614,12 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue2.Content = data[1].Trim() + "/" + data[2];
+                                bpSysValue2.Content = data[1].Trim();
+                                bpDiaValue2.Content = data[2].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                    fullscreenview.bpSysValue.Content = data[1].Trim();
+                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
                                 }
                             }
                             break;
@@ -518,10 +643,12 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue3.Content = data[1].Trim() + "/" + data[2];
+                                bpSysValue3.Content = data[1].Trim();
+                                bpDiaValue3.Content = data[2].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                    fullscreenview.bpSysValue.Content = data[1].Trim();
+                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
                                 }
                             }
                             break;
@@ -545,10 +672,12 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue4.Content = data[1].Trim() + "/" + data[2];
+                                bpSysValue4.Content = data[1].Trim();
+                                bpDiaValue4.Content = data[2].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                    fullscreenview.bpSysValue.Content = data[1].Trim();
+                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
                                 }
                             }
                             break;
@@ -572,10 +701,12 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue5.Content = data[1].Trim() + "/" + data[2];
+                                bpSysValue5.Content = data[1].Trim();
+                                bpDiaValue5.Content = data[2].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                    fullscreenview.bpSysValue.Content = data[1].Trim();
+                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
                                 }
                             }
                             break;
@@ -599,10 +730,12 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpValue6.Content = data[1].Trim() + "/" + data[2];
+                                bpSysValue6.Content = data[1].Trim();
+                                bpDiaValue6.Content = data[2].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.bpValue.Content = data[1].Trim() + "/" + data[2];
+                                    fullscreenview.bpSysValue.Content = data[1].Trim();
+                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
                                 }
                             }
                             break;
@@ -615,6 +748,10 @@ namespace CardioRehab_WPF
                                 patientid = Convert.ToInt32(restofData[1]);
 
                                 GetPatientInfo();
+                                maxHr = 220 - patientAge;
+                                minHrRange = maxHr * 0.6;
+                                maxHrRange = maxHr * 0.8;
+
                             }
                             break;
                     }
