@@ -90,10 +90,10 @@ namespace CardioRehab_WPF
 
             GetLocalIP();
             CheckRecord();
-            InitializeComponent();
+            //InitializeComponent();
 
-            //InitializeBioSockets();
-            CreateSocketConnection();
+            InitializeBioSockets();
+            //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
             InitTimer();

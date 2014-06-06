@@ -289,7 +289,7 @@ namespace CardioRehab_WPF
         {
             if(newimg == "downarrow.png")
             {
-                currentLabel.Foreground = System.Windows.Media.Brushes.RoyalBlue;
+                currentLabel.Foreground = System.Windows.Media.Brushes.Blue;
             }
             else
             {
@@ -478,7 +478,7 @@ namespace CardioRehab_WPF
                         case "patient1":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue1.Content = data[1].Trim() + " bpm";
+                                hrValue1.Content = data[1].Trim();
                                 if(Convert.ToInt32(data[1]) < minHrRange)
                                 {
                                     SetArrow(hrWarning1, hrValue1, "downarrow.png");
@@ -491,12 +491,12 @@ namespace CardioRehab_WPF
                                 else
                                 {
                                     hrValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    border1.BorderBrush = System.Windows.Media.Brushes.White;
+                                    border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
                                     hrWarning1.Visibility = Visibility.Hidden;
                                 }
                                 if(fullscreenview != null)
                                 {
-                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                    fullscreenview.hrValue.Content = data[1].Trim();
                                     if (Convert.ToInt32(data[1]) < minHrRange)
                                     {
                                         SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "downarrow.png");
@@ -516,34 +516,34 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue1.Content = data[1].Trim() + "%";
+                                oxiValue1.Content = data[1].Trim();
 
                                 if (Convert.ToInt32(data[1]) < minO2)
                                 {
                                     SetArrow(oxiWarning1, oxiValue1, "downarrow.png");
-                                    border1.BorderBrush = System.Windows.Media.Brushes.RoyalBlue;
+                                    border1.BorderBrush = System.Windows.Media.Brushes.Blue;
                                 }
                                 else
                                 {
                                     oxiValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    border1.BorderBrush = System.Windows.Media.Brushes.White;
+                                    border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
                                     oxiWarning1.Visibility = Visibility.Hidden;
                                 }
 
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                    fullscreenview.oxiValue.Content = data[1].Trim();
 
                                     if (Convert.ToInt32(data[1]) < minO2)
                                     {
                                         SetArrow(fullscreenview.oxiWarning, fullscreenview.oxiValue, "downarrow.png");
-                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.RoyalBlue;
+                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.Blue;
                                     }
                                     else
                                     {
                                         fullscreenview.oxiValue.Foreground = System.Windows.Media.Brushes.Black;
                                         fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
-                                        oxiWarning1.Visibility = Visibility.Hidden;
+                                        fullscreenview.oxiWarning.Visibility = Visibility.Hidden;
                                     }
                                 }
                             }
@@ -566,7 +566,7 @@ namespace CardioRehab_WPF
                                 {
                                     bpSysValue1.Foreground = System.Windows.Media.Brushes.Black;
                                     bpDiaValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    border1.BorderBrush = System.Windows.Media.Brushes.White;
+                                    border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
                                     bpWarning1.Visibility = Visibility.Hidden;
                                 }
 
@@ -598,18 +598,18 @@ namespace CardioRehab_WPF
                         case "patient2":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue2.Content = data[1].Trim() + " bpm";
+                                hrValue2.Content = data[1].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                    fullscreenview.hrValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue2.Content = data[1].Trim() + "%";
+                                oxiValue2.Content = data[1].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                    fullscreenview.oxiValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "BP")
@@ -627,18 +627,18 @@ namespace CardioRehab_WPF
                         case "patient3":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue3.Content = data[1].Trim() + " bpm";
+                                hrValue3.Content = data[1].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                    fullscreenview.hrValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue3.Content = data[1].Trim() + "%";
+                                oxiValue3.Content = data[1].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                    fullscreenview.oxiValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "BP")
@@ -656,18 +656,18 @@ namespace CardioRehab_WPF
                         case "patient4":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue4.Content = data[1].Trim() + " bpm";
+                                hrValue4.Content = data[1].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                    fullscreenview.hrValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue4.Content = data[1].Trim() + "%";
+                                oxiValue4.Content = data[1].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                    fullscreenview.oxiValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "BP")
@@ -685,10 +685,10 @@ namespace CardioRehab_WPF
                         case "patient5":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue5.Content = data[1].Trim() + " bpm";
+                                hrValue5.Content = data[1].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                    fullscreenview.hrValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "OX")
@@ -696,7 +696,7 @@ namespace CardioRehab_WPF
                                 oxiValue5.Content = data[1].Trim() + "%";
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                    fullscreenview.oxiValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "BP")
@@ -714,18 +714,18 @@ namespace CardioRehab_WPF
                         case "patient6":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue6.Content = data[1].Trim() + " bpm";
+                                hrValue6.Content = data[1].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.hrValue.Content = data[1].Trim() + " bpm";
+                                    fullscreenview.hrValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue6.Content = data[1].Trim() + "%";
+                                oxiValue6.Content = data[1].Trim();
                                 if (fullscreenview != null)
                                 {
-                                    fullscreenview.oxiValue.Content = data[1].Trim() + " %";
+                                    fullscreenview.oxiValue.Content = data[1].Trim();
                                 }
                             }
                             else if (data[0].Trim() == "BP")
