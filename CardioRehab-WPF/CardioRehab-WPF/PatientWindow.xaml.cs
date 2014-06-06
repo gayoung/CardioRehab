@@ -329,10 +329,10 @@ namespace CardioRehab_WPF
             byte[] dataToClinician;
 
             Random r = new Random();
-            int heartRate = r.Next(60, 140);
+            int heartRate = r.Next(60, 200);
             int oxygen = r.Next(93, 99);
             int systolic = r.Next(100, 180);
-            int diastolic = r.Next(50, 105);
+            int diastolic = r.Next(50, 120);
 
             // modify patient UI labels
             hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = heartRate.ToString() + " bpm"));
