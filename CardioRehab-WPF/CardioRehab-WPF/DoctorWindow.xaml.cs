@@ -57,6 +57,8 @@ namespace CardioRehab_WPF
         private int maxSys = 170;
         private int maxDia = 110;
 
+        private bool hasBadData = false;
+
         private List<String> patientIPCollection = new List<String>();
 
         private String localIP;
@@ -485,14 +487,19 @@ namespace CardioRehab_WPF
                                 }
                                 else if (Convert.ToInt32(data[1]) > maxHrRange)
                                 {
+                                    hasBadData = true;
                                     SetArrow(hrWarning1, hrValue1, "uparrow.png");
                                     border1.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
                                 }
                                 else
                                 {
                                     hrValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
                                     hrWarning1.Visibility = Visibility.Hidden;
+
+                                    if(!hasBadData)
+                                    {
+                                        border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
+                                    }
                                 }
                                 if(fullscreenview != null)
                                 {
@@ -503,31 +510,41 @@ namespace CardioRehab_WPF
                                     }
                                     else if (Convert.ToInt32(data[1]) > maxHrRange)
                                     {
+                                        hasBadData = true;
                                         SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "uparrow.png");
                                         fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
                                     }
                                     else
                                     {
                                         fullscreenview.hrValue.Foreground = System.Windows.Media.Brushes.Black;
-                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
                                         fullscreenview.hrWarning.Visibility = Visibility.Hidden;
+
+                                        if(!hasBadData)
+                                        {
+                                            fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
+                                        }
                                     }
                                 }
                             }
-                            else if (data[0].Trim() == "OX")
+                            if (data[0].Trim() == "OX")
                             {
                                 oxiValue1.Content = data[1].Trim();
 
                                 if (Convert.ToInt32(data[1]) < minO2)
                                 {
+                                    hasBadData = true;
                                     SetArrow(oxiWarning1, oxiValue1, "downarrow.png");
                                     border1.BorderBrush = System.Windows.Media.Brushes.Blue;
                                 }
                                 else
                                 {
                                     oxiValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
                                     oxiWarning1.Visibility = Visibility.Hidden;
+
+                                    if(!hasBadData)
+                                    {
+                                        border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
+                                    }
                                 }
 
                                 if (fullscreenview != null)
@@ -542,23 +559,29 @@ namespace CardioRehab_WPF
                                     else
                                     {
                                         fullscreenview.oxiValue.Foreground = System.Windows.Media.Brushes.Black;
-                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
                                         fullscreenview.oxiWarning.Visibility = Visibility.Hidden;
+
+                                        if(!hasBadData)
+                                        {
+                                            fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
+                                        }
                                     }
                                 }
                             }
-                            else if (data[0].Trim() == "BP")
+                            if (data[0].Trim() == "BP")
                             {
                                 bpSysValue1.Content = data[1].Trim();
                                 bpDiaValue1.Content = data[2].Trim();
 
                                 if (Convert.ToInt32(data[1]) > maxSys)
                                 {
+                                    hasBadData = true;
                                     SetArrow(bpWarning1, bpSysValue1, "uparrow.png");
                                     border1.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
                                 }
                                 else if(Convert.ToInt32(data[2]) > maxDia)
                                 {
+                                    hasBadData = true;
                                     SetArrow(bpWarning1, bpDiaValue1, "uparrow.png");
                                     border1.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
                                 }
@@ -566,8 +589,13 @@ namespace CardioRehab_WPF
                                 {
                                     bpSysValue1.Foreground = System.Windows.Media.Brushes.Black;
                                     bpDiaValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
                                     bpWarning1.Visibility = Visibility.Hidden;
+
+                                    if(!hasBadData)
+                                    {
+                                        border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
+                                    }
+                                    hasBadData = false;
                                 }
 
                                 if (fullscreenview != null)
@@ -576,11 +604,13 @@ namespace CardioRehab_WPF
                                     fullscreenview.bpDiaValue.Content = data[2].Trim();
                                     if (Convert.ToInt32(data[1]) > maxSys)
                                     {
+                                        hasBadData = true;
                                         SetArrow(fullscreenview.bpWarning, fullscreenview.bpSysValue, "uparrow.png");
                                         fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
                                     }
                                     else if (Convert.ToInt32(data[2]) > maxDia)
                                     {
+                                        hasBadData = true;
                                         SetArrow(fullscreenview.bpWarning, fullscreenview.bpDiaValue, "uparrow.png");
                                         fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
                                     }
@@ -588,8 +618,12 @@ namespace CardioRehab_WPF
                                     {
                                         fullscreenview.bpSysValue.Foreground = System.Windows.Media.Brushes.Black;
                                         fullscreenview.bpDiaValue.Foreground = System.Windows.Media.Brushes.Black;
-                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
                                         fullscreenview.bpWarning.Visibility = Visibility.Hidden;
+                                        if (!hasBadData)
+                                        {
+                                            fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
+                                        }
+                                        hasBadData = false;
                                     }
                                 }
                             }
