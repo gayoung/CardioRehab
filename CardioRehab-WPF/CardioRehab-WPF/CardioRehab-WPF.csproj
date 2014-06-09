@@ -195,7 +195,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ecg.png" />
+    <Resource Include="ecg.png" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="downarrow.png" />

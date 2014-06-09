@@ -4,8 +4,25 @@
          xmlns:k="http://schemas.microsoft.com/kinect/2013"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" mc:Ignorable="d"
         xmlns:d3="http://research.microsoft.com/DynamicDataDisplay/1.0"
-        Title="Full Screen Mode" Height="780" Width="1024" WindowStartupLocation="CenterScreen">
+        Title="Full Screen Mode" Height="780" Width="1024" WindowStartupLocation="CenterScreen" WindowState="Maximized">
     <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="67*"/>
+            <ColumnDefinition Width="163*"/>
+            <ColumnDefinition Width="262*"/>
+            <ColumnDefinition Width="265*"/>
+            <ColumnDefinition Width="90*"/>
+            <ColumnDefinition Width="78*"/>
+            <ColumnDefinition Width="91*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="71*"/>
+            <RowDefinition Height="185*"/>
+            <RowDefinition Height="215*"/>
+            <RowDefinition Height="49*"/>
+            <RowDefinition Height="145*"/>
+            <RowDefinition Height="85*"/>
+        </Grid.RowDefinitions>
         <Grid.Background>
             <RadialGradientBrush>
                 <GradientStop Color="#FF0A5B15" Offset="1"/>
@@ -13,10 +30,10 @@
                 <GradientStop Color="#FF5EC96D"/>
             </RadialGradientBrush>
         </Grid.Background>
-        <Border BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Left" Height="369" Margin="10,80,0,0" VerticalAlignment="Top" Width="739" CornerRadius="10">
-            <Image x:Name="patientFrame" HorizontalAlignment="Stretch" Height="349" Margin="5,5,0,0" VerticalAlignment="Stretch" Width="719"/>
+        <Border BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Stretch" Margin="10,10,5,5" VerticalAlignment="Stretch" CornerRadius="10" Grid.Row="1" Grid.RowSpan="2" Grid.ColumnSpan="4">
+            <Image x:Name="patientFrame" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Stretch" Stretch="Fill"/>
         </Border>
-        <Border x:Name="ecgBorder" BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Left" Height="202" Margin="10,525,0,0" VerticalAlignment="Top" Width="739" CornerRadius="10">
+        <Border x:Name="ecgBorder" BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Stretch" Margin="10,5,5,10" VerticalAlignment="Stretch" CornerRadius="10" Grid.Row="4" Grid.RowSpan="2" Grid.ColumnSpan="4">
             <d3:ChartPlotter x:Name="plotter" Margin="0,0,0,0">
                 <d3:ChartPlotter.HorizontalAxis>
                     <d3:HorizontalDateTimeAxis x:Name="dateAxis" FontSize="7"/>
@@ -28,16 +45,16 @@
                 <d3:HorizontalLine Value="{Binding MinECG}" Stroke="Red" StrokeThickness="2"/>
             </d3:ChartPlotter>
         </Border>
-        <Border BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Left" Height="166" Margin="764,80,0,0" VerticalAlignment="Top" Width="229" CornerRadius="10">
+        <Border BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Stretch" Margin="5,10,10,5" VerticalAlignment="Stretch" CornerRadius="10" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="3">
             <Image x:Name="doctorFrame" HorizontalAlignment="Stretch" Height="146" Margin="5,5,0,0" VerticalAlignment="Stretch" Width="209"/>
         </Border>
-        <Button x:Name="NoteButton" HorizontalAlignment="Left" Height="50" Margin="780,677,0,0" VerticalAlignment="Top" Width="50" Click="NoteButton_Click">
-            <Image x:Name="NoteIcon" Height="28" Width="28" Source="note.png"/>
+        <Button x:Name="NoteButton" HorizontalAlignment="Stretch" Margin="25,10,5,15" VerticalAlignment="Stretch" Click="NoteButton_Click" Grid.Row="5" Grid.Column="4">
+            <Image x:Name="NoteIcon" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Source="note.png" Margin="10"/>
         </Button>
-        <Label x:Name="pateintId" Content="Patient 1" HorizontalAlignment="Left" Height="65" Margin="285,10,0,0" VerticalAlignment="Top" Width="190" Foreground="#FFF7FBF7" FontFamily="Century" FontWeight="Bold" FontSize="36"/>
-        <Label x:Name="WarningLabel" Content="Warning" HorizontalAlignment="Center" Height="47" Margin="534,10,0,0" VerticalAlignment="Top" Width="444" Foreground="#FFFD0707" FontFamily="Century" FontSize="24" FontWeight="Bold" Background="#FFF7FBF7"/>
-        <Border x:Name="patientDataArea" Background="White" BorderBrush="White" BorderThickness="5" HorizontalAlignment="Left" Height="392" Margin="764,264,0,0" VerticalAlignment="Top" Width="229" CornerRadius="10" Opacity="0.8">
-            <Canvas HorizontalAlignment="Left" Height="279" Margin="5,5,0,0" VerticalAlignment="Top" Width="324">
+        <Label x:Name="pateintId" Content="Patient 1" HorizontalAlignment="Stretch" Margin="69,10,228,10" VerticalAlignment="Stretch" Foreground="#FFF7FBF7" FontFamily="Century" FontWeight="Bold" FontSize="36" Grid.Column="2" Grid.ColumnSpan="2"/>
+        <Label x:Name="WarningLabel" Content="Warning" HorizontalAlignment="Stretch" Margin="42,14,38,0" VerticalAlignment="Stretch" Foreground="#FFFD0707" FontFamily="Century" FontSize="24" FontWeight="Bold" Background="#FFF7FBF7" Grid.Column="3" Grid.ColumnSpan="4"/>
+        <Border x:Name="patientDataArea" Background="White" BorderBrush="White" BorderThickness="5" HorizontalAlignment="Stretch" Margin="5,5,10,5" VerticalAlignment="Stretch" CornerRadius="10" Opacity="0.8" Grid.Row="2" Grid.RowSpan="3" Grid.Column="4" Grid.ColumnSpan="3">
+            <Canvas HorizontalAlignment="Center" Height="280" Margin="5,16,5,93" VerticalAlignment="Center" Width="224">
                 <Label x:Name="hrLabel" Content="Heart Rate" Canvas.Left="61" Canvas.Top="12" FontFamily="Century" FontSize="16"/>
                 <Image Height="24" Canvas.Left="32" Source="heart.png" Stretch="Fill" Canvas.Top="17" Width="24"/>
                 <Label x:Name="hrValue" Content="--" Canvas.Left="61" Canvas.Top="46" FontFamily="Century" FontSize="16" RenderTransformOrigin="0.419,1.759"/>
@@ -47,8 +64,8 @@
                 <Label x:Name="bpLabel" Content="Blood Pressure" Canvas.Left="61" Canvas.Top="177" FontFamily="Century" FontSize="16"/>
                 <Image Height="24" Canvas.Left="32" Source="bp.png" Stretch="Fill" Canvas.Top="177" Width="24"/>
                 <Label x:Name="bpSysValue" Content="--" Canvas.Left="61" Canvas.Top="211" FontFamily="Century" FontSize="16" RenderTransformOrigin="0.419,1.759"/>
-                <Image x:Name="hrWarning" Height="29" Canvas.Left="139" Canvas.Top="46" Width="31" Source="pack://siteoforigin:,,,/uparrow.png" RenderTransformOrigin="0.29,0.724"/>
-                <Image x:Name="oxiWarning" Height="29" Canvas.Left="115" Canvas.Top="127" Width="31" Source="pack://siteoforigin:,,,/downarrow.png" RenderTransformOrigin="0.29,0.724"/>
+                <Image x:Name="hrWarning" Height="29" Canvas.Left="139" Canvas.Top="46" Width="31" Source="uparrow.png" RenderTransformOrigin="0.29,0.724"/>
+                <Image x:Name="oxiWarning" Height="29" Canvas.Left="115" Canvas.Top="127" Width="31" Source="downarrow.png" RenderTransformOrigin="0.29,0.724"/>
                 <Image x:Name="bpWarning" Height="29" Canvas.Left="132" Canvas.Top="211" Width="31" Source="uparrow.png" RenderTransformOrigin="0.29,0.724"/>
                 <Label x:Name="bpValue_Copy" Content="/" Canvas.Left="92" Canvas.Top="211" FontFamily="Century" FontSize="16" RenderTransformOrigin="0.419,1.759"/>
                 <Label x:Name="bpDiaValue" Content="--" Canvas.Left="106" Canvas.Top="211" FontFamily="Century" FontSize="16" RenderTransformOrigin="0.419,1.759"/>
@@ -56,13 +73,13 @@
                 <Label Content="%" Canvas.Left="87" Canvas.Top="127" FontFamily="Century" FontSize="16" RenderTransformOrigin="0.419,1.759"/>
             </Canvas>
         </Border>
-        <Image HorizontalAlignment="Left" Height="40" Margin="25,480,0,0" VerticalAlignment="Top" Width="40" Source="pack://siteoforigin:,,,/ecg.png" OpacityMask="Black"/>
-        <Label Content="ECG Graph" HorizontalAlignment="Left" Height="40" Margin="70,480,0,0" VerticalAlignment="Top" Width="158" Foreground="#FFF7FBF7" FontFamily="Century" FontWeight="Bold" FontSize="24"/>
-        <Button x:Name="MuteButton" HorizontalAlignment="Left" Height="50" Margin="854,677,0,0" VerticalAlignment="Top" Width="50" Click="MuteButton_Click">
-            <Image x:Name="muteIcon" Source="mic.png" Width="35"/>
+        <Image HorizontalAlignment="Stretch" Margin="21,9,0,0" VerticalAlignment="Stretch" Source="ecg.png" OpacityMask="Black" Grid.Row="3"/>
+        <Label Content="ECG Graph" HorizontalAlignment="Stretch" Margin="0,14,3,140" VerticalAlignment="Stretch" Foreground="#FFF7FBF7" FontFamily="Century" FontWeight="Bold" FontSize="24" Grid.Row="3" Grid.RowSpan="2" Grid.Column="1"/>
+        <Button x:Name="MuteButton" HorizontalAlignment="Stretch" Margin="10,10,15,15" VerticalAlignment="Stretch" Click="MuteButton_Click" Grid.Row="5" Grid.Column="5">
+            <Image x:Name="muteIcon" Source="mic.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="5,10"/>
         </Button>
-        <Button x:Name="CollapseButton" HorizontalAlignment="Left" Height="50" Margin="928,677,0,0" VerticalAlignment="Top" Width="50" Click="CollapseButton_Click">
-            <Image x:Name="collapseIcon" Source="collapse.png" Width="29"/>
+        <Button x:Name="CollapseButton" HorizontalAlignment="Stretch" Margin="5,10,30,15" VerticalAlignment="Stretch" Click="CollapseButton_Click" Grid.Row="5" Grid.Column="6">
+            <Image x:Name="collapseIcon" Source="collapse.png" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Margin="10"/>
         </Button>
     </Grid>
 </Window>
