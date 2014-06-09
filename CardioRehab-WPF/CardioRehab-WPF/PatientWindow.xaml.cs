@@ -93,10 +93,10 @@ namespace CardioRehab_WPF
             InitializeComponent();
 
             //InitializeBioSockets();
-            CreateSocketConnection();
+            //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            InitTimer();
+            //InitTimer();
 
             //this.SizeChanged += new EventHandler(PatientMain_Resize);
 

@@ -63,8 +63,8 @@ namespace VideoAudioTest
         {
             InitializeComponent();
             //start the kinect
-            InitializeKinect();
-            InitializeAudio();
+            //InitializeKinect();
+            //InitializeAudio();
 
         }
 
