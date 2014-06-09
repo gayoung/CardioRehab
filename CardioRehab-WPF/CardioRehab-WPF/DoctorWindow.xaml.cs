@@ -82,6 +82,7 @@ namespace CardioRehab_WPF
         WaveOut wo = new WaveOut();
         WaveFormat wf = new WaveFormat(16000, 1);
         BufferedWaveProvider mybufferwp = null;
+        float oldVolume;
 
         private AudioClient _audioClient;
         //private AudioClient _audioClient2;
@@ -276,6 +277,7 @@ namespace CardioRehab_WPF
                 icon.BeginInit();
                 icon.Source = new BitmapImage(new Uri("mic.png", UriKind.RelativeOrAbsolute));
                 icon.EndInit();
+                wo.Volume = oldVolume;
                 // add code to enable volume again
             }
             else
@@ -283,6 +285,8 @@ namespace CardioRehab_WPF
                 icon.BeginInit();
                 icon.Source = new BitmapImage(new Uri("mute.png", UriKind.RelativeOrAbsolute));
                 icon.EndInit();
+                oldVolume = wo.Volume;
+                wo.Volume = 0f;
                 // add code to mute the patient
             }
         }

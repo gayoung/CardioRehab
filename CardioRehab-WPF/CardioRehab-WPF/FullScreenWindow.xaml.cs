@@ -67,6 +67,9 @@ namespace CardioRehab_WPF
 
         #region mockECG
 
+        /// <summary>
+        /// Initialize the mocked ECG
+        /// </summary>
         public void InitializeECG()
         {
             ecgPointCollection = new ECGPointCollection();
@@ -100,12 +103,25 @@ namespace CardioRehab_WPF
 
         #endregion
 
+        /// <summary>
+        /// This method is called when the collapse button is triggered.
+        /// It switches the view from the current FullScreenWindow object to the object of
+        /// DoctorWindow.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void CollapseButton_Click(object sender, RoutedEventArgs e)
         {
             this.Hide();
             currentSplitScreen.Show();
         }
 
+        /// <summary>
+        /// This method is called when the note button is triggered.  It triggers the
+        /// PopupWindow to be open.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void NoteButton_Click(object sender, RoutedEventArgs e)
         {
             PopupWindow popup = new PopupWindow();
@@ -114,6 +130,12 @@ namespace CardioRehab_WPF
             popup.ShowDialog();
         }
 
+        /// <summary>
+        /// This method is called when the mute button is triggered.  It mutes/unmutes
+        /// the application.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void MuteButton_Click(object sender, RoutedEventArgs e)
         {
             String currentIcon = muteIcon.Source.ToString();
