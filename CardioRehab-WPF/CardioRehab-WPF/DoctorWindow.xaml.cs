@@ -123,15 +123,15 @@ namespace CardioRehab_WPF
 
             // patients send the biodata from port 5000-5005
             int[] ports = new int[6] { 5000, 5001, 5002, 5003, 5004, 5005 };
-            //InitializeBioSockets(ports);
+            InitializeBioSockets(ports);
 
         }
 
         private void DoctorWindow_Loaded(object sender, RoutedEventArgs e)
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
-            //InitializeKinect(kinectOutPorts);
-            //InitializeAudio();
+            InitializeKinect(kinectOutPorts);
+            InitializeAudio();
 
             InitializeECG();
 
@@ -287,22 +287,39 @@ namespace CardioRehab_WPF
             }
         }
 
+        /// <summary>
+        /// This method toggles the uparrow.png and downarrow.png to let the doctor know the
+        /// patients' biodata status.  If the heart rate is too high (> 80% of maximum HR) then
+        /// the heart rate value is displayed as red color with the uparrow.png visible.
+        /// (similar concept for oxygen sat and bp.)
+        /// </summary>
+        /// <param name="icon"> the image object placeholder in XAML file </param>
+        /// <param name="currentLabel"> the label object in XAML file displaying the biodata value </param>
+        /// <param name="newimg"> the name of the image file to be displayed </param>
         private void SetArrow(System.Windows.Controls.Image icon, Label currentLabel, String newimg)
         {
+            //if the biodata is too low, then the font is displayed as blue.
             if(newimg == "downarrow.png")
             {
                 currentLabel.Foreground = System.Windows.Media.Brushes.Blue;
             }
+            //if the biodata is too high, then the font is displayed as blue.
             else
             {
                 currentLabel.Foreground = System.Windows.Media.Brushes.OrangeRed;
             }
+            // display the speciied images
             icon.BeginInit();
             icon.Source = new BitmapImage(new Uri(newimg, UriKind.RelativeOrAbsolute));
             icon.EndInit();
             icon.Visibility = Visibility.Visible;
         }
 
+        /// <summary>
+        /// This method is triggered by expand button and it calls the FullScreenWindow object
+        /// to display the selected patient view only. (instead of all 6 patients)
+        /// </summary>
+        /// <param name="patient"></param>
         private void ExpandedScreenView(int patient)
         {
             fullscreenview = new FullScreenWindow(userid, patient, db, this);
@@ -319,7 +336,224 @@ namespace CardioRehab_WPF
         /// <param name="e"></param>
         private void DoctorWindowClose(object sender, EventArgs e)
         {
+            // need to modify this to properly close the windows when
+            // collapse/expand buttons are triggered
             Application.Current.Shutdown();
+        }
+
+        /// <summary>
+        /// This method is called from processData method below to process the heart rate
+        /// data sent from the patient.  It displays the data received and also calls SetArrow function
+        /// if the heart is > than 80% of max hr or if it is < than 60% of max hr.
+        /// </summary>
+        /// <param name="hrValue"> heart rate data received from the patient </param>
+        /// <param name="hrValLabel"> label in XAML file to display the heart rate </param>
+        /// <param name="hrWarnIcon"> image icon associated with high/low heart rate warning </param>
+        /// <param name="patientBorder"> border object associated with the patient (border1 - 6) </param>
+        private void ProcessHrData(String hrValue, Label hrValLabel, System.Windows.Controls.Image hrWarnIcon, Border patientBorder)
+        {
+            hrValLabel.Content = hrValue.Trim();
+            if (Convert.ToInt32(hrValue) < minHrRange)
+            {
+                SetArrow(hrWarnIcon, hrValLabel, "downarrow.png");
+            }
+            else if (Convert.ToInt32(hrValue) > maxHrRange)
+            {
+                hasBadData = true;
+                SetArrow(hrWarnIcon, hrValLabel, "uparrow.png");
+                patientBorder.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+            }
+            else
+            {
+                hrValLabel.Foreground = System.Windows.Media.Brushes.Black;
+                hrWarnIcon.Visibility = Visibility.Hidden;
+
+                if (!hasBadData)
+                {
+                    patientBorder.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
+                }
+            }
+            if (fullscreenview != null)
+            {
+                ModifyFulLScreenWindowHr(hrValue);
+            }
+        }
+
+        /// <summary>
+        /// This method is called from processData method below to process the oxygen saturation level
+        /// data sent from the patient.  It displays the data received and also calls SetArrow function
+        /// if the oxygen sat % is < than 94% (mocked currently to test the functionality).
+        /// </summary>
+        /// <param name="oxValue"> oxygen sat % data received from the patient </param>
+        /// <param name="oxValLabel"> label in XAML file to display the % sat </param>
+        /// <param name="oxWarnIcon"> image icon associated with high/low % sat warning </param>
+        /// <param name="patientBorder"> border object associated with the patient (border1 - 6) </param>
+        private void ProcessOxData(String oxValue, Label oxValLabel, System.Windows.Controls.Image oxWarnIcon, Border patientBorder)
+        {
+            oxValLabel.Content = oxValue.Trim();
+
+            if (Convert.ToInt32(oxValue) < minO2)
+            {
+                hasBadData = true;
+                SetArrow(oxWarnIcon, oxValLabel, "downarrow.png");
+                patientBorder.BorderBrush = System.Windows.Media.Brushes.Blue;
+            }
+            else
+            {
+                oxValLabel.Foreground = System.Windows.Media.Brushes.Black;
+                oxWarnIcon.Visibility = Visibility.Hidden;
+
+                if (!hasBadData)
+                {
+                    patientBorder.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
+                }
+            }
+
+            if (fullscreenview != null)
+            {
+                ModifyFullScreenWindowOx(oxValue);
+            }
+        }
+
+        /// <summary>
+        /// This method is called from processData method below to process the blood pressure 
+        /// data sent from the patient.  It displays the data received and also calls SetArrow function
+        /// if the systolic bp is > 170 and if the diastolic bp is > 110 (mocked currently to test the functionality).
+        /// </summary>
+        /// <param name="sysValue"> systolic bp data received from the patient </param>
+        /// <param name="diaValue"> diastolic bp data received from the patient </param>
+        /// <param name="sysValLabel"> label in XAML file to display the systolic bp </param>
+        /// <param name="diaValLabel"> label in XAML file to display the diastolic bp </param>
+        /// <param name="bpWarnIcon"> image icon associated with high bp warning </param>
+        /// <param name="patientBorder"> border object associated with the patient (border1 - 6) </param>
+        private void ProcessBpData(String sysValue, String diaValue, Label sysValLabel, Label diaValLabel, System.Windows.Controls.Image bpWarnIcon, Border patientBorder)
+        {
+            sysValLabel.Content = sysValue.Trim();
+            diaValLabel.Content = diaValue.Trim();
+
+            if (Convert.ToInt32(sysValue) > maxSys)
+            {
+                hasBadData = true;
+                SetArrow(bpWarnIcon, sysValLabel, "uparrow.png");
+                patientBorder.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+            }
+            else if (Convert.ToInt32(diaValue) > maxDia)
+            {
+                hasBadData = true;
+                SetArrow(bpWarnIcon, diaValLabel, "uparrow.png");
+                patientBorder.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+            }
+            else
+            {
+                sysValLabel.Foreground = System.Windows.Media.Brushes.Black;
+                diaValLabel.Foreground = System.Windows.Media.Brushes.Black;
+                bpWarnIcon.Visibility = Visibility.Hidden;
+
+                if (!hasBadData)
+                {
+                    patientBorder.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
+                }
+                hasBadData = false;
+            }
+
+            if (fullscreenview != null)
+            {
+                ModifyFullScreenWindowBp(sysValue, diaValue);
+            }
+        }
+
+        /// <summary>
+        /// This method is called from the ProcessHrData to modify the label objects from the
+        /// FullScreenWindow.  It calls SetArrow method to show the doctor the appropriate warning
+        /// if the heart rate of the patient is abnormal. 
+        /// </summary>
+        /// <param name="hrValue"> heart rate value passed from the patient </param>
+        private void ModifyFulLScreenWindowHr(String hrValue)
+        {
+            fullscreenview.hrValue.Content = hrValue.Trim();
+            if (Convert.ToInt32(hrValue) < minHrRange)
+            {
+                SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "downarrow.png");
+            }
+            else if (Convert.ToInt32(hrValue) > maxHrRange)
+            {
+                hasBadData = true;
+                SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "uparrow.png");
+                fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+            }
+            else
+            {
+                fullscreenview.hrValue.Foreground = System.Windows.Media.Brushes.Black;
+                fullscreenview.hrWarning.Visibility = Visibility.Hidden;
+
+                if (!hasBadData)
+                {
+                    fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
+                }
+            }
+        }
+
+        /// <summary>
+        /// This method is called from the ProcessOxData to modify the label objects from the
+        /// FullScreenWindow.  It calls SetArrow method to show the doctor the appropriate warning
+        /// if the oxgyen saturation of the patient is abnormal.
+        /// </summary>
+        /// <param name="oxValue"> oxygen saturation % data passed from the patient </param>
+        private void ModifyFullScreenWindowOx(String oxValue)
+        {
+            fullscreenview.oxiValue.Content = oxValue.Trim();
+
+            if (Convert.ToInt32(oxValue) < minO2)
+            {
+                SetArrow(fullscreenview.oxiWarning, fullscreenview.oxiValue, "downarrow.png");
+                fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.Blue;
+            }
+            else
+            {
+                fullscreenview.oxiValue.Foreground = System.Windows.Media.Brushes.Black;
+                fullscreenview.oxiWarning.Visibility = Visibility.Hidden;
+
+                if (!hasBadData)
+                {
+                    fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
+                }
+            }
+        }
+
+        /// <summary>
+        /// This method is called from the ProcessBpData to modify the label objects from the
+        /// FullScreenWindow.  It calls SetArrow method to show the doctor the appropriate warning
+        /// if the blood pressure of the patient is abnormal.
+        /// </summary>
+        /// <param name="sysValue"> systolic value passed from the patient </param>
+        /// <param name="diaValue"> diastolic value passed from the patient </param>
+        private void ModifyFullScreenWindowBp(String sysValue, String diaValue)
+        {
+            fullscreenview.bpSysValue.Content = sysValue.Trim();
+            fullscreenview.bpDiaValue.Content = diaValue.Trim();
+            if (Convert.ToInt32(sysValue) > maxSys)
+            {
+                hasBadData = true;
+                SetArrow(fullscreenview.bpWarning, fullscreenview.bpSysValue, "uparrow.png");
+                fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+            }
+            else if (Convert.ToInt32(diaValue) > maxDia)
+            {
+                hasBadData = true;
+                SetArrow(fullscreenview.bpWarning, fullscreenview.bpDiaValue, "uparrow.png");
+                fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
+            }
+            else
+            {
+                fullscreenview.bpSysValue.Foreground = System.Windows.Media.Brushes.Black;
+                fullscreenview.bpDiaValue.Foreground = System.Windows.Media.Brushes.Black;
+                fullscreenview.bpWarning.Visibility = Visibility.Hidden;
+                if (!hasBadData)
+                {
+                    fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
+                }
+                hasBadData = false;
+            }
         }
 
         #endregion
@@ -455,6 +689,7 @@ namespace CardioRehab_WPF
             }
             catch (SocketException e)
             {
+                Console.WriteLine("OnBioDataReceived SocketException");
                 MessageBox.Show(e.Message);
             }
 
@@ -480,297 +715,90 @@ namespace CardioRehab_WPF
                         case "patient1":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue1.Content = data[1].Trim();
-                                if(Convert.ToInt32(data[1]) < minHrRange)
-                                {
-                                    SetArrow(hrWarning1, hrValue1, "downarrow.png");
-                                }
-                                else if (Convert.ToInt32(data[1]) > maxHrRange)
-                                {
-                                    hasBadData = true;
-                                    SetArrow(hrWarning1, hrValue1, "uparrow.png");
-                                    border1.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
-                                }
-                                else
-                                {
-                                    hrValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    hrWarning1.Visibility = Visibility.Hidden;
-
-                                    if(!hasBadData)
-                                    {
-                                        border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
-                                    }
-                                }
-                                if(fullscreenview != null)
-                                {
-                                    fullscreenview.hrValue.Content = data[1].Trim();
-                                    if (Convert.ToInt32(data[1]) < minHrRange)
-                                    {
-                                        SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "downarrow.png");
-                                    }
-                                    else if (Convert.ToInt32(data[1]) > maxHrRange)
-                                    {
-                                        hasBadData = true;
-                                        SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "uparrow.png");
-                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
-                                    }
-                                    else
-                                    {
-                                        fullscreenview.hrValue.Foreground = System.Windows.Media.Brushes.Black;
-                                        fullscreenview.hrWarning.Visibility = Visibility.Hidden;
-
-                                        if(!hasBadData)
-                                        {
-                                            fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
-                                        }
-                                    }
-                                }
+                                ProcessHrData(data[1], hrValue1, hrWarning1, border1);
                             }
                             if (data[0].Trim() == "OX")
                             {
-                                oxiValue1.Content = data[1].Trim();
-
-                                if (Convert.ToInt32(data[1]) < minO2)
-                                {
-                                    hasBadData = true;
-                                    SetArrow(oxiWarning1, oxiValue1, "downarrow.png");
-                                    border1.BorderBrush = System.Windows.Media.Brushes.Blue;
-                                }
-                                else
-                                {
-                                    oxiValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    oxiWarning1.Visibility = Visibility.Hidden;
-
-                                    if(!hasBadData)
-                                    {
-                                        border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
-                                    }
-                                }
-
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.oxiValue.Content = data[1].Trim();
-
-                                    if (Convert.ToInt32(data[1]) < minO2)
-                                    {
-                                        SetArrow(fullscreenview.oxiWarning, fullscreenview.oxiValue, "downarrow.png");
-                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.Blue;
-                                    }
-                                    else
-                                    {
-                                        fullscreenview.oxiValue.Foreground = System.Windows.Media.Brushes.Black;
-                                        fullscreenview.oxiWarning.Visibility = Visibility.Hidden;
-
-                                        if(!hasBadData)
-                                        {
-                                            fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
-                                        }
-                                    }
-                                }
+                                ProcessOxData(data[1], oxiLabel1, oxiWarning1, border1); 
                             }
                             if (data[0].Trim() == "BP")
                             {
-                                bpSysValue1.Content = data[1].Trim();
-                                bpDiaValue1.Content = data[2].Trim();
-
-                                if (Convert.ToInt32(data[1]) > maxSys)
-                                {
-                                    hasBadData = true;
-                                    SetArrow(bpWarning1, bpSysValue1, "uparrow.png");
-                                    border1.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
-                                }
-                                else if(Convert.ToInt32(data[2]) > maxDia)
-                                {
-                                    hasBadData = true;
-                                    SetArrow(bpWarning1, bpDiaValue1, "uparrow.png");
-                                    border1.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
-                                }
-                                else
-                                {
-                                    bpSysValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    bpDiaValue1.Foreground = System.Windows.Media.Brushes.Black;
-                                    bpWarning1.Visibility = Visibility.Hidden;
-
-                                    if(!hasBadData)
-                                    {
-                                        border1.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
-                                    }
-                                    hasBadData = false;
-                                }
-
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.bpSysValue.Content = data[1].Trim();
-                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
-                                    if (Convert.ToInt32(data[1]) > maxSys)
-                                    {
-                                        hasBadData = true;
-                                        SetArrow(fullscreenview.bpWarning, fullscreenview.bpSysValue, "uparrow.png");
-                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
-                                    }
-                                    else if (Convert.ToInt32(data[2]) > maxDia)
-                                    {
-                                        hasBadData = true;
-                                        SetArrow(fullscreenview.bpWarning, fullscreenview.bpDiaValue, "uparrow.png");
-                                        fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.OrangeRed;
-                                    }
-                                    else
-                                    {
-                                        fullscreenview.bpSysValue.Foreground = System.Windows.Media.Brushes.Black;
-                                        fullscreenview.bpDiaValue.Foreground = System.Windows.Media.Brushes.Black;
-                                        fullscreenview.bpWarning.Visibility = Visibility.Hidden;
-                                        if (!hasBadData)
-                                        {
-                                            fullscreenview.patientDataArea.BorderBrush = System.Windows.Media.Brushes.White;
-                                        }
-                                        hasBadData = false;
-                                    }
-                                }
+                                ProcessBpData(data[1], data[2], bpSysValue1, bpDiaValue1, bpWarning1, border1);
                             }
                             break;
 
                         case "patient2":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue2.Content = data[1].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.hrValue.Content = data[1].Trim();
-                                }
+                                ProcessHrData(data[1], hrValue2, hrWarning2, border2);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue2.Content = data[1].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.oxiValue.Content = data[1].Trim();
-                                }
+                                ProcessOxData(data[1], oxiLabel2, oxiWarning2, border2); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpSysValue2.Content = data[1].Trim();
-                                bpDiaValue2.Content = data[2].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.bpSysValue.Content = data[1].Trim();
-                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
-                                }
+                                ProcessBpData(data[1], data[2], bpSysValue2, bpDiaValue2, bpWarning2, border2);
                             }
                             break;
 
                         case "patient3":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue3.Content = data[1].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.hrValue.Content = data[1].Trim();
-                                }
+                                ProcessHrData(data[1], hrValue3, hrWarning3, border3);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue3.Content = data[1].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.oxiValue.Content = data[1].Trim();
-                                }
+                                ProcessOxData(data[1], oxiLabel3, oxiWarning3, border3); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpSysValue3.Content = data[1].Trim();
-                                bpDiaValue3.Content = data[2].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.bpSysValue.Content = data[1].Trim();
-                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
-                                }
+                                ProcessBpData(data[1], data[2], bpSysValue3, bpDiaValue3, bpWarning3, border3);
                             }
                             break;
 
                         case "patient4":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue4.Content = data[1].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.hrValue.Content = data[1].Trim();
-                                }
+                                ProcessHrData(data[1], hrValue4, hrWarning4, border4);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue4.Content = data[1].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.oxiValue.Content = data[1].Trim();
-                                }
+                                ProcessOxData(data[1], oxiLabel4, oxiWarning4, border4); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpSysValue4.Content = data[1].Trim();
-                                bpDiaValue4.Content = data[2].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.bpSysValue.Content = data[1].Trim();
-                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
-                                }
+                                ProcessBpData(data[1], data[2], bpSysValue4, bpDiaValue4, bpWarning4, border4);
                             }
                             break;
 
                         case "patient5":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue5.Content = data[1].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.hrValue.Content = data[1].Trim();
-                                }
+                                ProcessHrData(data[1], hrValue5, hrWarning5, border5);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue5.Content = data[1].Trim() + "%";
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.oxiValue.Content = data[1].Trim();
-                                }
+                                ProcessOxData(data[1], oxiLabel5, oxiWarning5, border5); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpSysValue5.Content = data[1].Trim();
-                                bpDiaValue5.Content = data[2].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.bpSysValue.Content = data[1].Trim();
-                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
-                                }
+                                ProcessBpData(data[1], data[2], bpSysValue5, bpDiaValue5, bpWarning5, border5);
                             }
                             break;
 
                         case "patient6":
                             if (data[0].Trim() == "HR")
                             {
-                                hrValue6.Content = data[1].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.hrValue.Content = data[1].Trim();
-                                }
+                                ProcessHrData(data[1], hrValue6, hrWarning6, border6);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                oxiValue6.Content = data[1].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.oxiValue.Content = data[1].Trim();
-                                }
+                                ProcessOxData(data[1], oxiLabel6, oxiWarning6, border6); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                bpSysValue6.Content = data[1].Trim();
-                                bpDiaValue6.Content = data[2].Trim();
-                                if (fullscreenview != null)
-                                {
-                                    fullscreenview.bpSysValue.Content = data[1].Trim();
-                                    fullscreenview.bpDiaValue.Content = data[2].Trim();
-                                }
+                                ProcessBpData(data[1], data[2], bpSysValue6, bpDiaValue6, bpWarning6, border6);
                             }
                             break;
                         default:

@@ -63,7 +63,7 @@ namespace VideoAudioTest
         {
             InitializeComponent();
             //start the kinect
-            //InitializeKinect();
+            InitializeKinect();
             //InitializeAudio();
 
         }
@@ -172,7 +172,7 @@ namespace VideoAudioTest
                 outputImage.WritePixels(
                     new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
 
-                //this.MyImage.Source = outputImage;
+                this.MyImage.Source = outputImage;
 
             };
 
@@ -182,7 +182,7 @@ namespace VideoAudioTest
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
 
-            //this.OtherImage.Source = e.ColorFrame.BitmapImage;
+            this.OtherImage.Source = e.ColorFrame.BitmapImage;
 
         }
 

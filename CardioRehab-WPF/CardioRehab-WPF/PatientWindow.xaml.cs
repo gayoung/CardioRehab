@@ -35,7 +35,6 @@ namespace CardioRehab_WPF
     /// </summary>
     public partial class PatientWindow : Window
     {
-        //static string fname = string.Format("Tiny Tim-{0:yyyy-MM-dd hh.mm.ss.tt}.txt", DateTime.Now);
         private DatabaseClass db;
 
         private int user;
@@ -93,14 +92,10 @@ namespace CardioRehab_WPF
             InitializeComponent();
 
             //InitializeBioSockets();
-            //CreateSocketConnection();
+            CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            //InitTimer();
-
-            //this.SizeChanged += new EventHandler(PatientMain_Resize);
-
-
+            InitTimer();
         }
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
@@ -225,70 +220,6 @@ namespace CardioRehab_WPF
         }
 
         /// <summary>
-        /// This method is used to adjust the size of the form components
-        /// when the form window is resized (min/max). Need to modify this later to
-        /// work with the new WPF UI
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        /*/
-        private void PatientMain_Resize(object sender, EventArgs e)
-        {
-            int currentWidth = this.Width;
-            int currentHeight = this.Height;
-
-            panel1.Width = (int)(currentWidth * 0.70);
-            panel1.Height = (int)(currentHeight * 0.9);
-
-            int newdoctorFrameX = panel1.Location.X + panel1.Width + 10;
-            int doctorFrameY = panel1.Location.Y;
-
-            doctorFrame.Location = new Point(newdoctorFrameX, doctorFrameY);
-            doctorFrame.Width = (int)(currentWidth * 0.25);
-            doctorFrame.Height = (int)(currentHeight * 0.23);
-
-            int patientFrameY = doctorFrameY + doctorFrame.Height + 10;
-
-            patientFrame.Location = new Point(newdoctorFrameX, patientFrameY);
-            patientFrame.Width = (int)(currentWidth * 0.25);
-            patientFrame.Height = (int)(currentHeight * 0.23);
-
-            int BiostatPanellY = patientFrameY + patientFrame.Height + 10;
-
-            BiostatPanel.Location = new Point(newdoctorFrameX, BiostatPanellY);
-            BiostatPanel.Width = (int)(currentWidth * 0.25);
-            BiostatPanel.Height = (int)(currentHeight * 0.42);
-
-            if(WindowState == FormWindowState.Maximized)
-            {
-                Font newStyle = new Font(hrLabel.Font.FontFamily, 22);
-                hrLabel.Font = newStyle;
-                hrValue.Font = newStyle;
-                bpLabel.Font = newStyle;
-                bpValue.Font = newStyle;
-                oxiLabel.Font = newStyle;
-                oxiValue.Font = newStyle;
-
-            }
-            else
-            {
-                Font newStyle = new Font(hrLabel.Font.FontFamily, 16);
-                hrLabel.Font = newStyle;
-                hrValue.Font = newStyle;
-                bpLabel.Font = newStyle;
-                bpValue.Font = newStyle;
-                oxiLabel.Font = newStyle;
-                oxiValue.Font = newStyle;
-            }
-
-            hrValue.Location = new Point(hrValue.Location.X, hrLabel.Location.Y + hrLabel.Height + 5);
-            bpLabel.Location = new Point(bpLabel.Location.X, hrValue.Location.Y + hrValue.Height + 5);
-            bpValue.Location = new Point(bpValue.Location.X, bpLabel.Location.Y + bpLabel.Height + 5);
-            oxiLabel.Location = new Point(oxiLabel.Location.X, bpValue.Location.Y + bpValue.Height + 5);
-            oxiValue.Location = new Point(oxiValue.Location.X, oxiLabel.Location.Y + oxiLabel.Height + 5);
-        }/*/
-
-        /// <summary>
         /// This method is used to get both LAN and wireless IP of the current user
         /// </summary>
         private void GetLocalIP()
@@ -312,11 +243,6 @@ namespace CardioRehab_WPF
                     Ipcounter++;
                 }
             }
-        }
-
-        public static String GetTimestamp(DateTime value)
-        {
-            return value.ToString("HH:mm:ss");
         }
 
         /// <summary>
@@ -470,7 +396,6 @@ namespace CardioRehab_WPF
                 if (name.Length == 2)
                 {
                     System.String[] data = name[1].Trim().Split(' ');
-                    String timeStamp = GetTimestamp(DateTime.Now);
 
                     byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
@@ -492,12 +417,6 @@ namespace CardioRehab_WPF
                             hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "").Trim() + " bpm"));
                         }
 
-                        /*/
-                        using (StreamWriter sw = File.AppendText(fname))
-                        {
-                            sw.WriteLine(timeStamp + " |" + "HR " + data[1]);
-                        }
-                         * /*/
                     }
 
                     // Change the Sats display in the UI thread.

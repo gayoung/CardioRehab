@@ -62,6 +62,7 @@ namespace CardioRehab_WPF
             this.pateintId.Content = "Patient " + patientindex.ToString();
 
             InitializeECG();
+            // TODO need to add function to display warning from other patients
         }
 
         #region mockECG

@@ -165,7 +165,7 @@
 
                 </Grid>
             </Border>
-            <Border x:Name="borde3" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Stretch" Margin="5,10,10,5" VerticalAlignment="Stretch" CornerRadius="5" Grid.Column="2">
+            <Border x:Name="border3" BorderBrush="#FF0A5B15" BorderThickness="5" HorizontalAlignment="Stretch" Margin="5,10,10,5" VerticalAlignment="Stretch" CornerRadius="5" Grid.Column="2">
                 <Grid HorizontalAlignment="Stretch" Margin="5,5,0,0" VerticalAlignment="Stretch">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="152*"/>
