@@ -87,8 +87,8 @@ namespace CardioRehab_WPF
         private AudioClient _audioClient;
         //private AudioClient _audioClient2;
 
-        //private List<AudioListener> audioListenerCollection = new List<AudioListener>();
-        private static AudioListener _audioListener;
+        private List<AudioListener> audioListenerCollection = new List<AudioListener>();
+        //private static AudioListener _audioListener;
 
         private Random _Random;
         private int _maxECG;
@@ -111,7 +111,7 @@ namespace CardioRehab_WPF
         private int i = 0;
 
         private FullScreenWindow fullscreenview = null;
-        bool[] warningStatus = null;
+        bool[] warningStatus = new bool[6];
 
 
         public DoctorWindow(int currentuser, DatabaseClass openDB)
@@ -355,7 +355,7 @@ namespace CardioRehab_WPF
         /// <param name="hrValLabel"> label in XAML file to display the heart rate </param>
         /// <param name="hrWarnIcon"> image icon associated with high/low heart rate warning </param>
         /// <param name="patientBorder"> border object associated with the patient (border1 - 6) </param>
-        private void ProcessHrData(String hrValue, Label hrValLabel, System.Windows.Controls.Image hrWarnIcon, Border patientBorder)
+        private void ProcessHrData(String hrValue, Label hrValLabel, System.Windows.Controls.Image hrWarnIcon, Border patientBorder, int currentPatient)
         {
             hrValLabel.Content = hrValue.Trim();
             if (Convert.ToInt32(hrValue) < minHrRange)
@@ -378,9 +378,12 @@ namespace CardioRehab_WPF
                     patientBorder.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
                 }
             }
-            if (fullscreenview != null)
+            if (fullscreenview != null) 
             {
-                ModifyFulLScreenWindowHr(hrValue);
+                if(fullscreenview.patientLabel == currentPatient)
+                {
+                    ModifyFulLScreenWindowHr(hrValue);
+                }
             }
         }
 
@@ -393,7 +396,7 @@ namespace CardioRehab_WPF
         /// <param name="oxValLabel"> label in XAML file to display the % sat </param>
         /// <param name="oxWarnIcon"> image icon associated with high/low % sat warning </param>
         /// <param name="patientBorder"> border object associated with the patient (border1 - 6) </param>
-        private void ProcessOxData(String oxValue, Label oxValLabel, System.Windows.Controls.Image oxWarnIcon, Border patientBorder)
+        private void ProcessOxData(String oxValue, Label oxValLabel, System.Windows.Controls.Image oxWarnIcon, Border patientBorder, int currentPatient)
         {
             oxValLabel.Content = oxValue.Trim();
 
@@ -416,7 +419,10 @@ namespace CardioRehab_WPF
 
             if (fullscreenview != null)
             {
-                ModifyFullScreenWindowOx(oxValue);
+                if (fullscreenview.patientLabel == currentPatient)
+                {
+                    ModifyFullScreenWindowOx(oxValue);
+                }
             }
         }
 
@@ -431,7 +437,7 @@ namespace CardioRehab_WPF
         /// <param name="diaValLabel"> label in XAML file to display the diastolic bp </param>
         /// <param name="bpWarnIcon"> image icon associated with high bp warning </param>
         /// <param name="patientBorder"> border object associated with the patient (border1 - 6) </param>
-        private void ProcessBpData(String sysValue, String diaValue, Label sysValLabel, Label diaValLabel, System.Windows.Controls.Image bpWarnIcon, Border patientBorder)
+        private void ProcessBpData(String sysValue, String diaValue, Label sysValLabel, Label diaValLabel, System.Windows.Controls.Image bpWarnIcon, Border patientBorder, int currentPatient)
         {
             sysValLabel.Content = sysValue.Trim();
             diaValLabel.Content = diaValue.Trim();
@@ -463,17 +469,26 @@ namespace CardioRehab_WPF
 
             if (fullscreenview != null)
             {
-                ModifyFullScreenWindowBp(sysValue, diaValue);
+                if (fullscreenview.patientLabel == currentPatient)
+                {
+                    ModifyFullScreenWindowBp(sysValue, diaValue);
+                }
             }
         }
 
+        /// <summary>
+        /// This method is used to put the warning message about status of
+        /// other patients when the doctor is in Full screen view mode of one patient.
+        /// </summary>
         private void RaiseOtherPatientWarning()
         {
+            int currentPatient = fullscreenview.patientLabel;
             String patientString = "";
             int warningindex = 1;
+
             while(warningindex < warningStatus.Length)
             {
-                if(warningStatus[warningindex-1])
+                if((warningStatus[warningindex-1]) && (warningindex != currentPatient))
                 {
                     patientString += "patient"+warningindex.ToString()+", ";
                 }
@@ -484,7 +499,15 @@ namespace CardioRehab_WPF
             {
                 patientString += "patient"+warningStatus.Length.ToString();
             }
-            fullscreenview.WarningLabel.Content = patientString + " need to be checked.";
+            if(patientString != "")
+            {
+                fullscreenview.WarningLabel.Content = patientString + " need to be checked.";
+                fullscreenview.WarningLabel.Visibility = System.Windows.Visibility.Visible;
+            }
+            else
+            {
+                fullscreenview.WarningLabel.Visibility = System.Windows.Visibility.Hidden;
+            }
         }
 
         /// <summary>
@@ -740,15 +763,15 @@ namespace CardioRehab_WPF
                         case "patient1":
                             if (data[0].Trim() == "HR")
                             {
-                                ProcessHrData(data[1], hrValue1, hrWarning1, border1);
+                                ProcessHrData(data[1], hrValue1, hrWarning1, border1, 1);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiLabel1, oxiWarning1, border1); 
+                                ProcessOxData(data[1], oxiValue1, oxiWarning1, border1, 1); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue1, bpDiaValue1, bpWarning1, border1);
+                                ProcessBpData(data[1], data[2], bpSysValue1, bpDiaValue1, bpWarning1, border1, 1);
                             }
                             if(hasBadData)
                             {
@@ -767,15 +790,15 @@ namespace CardioRehab_WPF
                         case "patient2":
                             if (data[0].Trim() == "HR")
                             {
-                                ProcessHrData(data[1], hrValue2, hrWarning2, border2);
+                                ProcessHrData(data[1], hrValue2, hrWarning2, border2, 2);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiLabel2, oxiWarning2, border2); 
+                                ProcessOxData(data[1], oxiValue2, oxiWarning2, border2, 2); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue2, bpDiaValue2, bpWarning2, border2);
+                                ProcessBpData(data[1], data[2], bpSysValue2, bpDiaValue2, bpWarning2, border2, 2);
                             }
                             if (hasBadData)
                             {
@@ -785,20 +808,24 @@ namespace CardioRehab_WPF
                             {
                                 warningStatus[1] = false;
                             }
+                            if (fullscreenview != null)
+                            {
+                                RaiseOtherPatientWarning();
+                            }
                             break;
 
                         case "patient3":
                             if (data[0].Trim() == "HR")
                             {
-                                ProcessHrData(data[1], hrValue3, hrWarning3, border3);
+                                ProcessHrData(data[1], hrValue3, hrWarning3, border3, 3);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiLabel3, oxiWarning3, border3); 
+                                ProcessOxData(data[1], oxiValue3, oxiWarning3, border3, 3); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue3, bpDiaValue3, bpWarning3, border3);
+                                ProcessBpData(data[1], data[2], bpSysValue3, bpDiaValue3, bpWarning3, border3, 3);
                             }
                             if (hasBadData)
                             {
@@ -808,20 +835,24 @@ namespace CardioRehab_WPF
                             {
                                 warningStatus[2] = false;
                             }
+                            if (fullscreenview != null)
+                            {
+                                RaiseOtherPatientWarning();
+                            }
                             break;
 
                         case "patient4":
                             if (data[0].Trim() == "HR")
                             {
-                                ProcessHrData(data[1], hrValue4, hrWarning4, border4);
+                                ProcessHrData(data[1], hrValue4, hrWarning4, border4, 4);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiLabel4, oxiWarning4, border4); 
+                                ProcessOxData(data[1], oxiValue4, oxiWarning4, border4, 4); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue4, bpDiaValue4, bpWarning4, border4);
+                                ProcessBpData(data[1], data[2], bpSysValue4, bpDiaValue4, bpWarning4, border4, 4);
                             }
                             if (hasBadData)
                             {
@@ -831,20 +862,24 @@ namespace CardioRehab_WPF
                             {
                                 warningStatus[3] = false;
                             }
+                            if (fullscreenview != null)
+                            {
+                                RaiseOtherPatientWarning();
+                            }
                             break;
 
                         case "patient5":
                             if (data[0].Trim() == "HR")
                             {
-                                ProcessHrData(data[1], hrValue5, hrWarning5, border5);
+                                ProcessHrData(data[1], hrValue5, hrWarning5, border5, 5);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiLabel5, oxiWarning5, border5); 
+                                ProcessOxData(data[1], oxiValue5, oxiWarning5, border5, 5); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue5, bpDiaValue5, bpWarning5, border5);
+                                ProcessBpData(data[1], data[2], bpSysValue5, bpDiaValue5, bpWarning5, border5, 5);
                             }
                             if (hasBadData)
                             {
@@ -854,20 +889,24 @@ namespace CardioRehab_WPF
                             {
                                 warningStatus[4] = false;
                             }
+                            if (fullscreenview != null)
+                            {
+                                RaiseOtherPatientWarning();
+                            }
                             break;
 
                         case "patient6":
                             if (data[0].Trim() == "HR")
                             {
-                                ProcessHrData(data[1], hrValue6, hrWarning6, border6);
+                                ProcessHrData(data[1], hrValue6, hrWarning6, border6, 6);
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiLabel6, oxiWarning6, border6); 
+                                ProcessOxData(data[1], oxiValue6, oxiWarning6, border6, 6); 
                             }
                             else if (data[0].Trim() == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue6, bpDiaValue6, bpWarning6, border6);
+                                ProcessBpData(data[1], data[2], bpSysValue6, bpDiaValue6, bpWarning6, border6, 6);
                             }
                             if (hasBadData)
                             {
@@ -876,6 +915,10 @@ namespace CardioRehab_WPF
                             else
                             {
                                 warningStatus[5] = false;
+                            }
+                            if (fullscreenview != null)
+                            {
+                                RaiseOtherPatientWarning();
                             }
                             break;
                         default:
@@ -935,9 +978,9 @@ namespace CardioRehab_WPF
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
                 _videoClient.Connect("142.244.215.167", 4555);
 
-                _videoClient2 = new ColorClient();
-                _videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
-                _videoClient2.Connect("192.168.184.19", 4556);
+                //_videoClient2 = new ColorClient();
+                //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
+                //_videoClient2.Connect("192.168.184.19", 4556);
 
                 foreach (int portNum in ports)
                 {
@@ -948,23 +991,22 @@ namespace CardioRehab_WPF
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("142.244.215.167", 4537);
+                _audioClient.Connect("142.244.215.167", 4565);
 
                 //_audioClient2 = new AudioClient();
                 //_audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
                 //_audioClient2.Connect("192.168.184.19", 4538);
 
                 //for sending audio
-                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4541);
-                _audioListener.Start();
+                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4541);
+                //_audioListener.Start();
 
-                //foreach (int portNum in ports)
-                //{
-                //    Console.WriteLine("send audio to: " + Convert.ToInt32(portNum + 10));
-                //    AudioListener _audioListener = new AudioListener(this.sensorChooser.Kinect, portNum + 10);
-                //    _audioListener.Start();
-                //    audioListenerCollection.Add(_audioListener);
-                //}
+                foreach (int portNum in ports)
+                {
+                    AudioListener _audioListener = new AudioListener(this.sensorChooser.Kinect, portNum + 10);
+                    _audioListener.Start();
+                    audioListenerCollection.Add(_audioListener);
+                }
 
             }
         }
@@ -1119,7 +1161,10 @@ namespace CardioRehab_WPF
             this.patientFrame1.Source = e.ColorFrame.BitmapImage;
             if(fullscreenview != null)
             {
-                fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
+                if(fullscreenview.patientLabel == 1)
+                {
+                    fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
+                }
             }
         }
 
@@ -1128,7 +1173,10 @@ namespace CardioRehab_WPF
             this.patientFrame2.Source = e.ColorFrame.BitmapImage;
             if (fullscreenview != null)
             {
-                fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
+                if(fullscreenview.patientLabel == 2)
+                {
+                    fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
+                }
             }
 
         }

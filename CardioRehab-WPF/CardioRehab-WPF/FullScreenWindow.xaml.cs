@@ -26,7 +26,7 @@ namespace CardioRehab_WPF
     {
         private DatabaseClass db;
         private int userid;
-        private int patientLabel;
+        public int patientLabel;
 
         private Random _Random;
         private int _maxECG;

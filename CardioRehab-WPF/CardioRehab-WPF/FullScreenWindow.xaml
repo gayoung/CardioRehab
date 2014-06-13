@@ -46,7 +46,7 @@
             </d3:ChartPlotter>
         </Border>
         <Border BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Stretch" Margin="5,10,10,5" VerticalAlignment="Stretch" CornerRadius="10" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="3">
-            <Image x:Name="doctorFrame" HorizontalAlignment="Stretch" Height="146" Margin="5,5,0,0" VerticalAlignment="Stretch" Width="209"/>
+            <Image x:Name="doctorFrame" HorizontalAlignment="Stretch" Margin="5,5,0,0" VerticalAlignment="Stretch"/>
         </Border>
         <Button x:Name="NoteButton" HorizontalAlignment="Stretch" Margin="25,10,5,15" VerticalAlignment="Stretch" Click="NoteButton_Click" Grid.Row="5" Grid.Column="4">
             <Image x:Name="NoteIcon" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Fill" Source="note.png" Margin="10"/>
