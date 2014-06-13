@@ -37,11 +37,11 @@
                         <ColumnDefinition Width="51*"/>
                     </Grid.ColumnDefinitions>
                     <Image x:Name="patientFrame6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Grid.ColumnSpan="7" Margin="5" Grid.RowSpan="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Fill" Margin="5,3" Grid.Row="1"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Uniform" Margin="5,3" Grid.Row="1"/>
                     <Label x:Name="hrLabel6" Content="HR : " FontWeight="Bold" Grid.Row="1" Grid.Column="1" Margin="2,0,0,0"/>
                     <Label x:Name="oxiLabel6" Content="OX : " FontWeight="Bold" Margin="2,0,0,0" Grid.Row="2" Grid.Column="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Fill" Margin="5,3" Grid.Row="2"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Fill" Margin="5,3,5,5" Grid.Row="3"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Uniform" Margin="5,3" Grid.Row="2"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Uniform" Margin="5,3,5,5" Grid.Row="3"/>
                     <Label x:Name="bpLabel6" Content="BP : " RenderTransformOrigin="0.545,0.231" FontWeight="Bold" Margin="2,0,0,0" Grid.Row="3" Grid.Column="1"/>
                     <Label x:Name="hrValue6" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="1" Grid.Column="2"/>
                     <Label x:Name="oxiValue6" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="2" Grid.Column="2"/>
@@ -60,7 +60,7 @@
                     <Image x:Name="hrWarning6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="1" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="oxiWarning6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="2" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="bpWarning6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="3" Grid.Column="3" Visibility="Hidden"/>
-                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="30,0,16,0" Grid.Row="3" Grid.Column="2"/>
+                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="24,0,22,0" Grid.Row="3" Grid.Column="2"/>
                     <Label x:Name="bpDiaValue6" Content="--" FontWeight="Bold" Margin="39,0,25,0" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
                     <Label Content="bpm" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="30,0,0,2" Grid.Row="1" Grid.Column="2"/>
                     <Label Content="%" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="34,3,12,1" Grid.Row="2" Grid.Column="2"/>
@@ -86,11 +86,11 @@
                         <ColumnDefinition Width="51*"/>
                     </Grid.ColumnDefinitions>
                     <Image x:Name="patientFrame5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Grid.ColumnSpan="7" Margin="5" Grid.RowSpan="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Fill" Margin="5,3" Grid.Row="1"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Uniform" Margin="5,3" Grid.Row="1"/>
                     <Label x:Name="hrLabel5" Content="HR : " FontWeight="Bold" Grid.Row="1" Grid.Column="1" Margin="2,0,0,0"/>
                     <Label x:Name="oxiLabel5" Content="OX : " FontWeight="Bold" Margin="2,0,0,0" Grid.Row="2" Grid.Column="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Fill" Margin="5,3" Grid.Row="2"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Fill" Margin="5,3,5,5" Grid.Row="3"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Uniform" Margin="5,3" Grid.Row="2"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Uniform" Margin="5,3,5,5" Grid.Row="3"/>
                     <Label x:Name="bpLabel5" Content="BP : " RenderTransformOrigin="0.545,0.231" FontWeight="Bold" Margin="2,0,0,0" Grid.Row="3" Grid.Column="1"/>
                     <Label x:Name="hrValue5" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="1" Grid.Column="2"/>
                     <Label x:Name="oxiValue5" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="2" Grid.Column="2"/>
@@ -109,7 +109,7 @@
                     <Image x:Name="hrWarning5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="1" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="oxiWarning5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="2" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="bpWarning5" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="3" Grid.Column="3" Visibility="Hidden"/>
-                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="30,0,16,0" Grid.Row="3" Grid.Column="2"/>
+                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="24,0,22,0" Grid.Row="3" Grid.Column="2"/>
                     <Label x:Name="bpDiaValue5" Content="--" FontWeight="Bold" Margin="39,0,25,0" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
                     <Label Content="bpm" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="30,0,0,2" Grid.Row="1" Grid.Column="2"/>
                     <Label Content="%" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="34,3,12,1" Grid.Row="2" Grid.Column="2"/>
@@ -135,11 +135,11 @@
                         <ColumnDefinition Width="51*"/>
                     </Grid.ColumnDefinitions>
                     <Image x:Name="patientFrame4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Grid.ColumnSpan="7" Margin="5" Grid.RowSpan="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Fill" Margin="5,3" Grid.Row="1"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Uniform" Margin="5,3" Grid.Row="1"/>
                     <Label x:Name="hrLabel4" Content="HR : " FontWeight="Bold" Grid.Row="1" Grid.Column="1" Margin="2,0,0,0"/>
                     <Label x:Name="oxiLabel4" Content="OX : " FontWeight="Bold" Margin="2,0,0,0" Grid.Row="2" Grid.Column="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Fill" Margin="5,3" Grid.Row="2"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Fill" Margin="5,3,5,5" Grid.Row="3"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Uniform" Margin="5,3" Grid.Row="2"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Uniform" Margin="5,3,5,5" Grid.Row="3"/>
                     <Label x:Name="bpLabel4" Content="BP : " RenderTransformOrigin="0.545,0.231" FontWeight="Bold" Margin="2,0,0,0" Grid.Row="3" Grid.Column="1"/>
                     <Label x:Name="hrValue4" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="1" Grid.Column="2"/>
                     <Label x:Name="oxiValue4" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="2" Grid.Column="2"/>
@@ -158,8 +158,8 @@
                     <Image x:Name="hrWarning4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="1" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="oxiWarning4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="2" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="bpWarning4" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="3" Grid.Column="3" Visibility="Hidden"/>
-                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="30,0,16,0" Grid.Row="3" Grid.Column="2"/>
-                    <Label x:Name="bpDiaValue4" Content="--" FontWeight="Bold" Margin="39,0,25,0" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
+                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="24,0,22,0" Grid.Row="3" Grid.Column="2"/>
+                    <Label x:Name="bpDiaValue4" Content="--" FontWeight="Bold" Margin="37,0,27,0" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
                     <Label Content="bpm" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="30,0,0,2" Grid.Row="1" Grid.Column="2"/>
                     <Label Content="%" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="34,3,12,1" Grid.Row="2" Grid.Column="2"/>
 
@@ -184,11 +184,11 @@
                         <ColumnDefinition Width="51*"/>
                     </Grid.ColumnDefinitions>
                     <Image x:Name="patientFrame3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Grid.ColumnSpan="7" Margin="5" Grid.RowSpan="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Fill" Margin="5,3" Grid.Row="1"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Uniform" Margin="5,3" Grid.Row="1"/>
                     <Label x:Name="hrLabel3" Content="HR : " FontWeight="Bold" Grid.Row="1" Grid.Column="1" Margin="2,0,0,0"/>
                     <Label x:Name="oxiLabel3" Content="OX : " FontWeight="Bold" Margin="2,0,0,0" Grid.Row="2" Grid.Column="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Fill" Margin="5,3" Grid.Row="2"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Fill" Margin="5,3,5,5" Grid.Row="3"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Uniform" Margin="5,3" Grid.Row="2"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Uniform" Margin="5,3,5,5" Grid.Row="3"/>
                     <Label x:Name="bpLabel3" Content="BP : " RenderTransformOrigin="0.545,0.231" FontWeight="Bold" Margin="2,0,0,0" Grid.Row="3" Grid.Column="1"/>
                     <Label x:Name="hrValue3" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="1" Grid.Column="2"/>
                     <Label x:Name="oxiValue3" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="2" Grid.Column="2"/>
@@ -207,7 +207,7 @@
                     <Image x:Name="hrWarning3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="1" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="oxiWarning3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="2" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="bpWarning3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="3" Grid.Column="3" Visibility="Hidden"/>
-                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="30,0,16,0" Grid.Row="3" Grid.Column="2"/>
+                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="24,0,22,0" Grid.Row="3" Grid.Column="2"/>
                     <Label x:Name="bpDiaValue3" Content="--" FontWeight="Bold" Margin="39,0,25,0" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
                     <Label Content="bpm" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="30,0,0,2" Grid.Row="1" Grid.Column="2"/>
                     <Label Content="%" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="34,3,12,1" Grid.Row="2" Grid.Column="2"/>
@@ -233,11 +233,11 @@
                         <ColumnDefinition Width="51*"/>
                     </Grid.ColumnDefinitions>
                     <Image x:Name="patientFrame2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Grid.ColumnSpan="7" Margin="5" Grid.RowSpan="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Fill" Margin="5,3" Grid.Row="1"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Uniform" Margin="5,3" Grid.Row="1"/>
                     <Label x:Name="hrLabel2" Content="HR : " FontWeight="Bold" Grid.Row="1" Grid.Column="1" Margin="2,0,0,0"/>
                     <Label x:Name="oxiLabel2" Content="OX : " FontWeight="Bold" Margin="2,0,0,0" Grid.Row="2" Grid.Column="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Fill" Margin="5,3" Grid.Row="2"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Fill" Margin="5,3,5,5" Grid.Row="3"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Uniform" Margin="5,3" Grid.Row="2"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Uniform" Margin="5,3,5,5" Grid.Row="3"/>
                     <Label x:Name="bpLabel2" Content="BP : " RenderTransformOrigin="0.545,0.231" FontWeight="Bold" Margin="2,0,0,0" Grid.Row="3" Grid.Column="1"/>
                     <Label x:Name="hrValue2" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="1" Grid.Column="2"/>
                     <Label x:Name="oxiValue2" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="2" Grid.Column="2"/>
@@ -256,7 +256,7 @@
                     <Image x:Name="hrWarning2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="1" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="oxiWarning2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="2" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="bpWarning2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="3" Grid.Column="3" Visibility="Hidden"/>
-                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="30,0,16,0" Grid.Row="3" Grid.Column="2"/>
+                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="24,0,22,0" Grid.Row="3" Grid.Column="2"/>
                     <Label x:Name="bpDiaValue2" Content="--" FontWeight="Bold" Margin="39,0,25,0" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
                     <Label Content="bpm" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="30,0,0,2" Grid.Row="1" Grid.Column="2"/>
                     <Label Content="%" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="34,3,12,1" Grid.Row="2" Grid.Column="2"/>
@@ -282,11 +282,11 @@
                         <ColumnDefinition Width="51*"/>
                     </Grid.ColumnDefinitions>
                     <Image x:Name="patientFrame1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Grid.ColumnSpan="7" Margin="5" Grid.RowSpan="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Fill" Margin="5,3" Grid.Row="1"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="heart.png" Stretch="Uniform" Margin="5,3" Grid.Row="1"/>
                     <Label x:Name="hrLabel1" Content="HR : " FontWeight="Bold" Grid.Row="1" Grid.Column="1" Margin="2,0,0,0"/>
                     <Label x:Name="oxiLabel1" Content="OX : " FontWeight="Bold" Margin="2,0,0,0" Grid.Row="2" Grid.Column="1"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Fill" Margin="5,3" Grid.Row="2"/>
-                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Fill" Margin="5,3,5,5" Grid.Row="3"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="oxygen.png" Stretch="Uniform" Margin="5,3" Grid.Row="2"/>
+                    <Image HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="bp.png" Stretch="Uniform" Margin="5,3,5,5" Grid.Row="3"/>
                     <Label x:Name="bpLabel1" Content="BP : " RenderTransformOrigin="0.545,0.231" FontWeight="Bold" Margin="2,0,0,0" Grid.Row="3" Grid.Column="1"/>
                     <Label x:Name="hrValue1" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="1" Grid.Column="2"/>
                     <Label x:Name="oxiValue1" Content="--" FontWeight="Bold" Margin="2,0,34,0" Grid.Row="2" Grid.Column="2"/>
@@ -316,7 +316,7 @@
                     <Image x:Name="hrWarning1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="1" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="oxiWarning1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="downarrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="2" Grid.Column="3" Visibility="Hidden"/>
                     <Image x:Name="bpWarning1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Source="uparrow.png" RenderTransformOrigin="0.227,0.062" Margin="2" Grid.Row="3" Grid.Column="3" Visibility="Hidden"/>
-                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="30,0,16,0" Grid.Row="3" Grid.Column="2"/>
+                    <Label Content="/" FontWeight="Bold" RenderTransformOrigin="1.133,0.577" Margin="24,0,22,0" Grid.Row="3" Grid.Column="2"/>
                     <Label x:Name="bpDiaValue1" Content="--" FontWeight="Bold" Margin="39,0,25,0" Grid.Row="3" Grid.Column="2" Grid.ColumnSpan="2"/>
                     <Label Content="bpm" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="30,0,0,2" Grid.Row="1" Grid.Column="2"/>
                     <Label Content="%" FontWeight="Bold" RenderTransformOrigin="-0.55,0.538" Margin="34,3,12,1" Grid.Row="2" Grid.Column="2"/>
