@@ -111,6 +111,7 @@ namespace CardioRehab_WPF
         private int i = 0;
 
         private FullScreenWindow fullscreenview = null;
+        bool[] warningStatus = null;
 
 
         public DoctorWindow(int currentuser, DatabaseClass openDB)
@@ -466,6 +467,26 @@ namespace CardioRehab_WPF
             }
         }
 
+        private void RaiseOtherPatientWarning()
+        {
+            String patientString = "";
+            int warningindex = 1;
+            while(warningindex < warningStatus.Length)
+            {
+                if(warningStatus[warningindex-1])
+                {
+                    patientString += "patient"+warningindex.ToString()+", ";
+                }
+                warningindex++;
+            }
+
+            if(warningStatus[warningStatus.Length-1])
+            {
+                patientString += "patient"+warningStatus.Length.ToString();
+            }
+            fullscreenview.WarningLabel.Content = patientString + " need to be checked.";
+        }
+
         /// <summary>
         /// This method is called from the ProcessHrData to modify the label objects from the
         /// FullScreenWindow.  It calls SetArrow method to show the doctor the appropriate warning
@@ -721,13 +742,25 @@ namespace CardioRehab_WPF
                             {
                                 ProcessHrData(data[1], hrValue1, hrWarning1, border1);
                             }
-                            if (data[0].Trim() == "OX")
+                            else if (data[0].Trim() == "OX")
                             {
                                 ProcessOxData(data[1], oxiLabel1, oxiWarning1, border1); 
                             }
-                            if (data[0].Trim() == "BP")
+                            else if (data[0].Trim() == "BP")
                             {
                                 ProcessBpData(data[1], data[2], bpSysValue1, bpDiaValue1, bpWarning1, border1);
+                            }
+                            if(hasBadData)
+                            {
+                                warningStatus[0] = true;
+                            }
+                            else
+                            {
+                                warningStatus[0] = false;
+                            }
+                            if(fullscreenview != null)
+                            {
+                                RaiseOtherPatientWarning();
                             }
                             break;
 
@@ -744,6 +777,14 @@ namespace CardioRehab_WPF
                             {
                                 ProcessBpData(data[1], data[2], bpSysValue2, bpDiaValue2, bpWarning2, border2);
                             }
+                            if (hasBadData)
+                            {
+                                warningStatus[1] = true;
+                            }
+                            else
+                            {
+                                warningStatus[1] = false;
+                            }
                             break;
 
                         case "patient3":
@@ -758,6 +799,14 @@ namespace CardioRehab_WPF
                             else if (data[0].Trim() == "BP")
                             {
                                 ProcessBpData(data[1], data[2], bpSysValue3, bpDiaValue3, bpWarning3, border3);
+                            }
+                            if (hasBadData)
+                            {
+                                warningStatus[2] = true;
+                            }
+                            else
+                            {
+                                warningStatus[2] = false;
                             }
                             break;
 
@@ -774,6 +823,14 @@ namespace CardioRehab_WPF
                             {
                                 ProcessBpData(data[1], data[2], bpSysValue4, bpDiaValue4, bpWarning4, border4);
                             }
+                            if (hasBadData)
+                            {
+                                warningStatus[3] = true;
+                            }
+                            else
+                            {
+                                warningStatus[3] = false;
+                            }
                             break;
 
                         case "patient5":
@@ -789,6 +846,14 @@ namespace CardioRehab_WPF
                             {
                                 ProcessBpData(data[1], data[2], bpSysValue5, bpDiaValue5, bpWarning5, border5);
                             }
+                            if (hasBadData)
+                            {
+                                warningStatus[4] = true;
+                            }
+                            else
+                            {
+                                warningStatus[4] = false;
+                            }
                             break;
 
                         case "patient6":
@@ -803,6 +868,14 @@ namespace CardioRehab_WPF
                             else if (data[0].Trim() == "BP")
                             {
                                 ProcessBpData(data[1], data[2], bpSysValue6, bpDiaValue6, bpWarning6, border6);
+                            }
+                            if (hasBadData)
+                            {
+                                warningStatus[5] = true;
+                            }
+                            else
+                            {
+                                warningStatus[5] = false;
                             }
                             break;
                         default:
