@@ -90,6 +90,7 @@ namespace CardioRehab_WPF
             GetLocalIP();
             CheckRecord();
             InitializeComponent();
+            InitializeVR();
 
             //InitializeBioSockets();
             CreateSocketConnection();
@@ -116,6 +117,11 @@ namespace CardioRehab_WPF
         }
 
         #region Helper functions
+
+        private void InitializeVR()
+        {
+            //Process.Start()
+        }
 
         /// <summary>
         /// This method calls mimicPhoneTimer_Tick method which calls the PhoneTestMethod
@@ -259,11 +265,21 @@ namespace CardioRehab_WPF
             int oxygen = r.Next(93, 99);
             int systolic = r.Next(100, 180);
             int diastolic = r.Next(50, 120);
+    
+            // testing for bike data (values may not be in correct range)
+            int powerVal = r.Next(20, 40);
+            int speedVal = r.Next(10, 25);
+            int cadenceVal = r.Next(40, 60);
 
             // modify patient UI labels
             hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = heartRate.ToString() + " bpm"));
             oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = oxygen.ToString() + " %"));
             bpValue.Dispatcher.Invoke((Action)(() => bpValue.Content = systolic.ToString() + "/" + diastolic.ToString()));
+
+            // bike label modification
+            powerValue.Dispatcher.Invoke((Action)(() => powerValue.Content = powerVal.ToString() + " Watt"));
+            speedValue.Dispatcher.Invoke((Action)(() => speedValue.Content = speedVal.ToString() + " RPM?"));
+            cadenceValue.Dispatcher.Invoke((Action)(() => cadenceValue.Content = cadenceVal.ToString() + " RPM?"));
 
             String patientLabel = "patient" + patientIndex;
 
@@ -429,6 +445,7 @@ namespace CardioRehab_WPF
                         if (data[1] != null && data[2] != null)
                         {
                             oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = data[1] + " %"));
+                            // enable below to display hr from oximeter
                            // hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2] + " bpm"));
                         }
                     }
@@ -478,8 +495,6 @@ namespace CardioRehab_WPF
                     System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000 + patientIndex - 1);
                     socketToClinician.Connect(remoteEndPoint);
 
-                    //Console.WriteLine(socketToClinician.Connected);
-
                     if(socketToClinician.Connected)
                     {
                         // later change the patientLocalIp to their wireless IP
@@ -515,7 +530,6 @@ namespace CardioRehab_WPF
             // Don't try this unless there is a kinect
             if (this.sensorChooser.Kinect != null)
             {
-                //Console.WriteLine("kinect is not null");
                 //trying to get the video from the clinician -- this can fail
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
@@ -545,9 +559,6 @@ namespace CardioRehab_WPF
         /// <param name="e">event arguments</param>
         void sensorChooser_KinectChanged(object sender, KinectChangedEventArgs e)
         {
-
-            //MessageBox.Show(e.NewSensor == null ? "No Kinect" : e.NewSensor.Status.ToString());
-
             if (e.OldSensor != null)
             {
                 try
@@ -556,7 +567,6 @@ namespace CardioRehab_WPF
                 }
                 catch (InvalidOperationException)
                 {
-                    Console.Write("here?");
                     // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
                     // E.g.: sensor might be abruptly unplugged.
 
@@ -573,7 +583,6 @@ namespace CardioRehab_WPF
                 }
                 catch (InvalidOperationException)
                 {
-                    Console.Write("here?2");
                     // KinectSensor might enter an invalid state while enabling/disabling streams or stream features.
                     // E.g.: sensor might be abruptly unplugged.
                 }
@@ -611,7 +620,6 @@ namespace CardioRehab_WPF
         //called when a video frame from the client is ready
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
-            //Console.WriteLine("new frame!");
             this.doctorFrame.Source = e.ColorFrame.BitmapImage;
         }
 

@@ -195,6 +195,10 @@ namespace CardioRehab_WPF
                 }
             }
         }
+
+        /// <summary>
+        /// Update the db record of the current doctor to record the current IP address.
+        /// </summary>
         private void CheckRecord()
         {
             String query = "SELECT local_ip FROM doctor WHERE doctor_id=" + userid;
@@ -224,6 +228,9 @@ namespace CardioRehab_WPF
             cmd.Dispose();
         }
 
+        /// <summary>
+        /// Currently just retrieves the birth date of the patient and calculate the age.
+        /// </summary>
         private void GetPatientInfo()
         {
             String query = "SELECT strftime('%Y', date_birth) AS year FROM patient WHERE patient_id=" + patientid;
@@ -708,7 +715,6 @@ namespace CardioRehab_WPF
         {
             try
             {
-                Console.WriteLine("data here!");
                 var state = asyn.AsyncState as ReceivedDataState;
                 var socketData = state.socketData;
                 var port = state.port;
@@ -723,10 +729,6 @@ namespace CardioRehab_WPF
                 int len = d.GetChars(socketData.dataBuffer, 0, end, chars, 0);
                 String receivedData = new String(chars);
                 receivedData = Regex.Replace(receivedData, @"\t|\n|\r", " ");
-
-                // DEBUGGING
-                //Console.WriteLine("data passed");
-                //Console.WriteLine(receivedData);
 
                 processData(receivedData);
                 WaitForBioData(socketData.packetSocket, state.port);

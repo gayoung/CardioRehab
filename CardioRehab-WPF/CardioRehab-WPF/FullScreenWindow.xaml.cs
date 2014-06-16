@@ -62,7 +62,6 @@ namespace CardioRehab_WPF
             this.pateintId.Content = "Patient " + patientindex.ToString();
 
             InitializeECG();
-            // TODO need to add function to display warning from other patients
         }
 
         #region mockECG
@@ -112,6 +111,7 @@ namespace CardioRehab_WPF
         /// <param name="e"></param>
         private void CollapseButton_Click(object sender, RoutedEventArgs e)
         {
+            // when this method is changed to Close then it closes the entire app...
             this.Hide();
             currentSplitScreen.Show();
         }
