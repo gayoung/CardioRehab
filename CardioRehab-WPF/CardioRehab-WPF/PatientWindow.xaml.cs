@@ -12,6 +12,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
@@ -35,6 +36,19 @@ namespace CardioRehab_WPF
     /// </summary>
     public partial class PatientWindow : Window
     {
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
+
+        [DllImport("user32.dll", EntryPoint="SetWindowLong")]
+        private static extern int SetWindowLongPtr(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        private const int GWLSTYLE = -16;
+        private const int WSVISIBLE = 0x10000000;
+
         private DatabaseClass db;
 
         private int user;
@@ -52,6 +66,7 @@ namespace CardioRehab_WPF
         public Socket socketBioListener;
         public Socket bioSocketWorker;
         public Socket socketToClinician;
+        public Socket socketToUnity;
 
         int[] oxdata = new int[1000];
         int[] hrdata = new int[1000];
@@ -91,12 +106,12 @@ namespace CardioRehab_WPF
             CheckRecord();
             InitializeComponent();
             InitializeVR();
-
-            //InitializeBioSockets();
+            ConnectToUnity();
+            InitializeBioSockets();
             CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            InitTimer();
+            //InitTimer();
         }
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
@@ -120,7 +135,34 @@ namespace CardioRehab_WPF
 
         private void InitializeVR()
         {
-            //Process.Start()
+            //String debugpath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            //String projectpath = debugpath.Replace("\\bin\\Debug\\CardioRehab-WPF.exe", "");
+
+            //Console.WriteLine(projectpath);
+
+            // make this path relative later
+            Process mUnityProcess = new Process();
+
+            try
+            {
+                mUnityProcess.StartInfo.FileName = "C:\\Users\\Gayoung\\Documents\\Cardiac\\cardiac_run.exe";
+                mUnityProcess.StartInfo.CreateNoWindow = true;
+                mUnityProcess.Start();
+                //mUnityProcess.WaitForInputIdle();
+                IntPtr mUnityHandle = mUnityProcess.MainWindowHandle;
+                SetParent(mUnityProcess.MainWindowHandle, UnityWindow.Handle);
+                SetWindowLongPtr(mUnityHandle, GWLSTYLE, WSVISIBLE);
+
+                int UnityWinWidth = Convert.ToInt32(UnityWindow.Width);
+                int UnityWinHeight = Convert.ToInt32(UnityWindow.Height);
+                MoveWindow(mUnityHandle, 0, 0, UnityWinWidth, UnityWinHeight, true);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine("Error at InitializeVR");
+                Console.WriteLine(e.Message);
+            }
+            
         }
 
         /// <summary>
@@ -259,6 +301,7 @@ namespace CardioRehab_WPF
             //Console.WriteLine("phone test method");
             String data;
             byte[] dataToClinician;
+            byte[] dataToUnity;
 
             Random r = new Random();
             int heartRate = r.Next(60, 200);
@@ -285,17 +328,37 @@ namespace CardioRehab_WPF
 
             try
             {
-                data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                // mock data sent to the clinician
+                //data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
 
-                data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                //data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
 
-                data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                //data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
+
+                if(socketToUnity.Connected)
+                {
+                    Console.WriteLine("socket to unity is connected");
+
+                    // mock data sent to the Unity Application
+                    data = "PR " + powerVal.ToString() + "\n";
+                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                    socketToUnity.Send(dataToUnity);
+
+                    data = "SP " + speedVal.ToString() + "\n";
+                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                    socketToUnity.Send(dataToUnity);
+
+                    data = "CD " + cadenceVal.ToString() + "\n";
+                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                    socketToUnity.Send(dataToUnity);
+                }
+                
             }
             catch (Exception ex)
             {
@@ -517,6 +580,32 @@ namespace CardioRehab_WPF
             }
         }
 
+        #endregion
+
+        #region Connection with Unity
+        /// <summary>
+        /// This method creates a TCP connection to the external Unity application at
+        /// IP address of 127.0.0.1(local host) and port 5555.
+        /// </summary>
+        private void ConnectToUnity()
+        {
+            try
+            {
+                socketToUnity = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                //create listening socket
+                IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
+                IPEndPoint iplocal = new IPEndPoint(addy, 5555);
+                //bind to local IP Address
+                socketToUnity.Bind(iplocal);
+                 //start listening -- 4 is max connections queue, can be changed
+                 socketToUnity.Listen(4);
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine("SocketException thrown at ConnectToUnity: " + e.ErrorCode.ToString());
+                MessageBox.Show(e.Message);
+            }
+        }
         #endregion
 
         #region Kinect
