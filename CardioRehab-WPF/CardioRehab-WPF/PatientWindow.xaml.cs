@@ -55,7 +55,7 @@ namespace CardioRehab_WPF
         private int age;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "142.244.215.167";
+        private String doctorIp = "192.168.184.57";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -105,19 +105,19 @@ namespace CardioRehab_WPF
             GetLocalIP();
             CheckRecord();
             InitializeComponent();
-            InitializeVR();
-            ConnectToUnity();
-            InitializeBioSockets();
+            //InitializeVR();
+            //ConnectToUnity();
+            //InitializeBioSockets();
             CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            //InitTimer();
+            InitTimer();
         }
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeKinect();
-            InitializeAudio();
+            //InitializeAudio();
 
         }
 
@@ -329,35 +329,35 @@ namespace CardioRehab_WPF
             try
             {
                 // mock data sent to the clinician
-                //data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-                //data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-                //data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-                if(socketToUnity.Connected)
-                {
-                    Console.WriteLine("socket to unity is connected");
+                //if(socketToUnity.Connected)
+                //{
+                //    Console.WriteLine("socket to unity is connected");
 
-                    // mock data sent to the Unity Application
-                    data = "PR " + powerVal.ToString() + "\n";
-                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                    socketToUnity.Send(dataToUnity);
+                //    // mock data sent to the Unity Application
+                //    data = "PR " + powerVal.ToString() + "\n";
+                //    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                //    socketToUnity.Send(dataToUnity);
 
-                    data = "SP " + speedVal.ToString() + "\n";
-                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                    socketToUnity.Send(dataToUnity);
+                //    data = "SP " + speedVal.ToString() + "\n";
+                //    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                //    socketToUnity.Send(dataToUnity);
 
-                    data = "CD " + cadenceVal.ToString() + "\n";
-                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                    socketToUnity.Send(dataToUnity);
-                }
+                //    data = "CD " + cadenceVal.ToString() + "\n";
+                //    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                //    socketToUnity.Send(dataToUnity);
+                //}
                 
             }
             catch (Exception ex)
@@ -701,7 +701,6 @@ namespace CardioRehab_WPF
                     new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
 
                 this.patientFrame.Source = outputImage;
-
             };
 
         }
