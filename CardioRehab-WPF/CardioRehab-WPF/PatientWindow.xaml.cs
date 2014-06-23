@@ -36,19 +36,6 @@ namespace CardioRehab_WPF
     /// </summary>
     public partial class PatientWindow : Window
     {
-
-        [DllImport("user32.dll")]
-        public static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        public static extern bool MoveWindow(IntPtr hWnd, int X, int Y, int nWidth, int nHeight, bool bRepaint);
-
-        [DllImport("user32.dll", EntryPoint="SetWindowLong")]
-        private static extern int SetWindowLongPtr(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        private const int GWLSTYLE = -16;
-        private const int WSVISIBLE = 0x10000000;
-
         private DatabaseClass db;
 
         private int user;
@@ -105,7 +92,7 @@ namespace CardioRehab_WPF
             GetLocalIP();
             CheckRecord();
             InitializeComponent();
-            //InitializeVR();
+            InitializeVR();
             //ConnectToUnity();
             //InitializeBioSockets();
             CreateSocketConnection();
@@ -117,7 +104,7 @@ namespace CardioRehab_WPF
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeKinect();
-            //InitializeAudio();
+            InitializeAudio();
 
         }
 
@@ -141,21 +128,9 @@ namespace CardioRehab_WPF
             //Console.WriteLine(projectpath);
 
             // make this path relative later
-            Process mUnityProcess = new Process();
-
             try
             {
-                mUnityProcess.StartInfo.FileName = "C:\\Users\\Gayoung\\Documents\\Cardiac\\cardiac_run.exe";
-                mUnityProcess.StartInfo.CreateNoWindow = true;
-                mUnityProcess.Start();
-                //mUnityProcess.WaitForInputIdle();
-                IntPtr mUnityHandle = mUnityProcess.MainWindowHandle;
-                SetParent(mUnityProcess.MainWindowHandle, UnityWindow.Handle);
-                SetWindowLongPtr(mUnityHandle, GWLSTYLE, WSVISIBLE);
-
-                int UnityWinWidth = Convert.ToInt32(UnityWindow.Width);
-                int UnityWinHeight = Convert.ToInt32(UnityWindow.Height);
-                MoveWindow(mUnityHandle, 0, 0, UnityWinWidth, UnityWinHeight, true);
+                UnityWindow.Navigate("C:\\Users\\Gayoung\\Documents\\Cardiac\\web\\web.html");
             }
             catch(Exception e)
             {
@@ -617,27 +592,27 @@ namespace CardioRehab_WPF
             this.sensorChooser.Start();
 
             // Don't try this unless there is a kinect
-            if (this.sensorChooser.Kinect != null)
-            {
-                //trying to get the video from the clinician -- this can fail
-                _videoClient = new ColorClient();
-                _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect(doctorIp, 4531+patientIndex-1);
+            //if (this.sensorChooser.Kinect != null)
+            //{
+            //    //trying to get the video from the clinician -- this can fail
+            //    _videoClient = new ColorClient();
+            //    _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
+            //    _videoClient.Connect(doctorIp, 4531+patientIndex-1);
 
 
-                // Streaming video out on port 4555
-                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555+patientIndex-1, ImageFormat.Jpeg);
-                _videoListener.Start();
+            //    // Streaming video out on port 4555
+            //    _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555+patientIndex-1, ImageFormat.Jpeg);
+            //    _videoListener.Start();
 
-                _audioClient = new AudioClient();
-                _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect(doctorIp, 4541+patientIndex-1);
+            //    _audioClient = new AudioClient();
+            //    _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+            //    _audioClient.Connect(doctorIp, 4541+patientIndex-1);
 
-                //for sending audio
-                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4565+patientIndex-1);
-                _audioListener.Start();
+            //    //for sending audio
+            //    _audioListener = new AudioListener(this.sensorChooser.Kinect, 4565+patientIndex-1);
+            //    _audioListener.Start();
 
-            }
+            //}
 
         }
 
@@ -683,7 +658,7 @@ namespace CardioRehab_WPF
         {
             using (ColorImageFrame frame = e.OpenColorImageFrame())
             {
-
+                Console.WriteLine("here");
                 if (frame == null)
                 {
                     return;
@@ -701,6 +676,10 @@ namespace CardioRehab_WPF
                     new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
 
                 this.patientFrame.Source = outputImage;
+
+                // force the garbase collector to remove outputImage --> otherwise, causes mem leak
+                outputImage = null;
+                GC.Collect();
             };
 
         }

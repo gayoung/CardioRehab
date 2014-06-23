@@ -30,7 +30,7 @@
                 <Image x:Name="patientFrame"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Margin="5"/>
             </Border>
             <Border BorderBrush="#FFFBECEC" BorderThickness="5" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" CornerRadius="10" Grid.RowSpan="3">
-                <WindowsFormsHost x:Name="UnityWindow" HorizontalAlignment="Left" Height="700" Margin="5,5,0,0" VerticalAlignment="Top" Width="607"/>
+                <WebBrowser x:Name="UnityWindow"/>
             </Border>
             <Border Background="#FFF5F3F3" BorderBrush="#FFF5F3F3" BorderThickness="5" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" CornerRadius="10" Opacity="0.8" Grid.Column="1" Grid.Row="2">
                 <Canvas HorizontalAlignment="Center" Height="279" Margin="0" VerticalAlignment="Center" Width="324">

@@ -1084,6 +1084,10 @@ namespace CardioRehab_WPF
                         new Int32Rect(0, 0, frame.Width, frame.Height), this.pixels, frame.Width * 4, 0);
 
                     fullscreenview.doctorFrame.Source = outputImage;
+
+                    // force the garbase collector to remove outputImage --> otherwise, causes mem leak
+                    outputImage = null;
+                    GC.Collect();
                 }
             };
 
