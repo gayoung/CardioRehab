@@ -104,7 +104,7 @@ namespace CardioRehab_WPF
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeKinect();
-            InitializeAudio();
+            //InitializeAudio();
 
         }
 
@@ -592,27 +592,27 @@ namespace CardioRehab_WPF
             this.sensorChooser.Start();
 
             // Don't try this unless there is a kinect
-            //if (this.sensorChooser.Kinect != null)
-            //{
-            //    //trying to get the video from the clinician -- this can fail
-            //    _videoClient = new ColorClient();
-            //    _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-            //    _videoClient.Connect(doctorIp, 4531+patientIndex-1);
+            if (this.sensorChooser.Kinect != null)
+            {
+                //trying to get the video from the clinician -- this can fail
+                _videoClient = new ColorClient();
+                _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
+                _videoClient.Connect(doctorIp, 4531 + patientIndex - 1);
 
 
-            //    // Streaming video out on port 4555
-            //    _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555+patientIndex-1, ImageFormat.Jpeg);
-            //    _videoListener.Start();
+                // Streaming video out on port 4555
+                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555 + patientIndex - 1, ImageFormat.Jpeg);
+                _videoListener.Start();
 
-            //    _audioClient = new AudioClient();
-            //    _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-            //    _audioClient.Connect(doctorIp, 4541+patientIndex-1);
+                _audioClient = new AudioClient();
+                _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+                _audioClient.Connect(doctorIp, 4541 + patientIndex - 1);
 
-            //    //for sending audio
-            //    _audioListener = new AudioListener(this.sensorChooser.Kinect, 4565+patientIndex-1);
-            //    _audioListener.Start();
+                //for sending audio
+                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4565 + patientIndex - 1);
+                _audioListener.Start();
 
-            //}
+            }
 
         }
 
@@ -658,7 +658,6 @@ namespace CardioRehab_WPF
         {
             using (ColorImageFrame frame = e.OpenColorImageFrame())
             {
-                Console.WriteLine("here");
                 if (frame == null)
                 {
                     return;

@@ -133,7 +133,7 @@ namespace CardioRehab_WPF
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
             InitializeKinect(kinectOutPorts);
-            InitializeAudio();
+            //InitializeAudio();
 
             InitializeECG();
 
@@ -687,7 +687,6 @@ namespace CardioRehab_WPF
         }
         private void WaitForBioData(System.Net.Sockets.Socket soc, int port)
         {
-            Console.WriteLine("wait for bio data");
             try
             {
                 if (socketBioWorkerCallback == null)
@@ -928,6 +927,7 @@ namespace CardioRehab_WPF
                             {
                                 String[] restofData = sentData[1].Split('-');
                                 int index = Convert.ToInt32(restofData[0].Trim());
+                                Console.WriteLine(restofData[2]);
                                 patientIPCollection.Insert(index - 1, restofData[2].Trim());
                                 patientid = Convert.ToInt32(restofData[1]);
 
@@ -978,7 +978,7 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("142.244.215.167", 4555);
+                _videoClient.Connect("192.168.184.57", 4555);
 
                 //_videoClient2 = new ColorClient();
                 //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
@@ -993,7 +993,7 @@ namespace CardioRehab_WPF
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("142.244.215.167", 4565);
+                _audioClient.Connect("192.168.184.57", 4565);
 
                 //_audioClient2 = new AudioClient();
                 //_audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
@@ -1135,15 +1135,17 @@ namespace CardioRehab_WPF
         {
             if (sensorChooser.Kinect != null)
             {
-                Console.WriteLine("patient IP: " + patientIPCollection[0]);
-                if (patientIPCollection[0] != null)
-                {
-                    _videoClient.Connect(patientIPCollection[0], 4555);
-                }
-                if(patientIPCollection[0] != null)
-                {
-                    _audioClient.Connect(patientIPCollection[0], 4537);
-                }
+                _videoClient.Connect("192.168.184.57", 4555);
+                //_audioClient.Connect("192.168.184.57", 4537);
+                //Console.WriteLine("patient IP: " + patientIPCollection[0]);
+                //if (patientIPCollection[0] != null)
+                //{
+                //    _videoClient.Connect(patientIPCollection[0], 4555);
+                //}
+                //if(patientIPCollection[0] != null)
+                //{
+                //    _audioClient.Connect(patientIPCollection[0], 4537);
+                //}
             }
             connect1.Visibility = System.Windows.Visibility.Hidden;
         }
