@@ -42,7 +42,7 @@ namespace CardioRehab_WPF
         private int age;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "192.168.184.57";
+        private String doctorIp = "192.168.184.43";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -104,7 +104,7 @@ namespace CardioRehab_WPF
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeKinect();
-            //InitializeAudio();
+            InitializeAudio();
 
         }
 

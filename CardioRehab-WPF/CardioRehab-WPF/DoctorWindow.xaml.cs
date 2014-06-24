@@ -133,7 +133,7 @@ namespace CardioRehab_WPF
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
             InitializeKinect(kinectOutPorts);
-            //InitializeAudio();
+            InitializeAudio();
 
             InitializeECG();
 
@@ -337,7 +337,7 @@ namespace CardioRehab_WPF
             fullscreenview = new FullScreenWindow(userid, patient, db, this);
             this.Hide();
             fullscreenview.Show();
-            fullscreenview.Closed += new EventHandler(DoctorWindowClose);
+            fullscreenview.Closed += new EventHandler(ShowDoctorScreen);
         }
 
         /// <summary>
@@ -346,11 +346,9 @@ namespace CardioRehab_WPF
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DoctorWindowClose(object sender, EventArgs e)
+        private void ShowDoctorScreen(object sender, EventArgs e)
         {
-            // need to modify this to properly close the windows when
-            // collapse/expand buttons are triggered
-            Application.Current.Shutdown();
+            this.Show();
         }
 
         /// <summary>
@@ -1136,7 +1134,7 @@ namespace CardioRehab_WPF
             if (sensorChooser.Kinect != null)
             {
                 _videoClient.Connect("192.168.184.57", 4555);
-                //_audioClient.Connect("192.168.184.57", 4537);
+                _audioClient.Connect("192.168.184.57", 4565);
                 //Console.WriteLine("patient IP: " + patientIPCollection[0]);
                 //if (patientIPCollection[0] != null)
                 //{
@@ -1144,7 +1142,7 @@ namespace CardioRehab_WPF
                 //}
                 //if(patientIPCollection[0] != null)
                 //{
-                //    _audioClient.Connect(patientIPCollection[0], 4537);
+                //    _audioClient.Connect(patientIPCollection[0], 4565);
                 //}
             }
             connect1.Visibility = System.Windows.Visibility.Hidden;
