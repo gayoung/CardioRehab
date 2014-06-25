@@ -34,7 +34,6 @@
             <Image x:Name="patientFrame" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Stretch" Stretch="Uniform"/>
         </Border>
         <Border x:Name="ecgBorder" BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Stretch" Margin="10,5,5,10" VerticalAlignment="Stretch" CornerRadius="10" Grid.Row="4" Grid.RowSpan="2" Grid.ColumnSpan="4">
-            
         </Border>
         <Border BorderBrush="#FFF7FBF7" BorderThickness="5" HorizontalAlignment="Stretch" Margin="5,10,10,5" VerticalAlignment="Stretch" CornerRadius="10" Grid.Row="1" Grid.Column="4" Grid.ColumnSpan="3">
             <Image x:Name="doctorFrame" HorizontalAlignment="Stretch" Margin="5,5,0,5" VerticalAlignment="Stretch"/>

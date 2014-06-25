@@ -28,6 +28,7 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using ColorImageFormat = Microsoft.Kinect.ColorImageFormat;
 using ColorImageFrame = Microsoft.Kinect.ColorImageFrame;
+using mshtml;
 
 namespace CardioRehab_WPF
 {
@@ -42,7 +43,7 @@ namespace CardioRehab_WPF
         private int age;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "192.168.184.43";
+        private String doctorIp = "192.168.184.57";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -53,7 +54,7 @@ namespace CardioRehab_WPF
         public Socket socketBioListener;
         public Socket bioSocketWorker;
         public Socket socketToClinician;
-        public Socket socketToUnity;
+        public Socket unitySocketListener;
 
         int[] oxdata = new int[1000];
         int[] hrdata = new int[1000];
@@ -92,10 +93,10 @@ namespace CardioRehab_WPF
             GetLocalIP();
             CheckRecord();
             InitializeComponent();
+            ConnectToUnity();
             InitializeVR();
-            //ConnectToUnity();
             //InitializeBioSockets();
-            CreateSocketConnection();
+            //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
             InitTimer();
@@ -103,8 +104,8 @@ namespace CardioRehab_WPF
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeKinect();
-            InitializeAudio();
+            //InitializeKinect();
+            //InitializeAudio();
 
         }
 
@@ -273,7 +274,7 @@ namespace CardioRehab_WPF
         /// </summary>
         private void PhoneTestMethod()
         {
-            //Console.WriteLine("phone test method");
+            Console.WriteLine("phone test method");
             String data;
             byte[] dataToClinician;
             byte[] dataToUnity;
@@ -303,37 +304,37 @@ namespace CardioRehab_WPF
 
             try
             {
-                // mock data sent to the clinician
-                data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                //// mock data sent to the clinician
+                //data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
 
-                data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                //data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
 
-                data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                //data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
 
-                //if(socketToUnity.Connected)
-                //{
-                //    Console.WriteLine("socket to unity is connected");
+                //Console.WriteLine(unitySocketListener.Connected);
+                if(unitySocketListener.Connected)
+                {
+                    Console.WriteLine("socket to unity is connected");
 
-                //    // mock data sent to the Unity Application
-                //    data = "PR " + powerVal.ToString() + "\n";
-                //    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                //    socketToUnity.Send(dataToUnity);
+                    // mock data sent to the Unity Application
+                    data = "PR " + powerVal.ToString() + "\n";
+                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                    unitySocketListener.Send(dataToUnity);
 
-                //    data = "SP " + speedVal.ToString() + "\n";
-                //    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                //    socketToUnity.Send(dataToUnity);
+                    data = "SP " + speedVal.ToString() + "\n";
+                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                    unitySocketListener.Send(dataToUnity);
 
-                //    data = "CD " + cadenceVal.ToString() + "\n";
-                //    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                //    socketToUnity.Send(dataToUnity);
-                //}
-                
+                    data = "CD " + cadenceVal.ToString() + "\n";
+                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                    unitySocketListener.Send(dataToUnity);
+                }
             }
             catch (Exception ex)
             {
@@ -566,21 +567,25 @@ namespace CardioRehab_WPF
         {
             try
             {
-                socketToUnity = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                //create listening socket
+                unitySocketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 IPAddress addy = System.Net.IPAddress.Parse("127.0.0.1");
-                IPEndPoint iplocal = new IPEndPoint(addy, 5555);
+                IPEndPoint iplocal = new IPEndPoint(addy, 4445);
                 //bind to local IP Address
-                socketToUnity.Bind(iplocal);
-                 //start listening -- 4 is max connections queue, can be changed
-                 socketToUnity.Listen(4);
+                unitySocketListener.Bind(iplocal);
+                //start listening -- 4 is max connections queue, can be changed
+                unitySocketListener.Listen(4);
+                Console.WriteLine("Listning for connection for unitySocket");
+
+
+                //create call back for client connections -- aka maybe recieve video here????
             }
             catch (SocketException e)
             {
-                Console.WriteLine("SocketException thrown at ConnectToUnity: " + e.ErrorCode.ToString());
-                MessageBox.Show(e.Message);
+                Console.WriteLine("SocketException thrown at ConnectToUnity");
+                Console.WriteLine(e.Message);
             }
         }
+
         #endregion
 
         #region Kinect
