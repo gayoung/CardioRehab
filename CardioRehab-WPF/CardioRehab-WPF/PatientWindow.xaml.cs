@@ -28,7 +28,6 @@ using System.Windows.Shapes;
 using System.Windows.Threading;
 using ColorImageFormat = Microsoft.Kinect.ColorImageFormat;
 using ColorImageFrame = Microsoft.Kinect.ColorImageFrame;
-using mshtml;
 
 namespace CardioRehab_WPF
 {
@@ -94,7 +93,9 @@ namespace CardioRehab_WPF
             CheckRecord();
             InitializeComponent();
             ConnectToUnity();
+            Console.WriteLine("connect to unity done");
             InitializeVR();
+            Console.WriteLine("InitializeVR done");
             //InitializeBioSockets();
             //CreateSocketConnection();
 
@@ -152,10 +153,12 @@ namespace CardioRehab_WPF
         /// </summary>
         public void InitTimer()
         {
+            Console.WriteLine("start inittimer");
             mimicPhoneTimer = new System.Windows.Threading.DispatcherTimer();
             mimicPhoneTimer.Tick += new EventHandler(mimicPhoneTimer_Tick);
             mimicPhoneTimer.Interval = new TimeSpan(0, 0, 2); ; // 2 seconds
             mimicPhoneTimer.Start();
+            Console.WriteLine("begin inittimer");
         }
 
         /// <summary>
@@ -167,7 +170,9 @@ namespace CardioRehab_WPF
         /// <param name="e"></param>
         private void mimicPhoneTimer_Tick(object sender, EventArgs e)
         {
+            Console.WriteLine("calling phone test method");
             PhoneTestMethod();
+            Console.WriteLine("done");
         }
 
         /// <summary>
@@ -300,10 +305,13 @@ namespace CardioRehab_WPF
             speedValue.Dispatcher.Invoke((Action)(() => speedValue.Content = speedVal.ToString() + " RPM?"));
             cadenceValue.Dispatcher.Invoke((Action)(() => cadenceValue.Content = cadenceVal.ToString() + " RPM?"));
 
+            Console.WriteLine("phone test method2");
             String patientLabel = "patient" + patientIndex;
+            Console.WriteLine("phone test method3");
 
             try
             {
+                Console.WriteLine("phone test method4");
                 //// mock data sent to the clinician
                 //data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
                 //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
@@ -320,6 +328,7 @@ namespace CardioRehab_WPF
                 //Console.WriteLine(unitySocketListener.Connected);
                 if(unitySocketListener.Connected)
                 {
+                    Console.WriteLine("phone test method5-1");
                     Console.WriteLine("socket to unity is connected");
 
                     // mock data sent to the Unity Application
@@ -334,6 +343,10 @@ namespace CardioRehab_WPF
                     data = "CD " + cadenceVal.ToString() + "\n";
                     dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
                     unitySocketListener.Send(dataToUnity);
+                }
+                else
+                {
+                    Console.WriteLine("phone test method5-2");
                 }
             }
             catch (Exception ex)
@@ -565,6 +578,7 @@ namespace CardioRehab_WPF
         /// </summary>
         private void ConnectToUnity()
         {
+            Console.WriteLine("connect to unity");
             try
             {
                 unitySocketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -713,6 +727,13 @@ namespace CardioRehab_WPF
 
 
         #endregion
+
+        private void UnityWindow_LoadCompleted(object sender, NavigationEventArgs e)
+        {
+            Console.WriteLine("unity window load completed function");
+            mshtml.IHTMLDocument2 dom = (mshtml.IHTMLDocument2)UnityWindow.Document;
+            dom.body.style.overflow = "hidden";
+        }
     }
 
 }

@@ -5,7 +5,7 @@
         Title="Welcome to CardiacRehab Program!" Height="770" Width="1024" WindowStartupLocation="CenterScreen"
         Loaded="PatientWindow_Loaded" WindowState="Maximized">
     <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-        <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi" />
+        <k:KinectSensorChooserUI HorizontalAlignment="Center" VerticalAlignment="Top" x:Name="sensorChooserUi"/>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="206*"/>
@@ -30,7 +30,10 @@
                 <Image x:Name="patientFrame"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Margin="5"/>
             </Border>
             <Border BorderBrush="#FFFBECEC" BorderThickness="5" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" CornerRadius="10" Grid.RowSpan="3">
-                <WebBrowser x:Name="UnityWindow"/>
+                <WebBrowser x:Name="UnityWindow" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LoadCompleted="UnityWindow_LoadCompleted" 
+                            ScrollViewer.CanContentScroll="False" 
+                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                            ScrollViewer.VerticalScrollBarVisibility="Hidden"></WebBrowser>
             </Border>
             <Border Background="#FFF5F3F3" BorderBrush="#FFF5F3F3" BorderThickness="5" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" CornerRadius="10" Opacity="0.8" Grid.Column="1" Grid.Row="2">
                 <Canvas HorizontalAlignment="Center" Height="279" Margin="0" VerticalAlignment="Center" Width="324">
