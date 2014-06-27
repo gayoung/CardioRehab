@@ -3,6 +3,7 @@ using Coding4Fun.Kinect.KinectService.Listeners;
 using Coding4Fun.Kinect.KinectService.WpfClient;
 using Microsoft.Kinect;
 using Microsoft.Kinect.Toolkit;
+using mshtml;
 using NAudio.Wave;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ using System.Net.Sockets;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -54,6 +56,7 @@ namespace CardioRehab_WPF
         public Socket bioSocketWorker;
         public Socket socketToClinician;
         public Socket unitySocketListener;
+        public Socket unitySocketWorker = null;
 
         int[] oxdata = new int[1000];
         int[] hrdata = new int[1000];
@@ -79,6 +82,8 @@ namespace CardioRehab_WPF
 
         private AudioClient _audioClient;
 
+        TextWriter _writer;
+
         /// <summary>
         /// Constructor for this class
         /// </summary>
@@ -92,6 +97,10 @@ namespace CardioRehab_WPF
             GetLocalIP();
             CheckRecord();
             InitializeComponent();
+
+            _writer = new TextBoxStreamWriter(txtMessage);
+            Console.SetOut(_writer);
+
             ConnectToUnity();
             Console.WriteLine("connect to unity done");
             InitializeVR();
@@ -326,34 +335,35 @@ namespace CardioRehab_WPF
                 //socketToClinician.Send(dataToClinician);
 
                 //Console.WriteLine(unitySocketListener.Connected);
-                if(unitySocketListener.Connected)
+                if(unitySocketWorker != null)
                 {
-                    Console.WriteLine("phone test method5-1");
-                    Console.WriteLine("socket to unity is connected");
+                    if (unitySocketWorker.Connected)
+                    {
+                        Console.WriteLine("phone test method5-1");
+                        Console.WriteLine("socket to unity is connected");
 
-                    // mock data sent to the Unity Application
-                    data = "PR " + powerVal.ToString() + "\n";
-                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                    unitySocketListener.Send(dataToUnity);
+                        // mock data sent to the Unity Application
+                        data = "PR " + powerVal.ToString() + "\n";
+                        dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                        unitySocketListener.Send(dataToUnity);
 
-                    data = "SP " + speedVal.ToString() + "\n";
-                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                    unitySocketListener.Send(dataToUnity);
+                        data = "SP " + speedVal.ToString() + "\n";
+                        dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                        unitySocketListener.Send(dataToUnity);
 
-                    data = "CD " + cadenceVal.ToString() + "\n";
-                    dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                    unitySocketListener.Send(dataToUnity);
-                }
-                else
-                {
-                    Console.WriteLine("phone test method5-2");
+                        data = "CD " + cadenceVal.ToString() + "\n";
+                        dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                        unitySocketListener.Send(dataToUnity);
+                    }
+                    else
+                    {
+                        Console.WriteLine("phone test method5-2");
+                    }
                 }
             }
             catch (Exception ex)
             {
-                // doctor has terminated the connection
                 Console.WriteLine(ex.Message);
-                this.Close();
             }
 
         }
@@ -589,7 +599,7 @@ namespace CardioRehab_WPF
                 //start listening -- 4 is max connections queue, can be changed
                 unitySocketListener.Listen(4);
                 Console.WriteLine("Listning for connection for unitySocket");
-
+                unitySocketListener.BeginAccept(new AsyncCallback(OnUnitySocketConnection), null);
 
                 //create call back for client connections -- aka maybe recieve video here????
             }
@@ -597,6 +607,23 @@ namespace CardioRehab_WPF
             {
                 Console.WriteLine("SocketException thrown at ConnectToUnity");
                 Console.WriteLine(e.Message);
+            }
+        }
+
+        private void OnUnitySocketConnection(IAsyncResult asyn)
+        {
+            Console.WriteLine("Got Connection");
+            try
+            {
+                unitySocketWorker = unitySocketListener.EndAccept(asyn);
+            }
+            catch (ObjectDisposedException)
+            {
+                Console.WriteLine("OnSocketConnection: Socket has been closed", "error");
+            }
+            catch (SocketException e)
+            {
+                Console.WriteLine(e.Message, "error");
             }
         }
 

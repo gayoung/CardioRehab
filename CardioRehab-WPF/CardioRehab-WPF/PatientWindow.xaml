@@ -30,10 +30,10 @@
                 <Image x:Name="patientFrame"   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Stretch="Uniform" Margin="5"/>
             </Border>
             <Border BorderBrush="#FFFBECEC" BorderThickness="5" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" CornerRadius="10" Grid.RowSpan="3">
-                <WebBrowser x:Name="UnityWindow" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" LoadCompleted="UnityWindow_LoadCompleted" 
+                <WebBrowser x:Name="UnityWindow" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                             ScrollViewer.CanContentScroll="False" 
                             ScrollViewer.HorizontalScrollBarVisibility="Hidden"
-                            ScrollViewer.VerticalScrollBarVisibility="Hidden"></WebBrowser>
+                            ScrollViewer.VerticalScrollBarVisibility="Hidden" LoadCompleted="UnityWindow_LoadCompleted"></WebBrowser>
             </Border>
             <Border Background="#FFF5F3F3" BorderBrush="#FFF5F3F3" BorderThickness="5" HorizontalAlignment="Stretch" Margin="10,10,10,10" VerticalAlignment="Stretch" CornerRadius="10" Opacity="0.8" Grid.Column="1" Grid.Row="2">
                 <Canvas HorizontalAlignment="Center" Height="279" Margin="0" VerticalAlignment="Center" Width="324">
@@ -49,6 +49,7 @@
                     <Label x:Name="powerValue" Content="--" Canvas.Left="29" Canvas.Top="230" FontFamily="Century" FontSize="16" RenderTransformOrigin="0.419,1.759"/>
                     <Label x:Name="speedValue" Content="--" Canvas.Left="161" Canvas.Top="230" FontFamily="Century" FontSize="16" RenderTransformOrigin="0.419,1.759"/>
                     <Label x:Name="cadenceValue" Content="--" Canvas.Left="278" Canvas.Top="222" FontFamily="Century" FontSize="16" RenderTransformOrigin="0.419,1.759"/>
+                    <TextBox x:Name="txtMessage" Height="220" Canvas.Left="4" TextWrapping="Wrap" Canvas.Top="5" Width="310"/>
                 </Canvas>
             </Border>
         </Grid>
