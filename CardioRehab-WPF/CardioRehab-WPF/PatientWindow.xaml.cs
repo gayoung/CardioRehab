@@ -102,9 +102,7 @@ namespace CardioRehab_WPF
             Console.SetOut(_writer);
 
             ConnectToUnity();
-            Console.WriteLine("connect to unity done");
             InitializeVR();
-            Console.WriteLine("InitializeVR done");
             //InitializeBioSockets();
             //CreateSocketConnection();
 
@@ -143,12 +141,12 @@ namespace CardioRehab_WPF
             {
                 UnityWindow.Navigate("C:\\Users\\Gayoung\\Documents\\Cardiac\\web\\web.html");
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Console.WriteLine("Error at InitializeVR");
                 Console.WriteLine(e.Message);
             }
-            
+
         }
 
         /// <summary>
@@ -162,12 +160,10 @@ namespace CardioRehab_WPF
         /// </summary>
         public void InitTimer()
         {
-            Console.WriteLine("start inittimer");
             mimicPhoneTimer = new System.Windows.Threading.DispatcherTimer();
             mimicPhoneTimer.Tick += new EventHandler(mimicPhoneTimer_Tick);
             mimicPhoneTimer.Interval = new TimeSpan(0, 0, 2); ; // 2 seconds
             mimicPhoneTimer.Start();
-            Console.WriteLine("begin inittimer");
         }
 
         /// <summary>
@@ -179,9 +175,7 @@ namespace CardioRehab_WPF
         /// <param name="e"></param>
         private void mimicPhoneTimer_Tick(object sender, EventArgs e)
         {
-            Console.WriteLine("calling phone test method");
             PhoneTestMethod();
-            Console.WriteLine("done");
         }
 
         /// <summary>
@@ -288,7 +282,6 @@ namespace CardioRehab_WPF
         /// </summary>
         private void PhoneTestMethod()
         {
-            Console.WriteLine("phone test method");
             String data;
             byte[] dataToClinician;
             byte[] dataToUnity;
@@ -298,7 +291,7 @@ namespace CardioRehab_WPF
             int oxygen = r.Next(93, 99);
             int systolic = r.Next(100, 180);
             int diastolic = r.Next(50, 120);
-    
+
             // testing for bike data (values may not be in correct range)
             int powerVal = r.Next(20, 40);
             int speedVal = r.Next(10, 25);
@@ -311,16 +304,13 @@ namespace CardioRehab_WPF
 
             // bike label modification
             powerValue.Dispatcher.Invoke((Action)(() => powerValue.Content = powerVal.ToString() + " Watt"));
-            speedValue.Dispatcher.Invoke((Action)(() => speedValue.Content = speedVal.ToString() + " RPM?"));
-            cadenceValue.Dispatcher.Invoke((Action)(() => cadenceValue.Content = cadenceVal.ToString() + " RPM?"));
+            speedValue.Dispatcher.Invoke((Action)(() => speedValue.Content = speedVal.ToString() + " RPM"));
+            cadenceValue.Dispatcher.Invoke((Action)(() => cadenceValue.Content = cadenceVal.ToString() + " RPM"));
 
-            Console.WriteLine("phone test method2");
             String patientLabel = "patient" + patientIndex;
-            Console.WriteLine("phone test method3");
 
             try
             {
-                Console.WriteLine("phone test method4");
                 //// mock data sent to the clinician
                 //data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
                 //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
@@ -334,30 +324,26 @@ namespace CardioRehab_WPF
                 //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
                 //socketToClinician.Send(dataToClinician);
 
-                //Console.WriteLine(unitySocketListener.Connected);
-                if(unitySocketWorker != null)
+                if (unitySocketWorker != null)
                 {
                     if (unitySocketWorker.Connected)
                     {
-                        Console.WriteLine("phone test method5-1");
-                        Console.WriteLine("socket to unity is connected");
-
                         // mock data sent to the Unity Application
-                        data = "PR " + powerVal.ToString() + "\n";
+                        data = "PW " + powerVal.ToString() + "\n";
                         dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                        unitySocketListener.Send(dataToUnity);
+                        unitySocketWorker.Send(dataToUnity);
 
-                        data = "SP " + speedVal.ToString() + "\n";
-                        dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                        unitySocketListener.Send(dataToUnity);
+                        data = "";
 
-                        data = "CD " + cadenceVal.ToString() + "\n";
+                        data = "WR " + speedVal.ToString() + "\n";
                         dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
-                        unitySocketListener.Send(dataToUnity);
-                    }
-                    else
-                    {
-                        Console.WriteLine("phone test method5-2");
+                        unitySocketWorker.Send(dataToUnity);
+
+                        data = "";
+
+                        data = "CR " + cadenceVal.ToString() + "\n";
+                        dataToUnity = System.Text.Encoding.ASCII.GetBytes(data);
+                        unitySocketWorker.Send(dataToUnity);
                     }
                 }
             }
@@ -463,7 +449,7 @@ namespace CardioRehab_WPF
                 if (!tmp.Contains('|'))
                 {
                     // MessageBox.Show(tmp);
-                    tmp = string.Concat("patient" + patientIndex.ToString() + "-" +user.ToString()+"|", tmp);
+                    tmp = string.Concat("patient" + patientIndex.ToString() + "-" + user.ToString() + "|", tmp);
                 }
 
                 System.String[] name = tmp.Split('|');
@@ -487,7 +473,7 @@ namespace CardioRehab_WPF
                         //BT
                         int number;
                         bool result = Int32.TryParse(data[1], out number);
-                        if(result)
+                        if (result)
                         {
                             hrdata[hrcount] = Convert.ToInt32(data[1]);
                             hrcount++;
@@ -508,7 +494,7 @@ namespace CardioRehab_WPF
                         {
                             oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = data[1] + " %"));
                             // enable below to display hr from oximeter
-                           // hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2] + " bpm"));
+                            // hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2] + " bpm"));
                         }
                     }
 
@@ -557,7 +543,7 @@ namespace CardioRehab_WPF
                     System.Net.IPEndPoint remoteEndPoint = new System.Net.IPEndPoint(remoteIPAddy, 5000 + patientIndex - 1);
                     socketToClinician.Connect(remoteEndPoint);
 
-                    if(socketToClinician.Connected)
+                    if (socketToClinician.Connected)
                     {
                         // later change the patientLocalIp to their wireless IP
                         // once the video and audio works smoother in wireless
@@ -574,7 +560,7 @@ namespace CardioRehab_WPF
 
             catch (SocketException e)
             {
-                Console.WriteLine("SocketException thrown at CreateSocketConnection: "+e.ErrorCode.ToString());
+                Console.WriteLine("SocketException thrown at CreateSocketConnection: " + e.ErrorCode.ToString());
                 MessageBox.Show(e.Message);
             }
         }
@@ -588,7 +574,6 @@ namespace CardioRehab_WPF
         /// </summary>
         private void ConnectToUnity()
         {
-            Console.WriteLine("connect to unity");
             try
             {
                 unitySocketListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -598,7 +583,6 @@ namespace CardioRehab_WPF
                 unitySocketListener.Bind(iplocal);
                 //start listening -- 4 is max connections queue, can be changed
                 unitySocketListener.Listen(4);
-                Console.WriteLine("Listning for connection for unitySocket");
                 unitySocketListener.BeginAccept(new AsyncCallback(OnUnitySocketConnection), null);
 
                 //create call back for client connections -- aka maybe recieve video here????
@@ -612,7 +596,6 @@ namespace CardioRehab_WPF
 
         private void OnUnitySocketConnection(IAsyncResult asyn)
         {
-            Console.WriteLine("Got Connection");
             try
             {
                 unitySocketWorker = unitySocketListener.EndAccept(asyn);
@@ -689,7 +672,7 @@ namespace CardioRehab_WPF
                 {
                     e.NewSensor.ColorStream.Enable(ColorImageFormat.RgbResolution640x480Fps30);
                     e.NewSensor.ColorFrameReady += NewSensor_ColorFrameReady;
-                    
+
                 }
                 catch (InvalidOperationException)
                 {
@@ -764,3 +747,6 @@ namespace CardioRehab_WPF
     }
 
 }
+
+
+
