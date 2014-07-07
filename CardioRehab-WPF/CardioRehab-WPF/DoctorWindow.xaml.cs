@@ -133,7 +133,7 @@ namespace CardioRehab_WPF
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
             InitializeKinect(kinectOutPorts);
-            InitializeAudio();
+            //InitializeAudio();
 
             InitializeECG();
 

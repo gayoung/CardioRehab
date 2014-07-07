@@ -104,7 +104,7 @@ namespace CardioRehab_WPF
             ConnectToUnity();
             InitializeVR();
             //InitializeBioSockets();
-            //CreateSocketConnection();
+            CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
             InitTimer();
@@ -112,7 +112,7 @@ namespace CardioRehab_WPF
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //InitializeKinect();
+            InitializeKinect();
             //InitializeAudio();
 
         }
@@ -139,7 +139,7 @@ namespace CardioRehab_WPF
             // make this path relative later
             try
             {
-                UnityWindow.Navigate("C:\\Users\\Gayoung\\Documents\\Cardiac\\web\\web.html");
+                UnityWindow.Navigate("C:\\Users\\Gayoung\\Documents\\KdaysDemo\\web\\web.html");
             }
             catch (Exception e)
             {
@@ -303,9 +303,9 @@ namespace CardioRehab_WPF
             bpValue.Dispatcher.Invoke((Action)(() => bpValue.Content = systolic.ToString() + "/" + diastolic.ToString()));
 
             // bike label modification
-            powerValue.Dispatcher.Invoke((Action)(() => powerValue.Content = powerVal.ToString() + " Watt"));
-            speedValue.Dispatcher.Invoke((Action)(() => speedValue.Content = speedVal.ToString() + " RPM"));
-            cadenceValue.Dispatcher.Invoke((Action)(() => cadenceValue.Content = cadenceVal.ToString() + " RPM"));
+            //powerValue.Dispatcher.Invoke((Action)(() => powerValue.Content = powerVal.ToString() + " Watt"));
+            //speedValue.Dispatcher.Invoke((Action)(() => speedValue.Content = speedVal.ToString() + " RPM"));
+            //cadenceValue.Dispatcher.Invoke((Action)(() => cadenceValue.Content = cadenceVal.ToString() + " RPM"));
 
             String patientLabel = "patient" + patientIndex;
 
