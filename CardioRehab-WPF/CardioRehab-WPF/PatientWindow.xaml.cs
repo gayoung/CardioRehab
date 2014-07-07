@@ -104,7 +104,7 @@ namespace CardioRehab_WPF
             ConnectToUnity();
             InitializeVR();
             //InitializeBioSockets();
-            CreateSocketConnection();
+            //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
             InitTimer();
@@ -112,7 +112,7 @@ namespace CardioRehab_WPF
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeKinect();
+            //InitializeKinect();
             //InitializeAudio();
 
         }
@@ -294,18 +294,13 @@ namespace CardioRehab_WPF
 
             // testing for bike data (values may not be in correct range)
             int powerVal = r.Next(20, 40);
-            int speedVal = r.Next(10, 25);
+            int speedVal = r.Next(90, 200);
             int cadenceVal = r.Next(40, 60);
 
             // modify patient UI labels
             hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = heartRate.ToString() + " bpm"));
             oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = oxygen.ToString() + " %"));
             bpValue.Dispatcher.Invoke((Action)(() => bpValue.Content = systolic.ToString() + "/" + diastolic.ToString()));
-
-            // bike label modification
-            //powerValue.Dispatcher.Invoke((Action)(() => powerValue.Content = powerVal.ToString() + " Watt"));
-            //speedValue.Dispatcher.Invoke((Action)(() => speedValue.Content = speedVal.ToString() + " RPM"));
-            //cadenceValue.Dispatcher.Invoke((Action)(() => cadenceValue.Content = cadenceVal.ToString() + " RPM"));
 
             String patientLabel = "patient" + patientIndex;
 
@@ -633,13 +628,13 @@ namespace CardioRehab_WPF
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555 + patientIndex - 1, ImageFormat.Jpeg);
                 _videoListener.Start();
 
-                _audioClient = new AudioClient();
-                _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect(doctorIp, 4541 + patientIndex - 1);
+                //_audioClient = new AudioClient();
+                //_audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+                //_audioClient.Connect(doctorIp, 4541 + patientIndex - 1);
 
-                //for sending audio
-                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4565 + patientIndex - 1);
-                _audioListener.Start();
+                ////for sending audio
+                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4565 + patientIndex - 1);
+                //_audioListener.Start();
 
             }
 
