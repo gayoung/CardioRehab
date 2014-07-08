@@ -294,7 +294,8 @@ namespace CardioRehab_WPF
 
             // testing for bike data (values may not be in correct range)
             int powerVal = r.Next(20, 40);
-            int speedVal = r.Next(90, 200);
+            // should be between 100-200 (changed for faster testing)
+            int speedVal = r.Next(100, 200);
             int cadenceVal = r.Next(40, 60);
 
             // modify patient UI labels
@@ -456,9 +457,24 @@ namespace CardioRehab_WPF
                 {
                     System.String[] data = name[1].Trim().Split(' ');
 
-                    byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
+                    if((data[0] == "HR") || (data[0] == "OX") || (data[0] == "BP"))
+                    {
+                        byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
-                    socketToClinician.Send(dataToClinician);
+                        socketToClinician.Send(dataToClinician);
+                    }
+                    else if((data[0] == "PR") || (data[0] == "WR") || (data[0] == "CR"))
+                    {
+                        if (unitySocketWorker != null)
+                        {
+                            if (unitySocketWorker.Connected)
+                            {
+                                tmp = new System.String(chars);
+                                byte[] dataToUnity = System.Text.Encoding.ASCII.GetBytes(tmp);
+                                unitySocketWorker.Send(dataToUnity);
+                            }
+                        }
+                    }
 
                     var regexlimit = new Regex("^[0-9 ]*$");
 
@@ -489,11 +505,11 @@ namespace CardioRehab_WPF
                         {
                             oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = data[1] + " %"));
                             // enable below to display hr from oximeter
-                            // hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2] + " bpm"));
+                            hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2] + " bpm"));
                         }
                     }
 
-                    if (data[0] == "BP")
+                    else if (data[0] == "BP")
                     {
                         //BT
                         bpdata[bpcount] = Convert.ToInt32(data[1]); ;
