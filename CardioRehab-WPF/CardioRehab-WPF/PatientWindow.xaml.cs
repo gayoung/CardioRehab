@@ -103,11 +103,11 @@ namespace CardioRehab_WPF
 
             ConnectToUnity();
             InitializeVR();
-            //InitializeBioSockets();
+            InitializeBioSockets();
             //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            InitTimer();
+            //InitTimer();
         }
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
@@ -266,7 +266,8 @@ namespace CardioRehab_WPF
                     Console.WriteLine(addr.ToString());
                     if (Ipcounter == 0)
                     {
-                        patientLocalIp = addr.ToString();
+                        //patientLocalIp = addr.ToString();
+                        wirelessIP = addr.ToString();
                     }
                     else if (Ipcounter == 1)
                     {
@@ -452,6 +453,7 @@ namespace CardioRehab_WPF
 
                 System.String[] fakeECG = new String[1] { "ECG" };
 
+                Console.WriteLine(name.Length);
 
                 if (name.Length == 2)
                 {
@@ -463,13 +465,14 @@ namespace CardioRehab_WPF
 
                         socketToClinician.Send(dataToClinician);
                     }
-                    else if((data[0] == "PR") || (data[0] == "WR") || (data[0] == "CR"))
+                    else if((data[0] == "PW") || (data[0] == "WR") || (data[0] == "CR"))
                     {
                         if (unitySocketWorker != null)
                         {
                             if (unitySocketWorker.Connected)
                             {
                                 tmp = new System.String(chars);
+                                Console.WriteLine(tmp);
                                 byte[] dataToUnity = System.Text.Encoding.ASCII.GetBytes(tmp);
                                 unitySocketWorker.Send(dataToUnity);
                             }
