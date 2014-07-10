@@ -103,11 +103,11 @@ namespace CardioRehab_WPF
 
             ConnectToUnity();
             InitializeVR();
-            InitializeBioSockets();
+            //InitializeBioSockets();
             //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            //InitTimer();
+            InitTimer();
         }
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
