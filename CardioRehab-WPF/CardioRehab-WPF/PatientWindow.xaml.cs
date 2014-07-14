@@ -44,7 +44,7 @@ namespace CardioRehab_WPF
         private int age;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "192.168.184.57";
+        private String doctorIp = "192.168.184.22";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -98,13 +98,13 @@ namespace CardioRehab_WPF
             CheckRecord();
             InitializeComponent();
 
-            _writer = new TextBoxStreamWriter(txtMessage);
-            Console.SetOut(_writer);
+            //_writer = new TextBoxStreamWriter(txtMessage);
+            //Console.SetOut(_writer);
 
             ConnectToUnity();
             InitializeVR();
             //InitializeBioSockets();
-            //CreateSocketConnection();
+            CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
             InitTimer();
@@ -112,8 +112,8 @@ namespace CardioRehab_WPF
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //InitializeKinect();
-            //InitializeAudio();
+            InitializeKinect();
+            InitializeAudio();
 
         }
 
@@ -262,8 +262,8 @@ namespace CardioRehab_WPF
             {
                 if (addr.AddressFamily == AddressFamily.InterNetwork)
                 {
-                    Console.WriteLine("All the IP addresses read: ");
-                    Console.WriteLine(addr.ToString());
+                    //Console.WriteLine("All the IP addresses read: ");
+                    //Console.WriteLine(addr.ToString());
                     if (Ipcounter == 0)
                     {
                         //patientLocalIp = addr.ToString();
@@ -309,17 +309,17 @@ namespace CardioRehab_WPF
             try
             {
                 //// mock data sent to the clinician
-                //data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-                //data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-                //data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
                 if (unitySocketWorker != null)
                 {
@@ -453,7 +453,7 @@ namespace CardioRehab_WPF
 
                 System.String[] fakeECG = new String[1] { "ECG" };
 
-                Console.WriteLine(name.Length);
+                //Console.WriteLine(name.Length);
 
                 if (name.Length == 2)
                 {
@@ -472,7 +472,7 @@ namespace CardioRehab_WPF
                             if (unitySocketWorker.Connected)
                             {
                                 tmp = new System.String(chars);
-                                Console.WriteLine(tmp);
+                                //Console.WriteLine(tmp);
                                 byte[] dataToUnity = System.Text.Encoding.ASCII.GetBytes(tmp);
                                 unitySocketWorker.Send(dataToUnity);
                             }
@@ -647,13 +647,13 @@ namespace CardioRehab_WPF
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555 + patientIndex - 1, ImageFormat.Jpeg);
                 _videoListener.Start();
 
-                //_audioClient = new AudioClient();
-                //_audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                //_audioClient.Connect(doctorIp, 4541 + patientIndex - 1);
+                _audioClient = new AudioClient();
+                _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+                _audioClient.Connect(doctorIp, 4541 + patientIndex - 1);
 
-                ////for sending audio
-                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4565 + patientIndex - 1);
-                //_audioListener.Start();
+                //for sending audio
+                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4565 + patientIndex - 1);
+                _audioListener.Start();
 
             }
 
@@ -754,7 +754,7 @@ namespace CardioRehab_WPF
 
         private void UnityWindow_LoadCompleted(object sender, NavigationEventArgs e)
         {
-            Console.WriteLine("unity window load completed function");
+            //Console.WriteLine("unity window load completed function");
             mshtml.IHTMLDocument2 dom = (mshtml.IHTMLDocument2)UnityWindow.Document;
             dom.body.style.overflow = "hidden";
         }

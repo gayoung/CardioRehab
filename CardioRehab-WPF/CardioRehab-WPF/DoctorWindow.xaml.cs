@@ -182,12 +182,12 @@ namespace CardioRehab_WPF
                 {
                     if (Ipcounter == 0)
                     {
-                        Console.WriteLine("localIP1: " + addr.ToString());
+                        //Console.WriteLine("localIP1: " + addr.ToString());
                         localIP = addr.ToString();
                     }
                     if (Ipcounter == 1)
                     {
-                        Console.WriteLine("localIP2: " + addr.ToString());
+                        //Console.WriteLine("localIP2: " + addr.ToString());
                         localIP = addr.ToString();
 
                     }
@@ -628,7 +628,7 @@ namespace CardioRehab_WPF
 
                     //create listening socket
                     Socket currentSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                    Console.WriteLine("listening on :  " + localIP + ":" + portNum.ToString());
+                    //Console.WriteLine("listening on :  " + localIP + ":" + portNum.ToString());
                     IPAddress addy = IPAddress.Parse(localIP);
                     IPEndPoint iplocal = new IPEndPoint(addy, portNum);
                     //bind to local IP Address
@@ -755,8 +755,8 @@ namespace CardioRehab_WPF
                 this.Dispatcher.Invoke((Action)(() =>
                 {
                     String currentLabel = name[0].Trim();
-                    Console.WriteLine("name at processData");
-                    Console.WriteLine(name[0]);
+                    //Console.WriteLine("name at processData");
+                    //Console.WriteLine(name[0]);
                     switch (currentLabel)
                     {
                         case "patient1":
@@ -925,7 +925,7 @@ namespace CardioRehab_WPF
                             {
                                 String[] restofData = sentData[1].Split('-');
                                 int index = Convert.ToInt32(restofData[0].Trim());
-                                Console.WriteLine(restofData[2]);
+                                //Console.WriteLine(restofData[2]);
                                 patientIPCollection.Insert(index - 1, restofData[2].Trim());
                                 patientid = Convert.ToInt32(restofData[1]);
 
@@ -965,7 +965,7 @@ namespace CardioRehab_WPF
         #region Kinect
         private void InitializeKinect(int[] ports)
         {
-            Console.WriteLine("InitializeKinect");
+            //Console.WriteLine("InitializeKinect");
             this.sensorChooser = new KinectSensorChooser();
             this.sensorChooser.KinectChanged += sensorChooser_KinectChanged;
             this.sensorChooserUi.KinectSensorChooser = this.sensorChooser;
