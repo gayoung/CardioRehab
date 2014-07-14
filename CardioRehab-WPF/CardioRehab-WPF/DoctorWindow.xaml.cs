@@ -77,7 +77,9 @@ namespace CardioRehab_WPF
         private ColorClient _videoClient;
         private ColorClient _videoClient2;
 
-        private List<ColorListener> videoListenerCollection = new List<ColorListener>();
+        //private List<ColorListener> videoListenerCollection = new List<ColorListener>();
+
+        private ColorListener _videoListener;
 
         WaveOut wo = new WaveOut();
         WaveFormat wf = new WaveFormat(16000, 1);
@@ -87,8 +89,8 @@ namespace CardioRehab_WPF
         private AudioClient _audioClient;
         //private AudioClient _audioClient2;
 
-        private List<AudioListener> audioListenerCollection = new List<AudioListener>();
-        //private static AudioListener _audioListener;
+        //private List<AudioListener> audioListenerCollection = new List<AudioListener>();
+        private static AudioListener _audioListener;
 
         private Random _Random;
         private int _maxECG;
@@ -982,12 +984,15 @@ namespace CardioRehab_WPF
                 //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
                 //_videoClient2.Connect("192.168.184.19", 4556);
 
-                foreach (int portNum in ports)
-                {
-                    ColorListener _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
-                    _videoListener.Start();
-                    videoListenerCollection.Add(_videoListener);
-                }
+                _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
+                _videoListener.Start();
+
+                //foreach (int portNum in ports)
+                //{
+                //    ColorListener _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
+                //    _videoListener.Start();
+                //    videoListenerCollection.Add(_videoListener);
+                //}
 
                 _audioClient = new AudioClient();
                 _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
@@ -998,15 +1003,15 @@ namespace CardioRehab_WPF
                 //_audioClient2.Connect("192.168.184.19", 4538);
 
                 //for sending audio
-                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4541);
-                //_audioListener.Start();
+                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4541);
+                _audioListener.Start();
 
-                foreach (int portNum in ports)
-                {
-                    AudioListener _audioListener = new AudioListener(this.sensorChooser.Kinect, portNum + 10);
-                    _audioListener.Start();
-                    audioListenerCollection.Add(_audioListener);
-                }
+                //foreach (int portNum in ports)
+                //{
+                //    AudioListener _audioListener = new AudioListener(this.sensorChooser.Kinect, portNum + 10);
+                //    _audioListener.Start();
+                //    audioListenerCollection.Add(_audioListener);
+                //}
 
             }
         }
