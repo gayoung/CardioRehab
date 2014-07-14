@@ -206,7 +206,7 @@ namespace CardioRehab_WPF
             String query = "SELECT local_ip FROM doctor WHERE doctor_id=" + userid;
 
             // sometimes the db connection is closed (when going from expand to collapse)
-            if(db.m_dbconnection.State != System.Data.ConnectionState.Open)
+            if (db.m_dbconnection.State != System.Data.ConnectionState.Open)
             {
                 db.m_dbconnection.Open();
             }
@@ -249,11 +249,11 @@ namespace CardioRehab_WPF
             // current user does not have any IP addresses in the database record
             if (reader.HasRows)
             {
-                while(reader.Read())
+                while (reader.Read())
                 {
                     patientAge = System.DateTime.Now.Year - Convert.ToInt32(reader["year"]);
                 }
-               
+
             }
             reader.Dispose();
             cmd.Dispose();
@@ -313,7 +313,7 @@ namespace CardioRehab_WPF
         private void SetArrow(System.Windows.Controls.Image icon, Label currentLabel, String newimg)
         {
             //if the biodata is too low, then the font is displayed as blue.
-            if(newimg == "downarrow.png")
+            if (newimg == "downarrow.png")
             {
                 currentLabel.Foreground = System.Windows.Media.Brushes.Blue;
             }
@@ -385,9 +385,9 @@ namespace CardioRehab_WPF
                     patientBorder.BorderBrush = System.Windows.Media.Brushes.DarkGreen;
                 }
             }
-            if (fullscreenview != null) 
+            if (fullscreenview != null)
             {
-                if(fullscreenview.patientLabel == currentPatient)
+                if (fullscreenview.patientLabel == currentPatient)
                 {
                     ModifyFulLScreenWindowHr(hrValue);
                 }
@@ -483,6 +483,18 @@ namespace CardioRehab_WPF
             }
         }
 
+        private void ProcessECGData(String ecgValue)
+        {
+            String[] ecgDataArray = ecgValue.Split(' ');
+
+            for (int i = 0; i < ecgDataArray.Length; i++)
+            {
+                ecgPointCollection.Add(new ECGPoint(Convert.ToInt32(ecgDataArray[i]), DateTime.Now));
+            }
+
+
+        }
+
         /// <summary>
         /// This method is used to put the warning message about status of
         /// other patients when the doctor is in Full screen view mode of one patient.
@@ -493,20 +505,20 @@ namespace CardioRehab_WPF
             String patientString = "";
             int warningindex = 1;
 
-            while(warningindex < warningStatus.Length)
+            while (warningindex < warningStatus.Length)
             {
-                if((warningStatus[warningindex-1]) && (warningindex != currentPatient))
+                if ((warningStatus[warningindex - 1]) && (warningindex != currentPatient))
                 {
-                    patientString += "patient"+warningindex.ToString()+", ";
+                    patientString += "patient" + warningindex.ToString() + ", ";
                 }
                 warningindex++;
             }
 
-            if(warningStatus[warningStatus.Length-1])
+            if (warningStatus[warningStatus.Length - 1])
             {
-                patientString += "patient"+warningStatus.Length.ToString();
+                patientString += "patient" + warningStatus.Length.ToString();
             }
-            if(patientString != "")
+            if (patientString != "")
             {
                 fullscreenview.WarningLabel.Content = patientString + " need to be checked.";
                 fullscreenview.WarningLabel.Visibility = System.Windows.Visibility.Visible;
@@ -768,13 +780,22 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue1, oxiWarning1, border1, 1); 
+                                ProcessOxData(data[1], oxiValue1, oxiWarning1, border1, 1);
                             }
                             else if (data[0].Trim() == "BP")
                             {
                                 ProcessBpData(data[1], data[2], bpSysValue1, bpDiaValue1, bpWarning1, border1, 1);
                             }
-                            if(hasBadData)
+                            else if (data[0].Trim() == "EC")
+                            {
+                                String ecgData = data[1];
+                                for (int index = 2; index < data.Length; index++)
+                                {
+                                    ecgData += ' ' + data[index];
+                                }
+                                ProcessECGData(ecgData);
+                            }
+                            if (hasBadData)
                             {
                                 warningStatus[0] = true;
                             }
@@ -782,7 +803,7 @@ namespace CardioRehab_WPF
                             {
                                 warningStatus[0] = false;
                             }
-                            if(fullscreenview != null)
+                            if (fullscreenview != null)
                             {
                                 RaiseOtherPatientWarning();
                             }
@@ -795,7 +816,7 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue2, oxiWarning2, border2, 2); 
+                                ProcessOxData(data[1], oxiValue2, oxiWarning2, border2, 2);
                             }
                             else if (data[0].Trim() == "BP")
                             {
@@ -822,7 +843,7 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue3, oxiWarning3, border3, 3); 
+                                ProcessOxData(data[1], oxiValue3, oxiWarning3, border3, 3);
                             }
                             else if (data[0].Trim() == "BP")
                             {
@@ -849,7 +870,7 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue4, oxiWarning4, border4, 4); 
+                                ProcessOxData(data[1], oxiValue4, oxiWarning4, border4, 4);
                             }
                             else if (data[0].Trim() == "BP")
                             {
@@ -876,7 +897,7 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue5, oxiWarning5, border5, 5); 
+                                ProcessOxData(data[1], oxiValue5, oxiWarning5, border5, 5);
                             }
                             else if (data[0].Trim() == "BP")
                             {
@@ -903,7 +924,7 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue6, oxiWarning6, border6, 6); 
+                                ProcessOxData(data[1], oxiValue6, oxiWarning6, border6, 6);
                             }
                             else if (data[0].Trim() == "BP")
                             {
@@ -984,7 +1005,7 @@ namespace CardioRehab_WPF
                 //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
                 //_videoClient2.Connect("192.168.184.19", 4556);
 
-                _videoListener = new ColorListener(this.sensorChooser.Kinect, portNum, ImageFormat.Jpeg);
+                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4531, ImageFormat.Jpeg);
                 _videoListener.Start();
 
                 //foreach (int portNum in ports)
@@ -1038,7 +1059,7 @@ namespace CardioRehab_WPF
                     // E.g.: sensor might be abruptly unplugged.
                     Console.WriteLine("InvalidOperation Exception was thrown1.");
                 }
-                catch(ArgumentOutOfRangeException)
+                catch (ArgumentOutOfRangeException)
                 {
                     Console.WriteLine("sensorChooser_kinectChanged1 argument out of range exception");
                 }
@@ -1057,7 +1078,7 @@ namespace CardioRehab_WPF
                     // E.g.: sensor might be abruptly unplugged.
                     Console.WriteLine("InvalidOperation Exception was thrown2.");
                 }
-                catch(ArgumentOutOfRangeException)
+                catch (ArgumentOutOfRangeException)
                 {
                     Console.WriteLine("sensorChooser_kinectChanged2 argument out of range exception");
                 }
@@ -1068,7 +1089,7 @@ namespace CardioRehab_WPF
         {
             using (ColorImageFrame frame = e.OpenColorImageFrame())
             {
-                if(fullscreenview != null)
+                if (fullscreenview != null)
                 {
                     if (frame == null)
                     {
@@ -1104,26 +1125,15 @@ namespace CardioRehab_WPF
         {
             ecgPointCollection = new ECGPointCollection();
 
-            updateCollectionTimer = new DispatcherTimer();
-            updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(100);
-            updateCollectionTimer.Tick += new EventHandler(updateCollectionTimer_Tick);
-            updateCollectionTimer.Start();
-
             var ds = new EnumerableDataSource<ECGPoint>(ecgPointCollection);
             ds.SetXMapping(x => dateAxis.ConvertToDouble(x.Date));
             ds.SetYMapping(y => y.ECG);
-            plotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
+            //plotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
             plotter.VerticalAxis.Remove();
-            MaxECG = 1;
-            MinECG = -1;
+            //MaxECG = 1;
+            //MinECG = -1;
         }
 
-        void updateCollectionTimer_Tick(object sender, EventArgs e)
-        {
-            i++;
-            _Random = new Random();
-            ecgPointCollection.Add(new ECGPoint(_Random.NextDouble(), DateTime.Now));
-        }
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName)
         {
@@ -1170,9 +1180,9 @@ namespace CardioRehab_WPF
         void _videoClient_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
         {
             this.patientFrame1.Source = e.ColorFrame.BitmapImage;
-            if(fullscreenview != null)
+            if (fullscreenview != null)
             {
-                if(fullscreenview.patientLabel == 1)
+                if (fullscreenview.patientLabel == 1)
                 {
                     fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
                 }
@@ -1184,7 +1194,7 @@ namespace CardioRehab_WPF
             this.patientFrame2.Source = e.ColorFrame.BitmapImage;
             if (fullscreenview != null)
             {
-                if(fullscreenview.patientLabel == 2)
+                if (fullscreenview.patientLabel == 2)
                 {
                     fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
                 }

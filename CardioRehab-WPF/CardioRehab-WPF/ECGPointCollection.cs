@@ -8,7 +8,7 @@ namespace DynamicDataDisplaySample.ECGViewModel
 {
     public class ECGPointCollection : RingArray <ECGPoint>
     {
-        private const int TOTAL_POINTS = 30;
+        private const int TOTAL_POINTS = 100;
 
         public ECGPointCollection()
             : base(TOTAL_POINTS) // here i set how much values to show 
@@ -22,7 +22,7 @@ namespace DynamicDataDisplaySample.ECGViewModel
         
         public double ECG { get; set; }
 
-        public ECGPoint(double ecg, DateTime date)
+        public ECGPoint(int ecg, DateTime date)
         {
             this.Date = date;
             this.ECG = ecg;

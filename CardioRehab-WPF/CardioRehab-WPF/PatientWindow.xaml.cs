@@ -321,6 +321,10 @@ namespace CardioRehab_WPF
                 dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
                 socketToClinician.Send(dataToClinician);
 
+                data = patientLabel + "-" + user.ToString() + "|" + "EC -592 -201 -133 -173 -172 -143 -372 -349 -336 -332 -314 -309 -295 -274 -265 -261 16 44 75 102 -123 -80 -44 -11 259\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
+
                 if (unitySocketWorker != null)
                 {
                     if (unitySocketWorker.Connected)
@@ -459,7 +463,7 @@ namespace CardioRehab_WPF
                 {
                     System.String[] data = name[1].Trim().Split(' ');
 
-                    if((data[0] == "HR") || (data[0] == "OX") || (data[0] == "BP"))
+                    if((data[0] == "HR") || (data[0] == "OX") || (data[0] == "BP") ||(data[0] == "EC"))
                     {
                         byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
