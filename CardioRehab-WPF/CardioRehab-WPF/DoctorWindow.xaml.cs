@@ -36,7 +36,7 @@ namespace CardioRehab_WPF
     /// <summary>
     /// Interaction logic for DoctorWindow.xaml
     /// </summary>
-    public partial class DoctorWindow : Window, INotifyPropertyChanged
+    public partial class DoctorWindow : Window
     {
         private DatabaseClass db;
 
@@ -75,7 +75,7 @@ namespace CardioRehab_WPF
         private byte[] pixels = new byte[0];
 
         private ColorClient _videoClient;
-        private ColorClient _videoClient2;
+        //private ColorClient _videoClient2;
 
         //private List<ColorListener> videoListenerCollection = new List<ColorListener>();
 
@@ -92,26 +92,25 @@ namespace CardioRehab_WPF
         //private List<AudioListener> audioListenerCollection = new List<AudioListener>();
         private static AudioListener _audioListener;
 
-        private Random _Random;
-        private int _maxECG;
+        //private int _maxECG;
 
-        public int MaxECG
-        {
-            get { return _maxECG; }
-            set { _maxECG = value; this.OnPropertyChanged("MaxECG"); }
-        }
+        //public int MaxECG
+        //{
+        //    get { return _maxECG; }
+        //    set { _maxECG = value; this.OnPropertyChanged("MaxECG"); }
+        //}
 
-        private int _minECG;
-        public int MinECG
-        {
-            get { return _minECG; }
-            set { _minECG = value; this.OnPropertyChanged("MinECG"); }
-        }
+        //private int _minECG;
+        //public int MinECG
+        //{
+        //    get { return _minECG; }
+        //    set { _minECG = value; this.OnPropertyChanged("MinECG"); }
+        //}
 
         public ECGPointCollection ecgPointCollection;
+        private List<ECGPoint> ECGPointList = new List<ECGPoint>();
         DispatcherTimer updateCollectionTimer;
-        private int i = 0;
-
+        private double xaxisValue = 0;
         private FullScreenWindow fullscreenview = null;
         bool[] warningStatus = new bool[6];
 
@@ -134,7 +133,7 @@ namespace CardioRehab_WPF
         private void DoctorWindow_Loaded(object sender, RoutedEventArgs e)
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
-            InitializeKinect(kinectOutPorts);
+            //InitializeKinect(kinectOutPorts);
             //InitializeAudio();
 
             InitializeECG();
@@ -483,16 +482,26 @@ namespace CardioRehab_WPF
             }
         }
 
-        private void ProcessECGData(String ecgValue)
+        private void ProcessECGData(String ecgValue, int currentPatient)
         {
             String[] ecgDataArray = ecgValue.Split(' ');
 
-            for (int i = 0; i < ecgDataArray.Length; i++)
+            Console.WriteLine(ecgValue+ "\n");
+            Console.WriteLine(ecgDataArray.Length.ToString() + "\n");
+
+            for (int i = 0; i < 25; i++)
             {
-                ecgPointCollection.Add(new ECGPoint(Convert.ToInt32(ecgDataArray[i]), DateTime.Now));
+                if ((ecgDataArray[i] != "") || (ecgDataArray[i] != null))
+                {
+                    double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                    
+                    ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
+                    //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
+                    xaxisValue += 0.01;
+                }
             }
 
-
+            
         }
 
         /// <summary>
@@ -769,8 +778,6 @@ namespace CardioRehab_WPF
                 this.Dispatcher.Invoke((Action)(() =>
                 {
                     String currentLabel = name[0].Trim();
-                    //Console.WriteLine("name at processData");
-                    //Console.WriteLine(name[0]);
                     switch (currentLabel)
                     {
                         case "patient1":
@@ -793,7 +800,7 @@ namespace CardioRehab_WPF
                                 {
                                     ecgData += ' ' + data[index];
                                 }
-                                ProcessECGData(ecgData);
+                                ProcessECGData(ecgData, 1);
                             }
                             if (hasBadData)
                             {
@@ -948,7 +955,6 @@ namespace CardioRehab_WPF
                             {
                                 String[] restofData = sentData[1].Split('-');
                                 int index = Convert.ToInt32(restofData[0].Trim());
-                                //Console.WriteLine(restofData[2]);
                                 patientIPCollection.Insert(index - 1, restofData[2].Trim());
                                 patientid = Convert.ToInt32(restofData[1]);
 
@@ -1119,28 +1125,39 @@ namespace CardioRehab_WPF
 
         #endregion
 
-        #region mockECG
+        #region ECG
 
         public void InitializeECG()
         {
             ecgPointCollection = new ECGPointCollection();
 
+            updateCollectionTimer = new DispatcherTimer();
+            updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(60);
+            updateCollectionTimer.Tick += new EventHandler(updateCollectionTimer_Tick);
+            updateCollectionTimer.Start();
+
             var ds = new EnumerableDataSource<ECGPoint>(ecgPointCollection);
-            ds.SetXMapping(x => dateAxis.ConvertToDouble(x.Date));
+            ds.SetXMapping(x => x.ECGtime);
             ds.SetYMapping(y => y.ECG);
-            //plotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
-            plotter.VerticalAxis.Remove();
+            plotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
+            if (fullscreenview != null)
+            {
+                fullscreenview.fullplotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
+            }
+            //plotter.HorizontalAxis.Remove();
             //MaxECG = 1;
             //MinECG = -1;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void OnPropertyChanged(string propertyName)
+        void updateCollectionTimer_Tick(object sender, EventArgs e)
         {
-            if (PropertyChanged != null)
-                this.PropertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            if(ECGPointList.Count > 0)
+            {
+                ECGPoint point = ECGPointList.First();
+                ecgPointCollection.Add(point);
+                ECGPointList.Remove(point);
+            }
         }
-
         #endregion
 
         #region Connect button triggers

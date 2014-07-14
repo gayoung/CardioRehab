@@ -44,7 +44,7 @@ namespace CardioRehab_WPF
         private int age;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "192.168.184.22";
+        private String doctorIp = "192.168.184.14";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -54,7 +54,7 @@ namespace CardioRehab_WPF
         private AsyncCallback socketBioWorkerCallback;
         public Socket socketBioListener;
         public Socket bioSocketWorker;
-        public Socket socketToClinician;
+        public Socket socketToClinician = null;
         public Socket unitySocketListener;
         public Socket unitySocketWorker = null;
 
@@ -103,17 +103,17 @@ namespace CardioRehab_WPF
 
             ConnectToUnity();
             InitializeVR();
-            //InitializeBioSockets();
+            InitializeBioSockets();
             CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            InitTimer();
+            //InitTimer();
         }
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeKinect();
-            InitializeAudio();
+            //InitializeKinect();
+            //InitializeAudio();
 
         }
 
@@ -455,21 +455,24 @@ namespace CardioRehab_WPF
 
                 System.String[] name = tmp.Split('|');
 
-                System.String[] fakeECG = new String[1] { "ECG" };
-
                 //Console.WriteLine(name.Length);
 
                 if (name.Length == 2)
                 {
                     System.String[] data = name[1].Trim().Split(' ');
 
-                    if((data[0] == "HR") || (data[0] == "OX") || (data[0] == "BP") ||(data[0] == "EC"))
+                    if ((data[0] == "HR") || (data[0] == "OX") || (data[0] == "BP") || (data[0] == "EC"))
                     {
                         byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
 
-                        socketToClinician.Send(dataToClinician);
+                        Console.WriteLine(tmp);
+
+                        if (socketToClinician != null)
+                        {
+                            socketToClinician.Send(dataToClinician);
+                        }
                     }
-                    else if((data[0] == "PW") || (data[0] == "WR") || (data[0] == "CR"))
+                    else if ((data[0] == "PW") || (data[0] == "WR") || (data[0] == "CR"))
                     {
                         if (unitySocketWorker != null)
                         {
@@ -765,6 +768,8 @@ namespace CardioRehab_WPF
     }
 
 }
+
+
 
 
 

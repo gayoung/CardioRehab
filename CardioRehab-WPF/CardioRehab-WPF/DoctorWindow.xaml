@@ -303,13 +303,11 @@
                     <Border x:Name="EcgBorder1" BorderBrush="Black" BorderThickness="3" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.ColumnSpan="7" Margin="5,5,9,5" Grid.Row="4">
                         <d3:ChartPlotter x:Name="plotter" Margin="0,0,0,0">
                             <d3:ChartPlotter.HorizontalAxis>
-                                <d3:HorizontalDateTimeAxis x:Name="dateAxis" FontSize="7"/>
+                                <d3:HorizontalAxis x:Name="dateAxis" FontSize="7"/>
                             </d3:ChartPlotter.HorizontalAxis>
                             <d3:Header FontFamily="Microsoft Uighur"/>
                             <d3:VerticalAxisTitle FontFamily="Microsoft Uighur"/>
                             <d3:HorizontalAxisTitle FontFamily="Microsoft Uighur"/>
-                            <d3:HorizontalLine Value="{Binding MaxECG}" Stroke="Red" StrokeThickness="2"/>
-                            <d3:HorizontalLine Value="{Binding MinECG}" Stroke="Red" StrokeThickness="2"/>
                         </d3:ChartPlotter>
                     </Border>
                     <Button HorizontalAlignment="Stretch" VerticalAlignment="Stretch" x:Name="connect1" Content="Connect" Background="#FF0A5B15" Foreground="#FFF9F6F6" FontWeight="Bold" FontFamily="Century" FontSize="24" Grid.ColumnSpan="6" Margin="15,42,49,48" Grid.Column="1" Click="connect1_Click"/>
