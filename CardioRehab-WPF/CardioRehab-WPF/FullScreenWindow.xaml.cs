@@ -28,6 +28,10 @@ namespace CardioRehab_WPF
         private int userid;
         public int patientLabel;
 
+        public ECGPointCollection ecgPointCollection;
+        DispatcherTimer updateCollectionTimer = null;
+        private double xaxisValue = 0;
+
         private DoctorWindow currentSplitScreen;
 
         public FullScreenWindow(int currentUser, int patientindex, DatabaseClass database, DoctorWindow hidden)
@@ -39,7 +43,41 @@ namespace CardioRehab_WPF
 
             InitializeComponent();
 
+            InitializeECG();
+
             this.pateintId.Content = "Patient " + patientindex.ToString();
+        }
+
+        public void InitializeECG()
+        {
+            ecgPointCollection = new ECGPointCollection();
+
+            updateCollectionTimer = new DispatcherTimer();
+            updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(currentSplitScreen.ecgms);
+            updateCollectionTimer.Tick += new EventHandler(updateCollectionTimer_Tick);
+            updateCollectionTimer.Start();
+
+            var ds = new EnumerableDataSource<ECGPoint>(ecgPointCollection);
+            ds.SetXMapping(x => x.ECGtime);
+            ds.SetYMapping(y => y.ECG);
+            fullplotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
+           
+            //plotter.HorizontalAxis.Remove();
+            //MaxECG = 1;
+            //MinECG = -1;
+        }
+
+        void updateCollectionTimer_Tick(object sender, EventArgs e)
+        {
+            if(currentSplitScreen != null)
+            {
+                if (currentSplitScreen.ECGPointList.Count > 0)
+                {
+                    ECGPoint point = currentSplitScreen.ECGPointList.First();
+                    ecgPointCollection.Add(point);
+                    currentSplitScreen.ECGPointList.Remove(point);
+                }
+            }
         }
 
         /// <summary>

@@ -91,30 +91,16 @@ namespace CardioRehab_WPF
 
         //private List<AudioListener> audioListenerCollection = new List<AudioListener>();
         private static AudioListener _audioListener;
-
-        //private int _maxECG;
-
-        //public int MaxECG
-        //{
-        //    get { return _maxECG; }
-        //    set { _maxECG = value; this.OnPropertyChanged("MaxECG"); }
-        //}
-
-        //private int _minECG;
-        //public int MinECG
-        //{
-        //    get { return _minECG; }
-        //    set { _minECG = value; this.OnPropertyChanged("MinECG"); }
-        //}
+        private DispatcherTimer mimicPhoneTimer;
 
         public ECGPointCollection ecgPointCollection;
-        private List<ECGPoint> ECGPointList = new List<ECGPoint>();
+        public List<ECGPoint> ECGPointList = new List<ECGPoint>();
         DispatcherTimer updateCollectionTimer = null;
         private double xaxisValue = 0;
         private FullScreenWindow fullscreenview = null;
         bool[] warningStatus = new bool[6];
 
-        private double ecgms = 30;
+        public double ecgms = 30;
 
 
         public DoctorWindow(int currentuser, DatabaseClass openDB)
@@ -128,7 +114,7 @@ namespace CardioRehab_WPF
 
             // patients send the biodata from port 5000-5005
             int[] ports = new int[6] { 5000, 5001, 5002, 5003, 5004, 5005 };
-            InitializeBioSockets(ports);
+            //InitializeBioSockets(ports);
 
         }
 
@@ -139,6 +125,7 @@ namespace CardioRehab_WPF
             InitializeAudio();
 
             InitializeECG();
+            InitTimer();
 
             this.DataContext = this;
         }
@@ -172,6 +159,40 @@ namespace CardioRehab_WPF
         }
 
         #region Helper functions
+
+        /// <summary>
+        /// This method calls mimicPhoneTimer_Tick method which calls the PhoneTestMethod
+        /// to mimic the data sent by the phone at port 4444.
+        /// 
+        /// Used to test the application without having access to 6 phones to mock 6 proper patients.
+        /// 
+        /// The code was modified from
+        /// http://stackoverflow.com/questions/6169288/execute-specified-function-every-x-seconds
+        /// </summary>
+        public void InitTimer()
+        {
+            mimicPhoneTimer = new System.Windows.Threading.DispatcherTimer();
+            mimicPhoneTimer.Tick += new EventHandler(mimicPhoneTimer_Tick);
+            mimicPhoneTimer.Interval = new TimeSpan(0, 0, 2); ; // 2 seconds
+            mimicPhoneTimer.Start();
+        }
+
+        /// <summary>
+        /// Function called by the timer class.
+        /// 
+        /// This method is called every 2 seconds.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void mimicPhoneTimer_Tick(object sender, EventArgs e)
+        {
+            PhoneTestMethod();
+        }
+
+        private void PhoneTestMethod()
+        {
+            ProcessECGData("-592 -201 -133 -173 -172 -143 -372 -349 -336 -332 -314 -309 -295 -274 -265 -261 16 44 75 102 -123 -80 -44 -11 259", 1);
+        }
 
         private void GetLocalIP()
         {
@@ -366,11 +387,11 @@ namespace CardioRehab_WPF
         private void ProcessHrData(String hrValue, Label hrValLabel, System.Windows.Controls.Image hrWarnIcon, Border patientBorder, int currentPatient)
         {
             hrValLabel.Content = hrValue.Trim();
-            if (Convert.ToInt32(hrValue) < minHrRange)
-            {
-                SetArrow(hrWarnIcon, hrValLabel, "downarrow.png");
-            }
-            else if (Convert.ToInt32(hrValue) > maxHrRange)
+            //if (Convert.ToInt32(hrValue) < minHrRange)
+            //{
+            //    SetArrow(hrWarnIcon, hrValLabel, "downarrow.png");
+            //}
+            if (Convert.ToInt32(hrValue) > maxHrRange)
             {
                 hasBadData = true;
                 SetArrow(hrWarnIcon, hrValLabel, "uparrow.png");
@@ -549,11 +570,11 @@ namespace CardioRehab_WPF
         private void ModifyFulLScreenWindowHr(String hrValue)
         {
             fullscreenview.hrValue.Content = hrValue.Trim();
-            if (Convert.ToInt32(hrValue) < minHrRange)
-            {
-                SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "downarrow.png");
-            }
-            else if (Convert.ToInt32(hrValue) > maxHrRange)
+            //if (Convert.ToInt32(hrValue) < minHrRange)
+            //{
+            //    SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "downarrow.png");
+            //}
+            if (Convert.ToInt32(hrValue) > maxHrRange)
             {
                 hasBadData = true;
                 SetArrow(fullscreenview.hrWarning, fullscreenview.hrValue, "uparrow.png");
