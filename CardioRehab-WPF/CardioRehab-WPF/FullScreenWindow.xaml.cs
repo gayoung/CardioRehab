@@ -81,21 +81,7 @@ namespace CardioRehab_WPF
         /// <param name="e"></param>
         private void MuteButton_Click(object sender, RoutedEventArgs e)
         {
-            String currentIcon = muteIcon.Source.ToString();
-            if (currentIcon.Contains("mute.png"))
-            {
-                muteIcon.BeginInit();
-                muteIcon.Source = new BitmapImage(new Uri("mic.png", UriKind.RelativeOrAbsolute));
-                muteIcon.EndInit();
-                // add code to enable volume again
-            }
-            else
-            {
-                muteIcon.BeginInit();
-                muteIcon.Source = new BitmapImage(new Uri("mute.png", UriKind.RelativeOrAbsolute));
-                muteIcon.EndInit();
-                // add code to mute the patient
-            }
+            currentSplitScreen.ToggleMuteIcon(muteIcon);
         }
     }
 }

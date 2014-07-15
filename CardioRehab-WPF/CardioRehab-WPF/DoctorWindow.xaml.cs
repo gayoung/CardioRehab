@@ -84,7 +84,7 @@ namespace CardioRehab_WPF
         WaveOut wo = new WaveOut();
         WaveFormat wf = new WaveFormat(16000, 1);
         BufferedWaveProvider mybufferwp = null;
-        float oldVolume;
+        public float oldVolume;
 
         private AudioClient _audioClient;
         //private AudioClient _audioClient2;
@@ -278,7 +278,7 @@ namespace CardioRehab_WPF
         /// patient.
         /// </summary>
         /// <param name="icon"> the selected muteIcon object </param>
-        private void ToggleMuteIcon(System.Windows.Controls.Image icon)
+        public void ToggleMuteIcon(System.Windows.Controls.Image icon)
         {
             String currentIcon = icon.Source.ToString();
             if (currentIcon.Contains("mute.png"))
