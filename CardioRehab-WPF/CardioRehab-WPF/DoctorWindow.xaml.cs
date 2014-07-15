@@ -109,10 +109,12 @@ namespace CardioRehab_WPF
 
         public ECGPointCollection ecgPointCollection;
         private List<ECGPoint> ECGPointList = new List<ECGPoint>();
-        DispatcherTimer updateCollectionTimer;
+        DispatcherTimer updateCollectionTimer = null;
         private double xaxisValue = 0;
         private FullScreenWindow fullscreenview = null;
         bool[] warningStatus = new bool[6];
+
+        private double ecgms = 30;
 
 
         public DoctorWindow(int currentuser, DatabaseClass openDB)
@@ -133,8 +135,8 @@ namespace CardioRehab_WPF
         private void DoctorWindow_Loaded(object sender, RoutedEventArgs e)
         {
             int[] kinectOutPorts = new int[6] { 4531, 4532, 4533, 4534, 4535, 4536 };
-            //InitializeKinect(kinectOutPorts);
-            //InitializeAudio();
+            InitializeKinect(kinectOutPorts);
+            InitializeAudio();
 
             InitializeECG();
 
@@ -486,7 +488,7 @@ namespace CardioRehab_WPF
         {
             String[] ecgDataArray = ecgValue.Split(' ');
 
-            Console.WriteLine(ecgValue+ "\n");
+            Console.WriteLine(ecgValue + "\n");
             Console.WriteLine(ecgDataArray.Length.ToString() + "\n");
 
             for (int i = 0; i < 25; i++)
@@ -494,14 +496,14 @@ namespace CardioRehab_WPF
                 if ((ecgDataArray[i] != "") || (ecgDataArray[i] != null))
                 {
                     double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
-                    
+
                     ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
                     //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
                     xaxisValue += 0.01;
                 }
             }
 
-            
+
         }
 
         /// <summary>
@@ -784,6 +786,12 @@ namespace CardioRehab_WPF
                             if (data[0].Trim() == "HR")
                             {
                                 ProcessHrData(data[1], hrValue1, hrWarning1, border1, 1);
+                                int heartrate = Convert.ToInt32(data[1].Trim());
+                                ecgms = heartrate * 0.4;
+                                if (updateCollectionTimer != null)
+                                {
+                                    updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(ecgms);
+                                }
                             }
                             else if (data[0].Trim() == "OX")
                             {
@@ -1132,7 +1140,7 @@ namespace CardioRehab_WPF
             ecgPointCollection = new ECGPointCollection();
 
             updateCollectionTimer = new DispatcherTimer();
-            updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(60);
+            updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(ecgms);
             updateCollectionTimer.Tick += new EventHandler(updateCollectionTimer_Tick);
             updateCollectionTimer.Start();
 
@@ -1151,7 +1159,7 @@ namespace CardioRehab_WPF
 
         void updateCollectionTimer_Tick(object sender, EventArgs e)
         {
-            if(ECGPointList.Count > 0)
+            if (ECGPointList.Count > 0)
             {
                 ECGPoint point = ECGPointList.First();
                 ecgPointCollection.Add(point);
