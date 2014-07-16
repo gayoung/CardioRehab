@@ -103,11 +103,11 @@ namespace CardioRehab_WPF
 
             ConnectToUnity();
             InitializeVR();
-            //InitializeBioSockets();
-            //CreateSocketConnection();
+            InitializeBioSockets();
+            CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            InitTimer();
+            //InitTimer();
         }
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
@@ -309,21 +309,21 @@ namespace CardioRehab_WPF
             try
             {
                 //// mock data sent to the clinician
-                //data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-                //data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-                //data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
-                //data = patientLabel + "-" + user.ToString() + "|" + "EC -592 -201 -133 -173 -172 -143 -372 -349 -336 -332 -314 -309 -295 -274 -265 -261 16 44 75 102 -123 -80 -44 -11 259\n";
-                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                //socketToClinician.Send(dataToClinician);
+                data = patientLabel + "-" + user.ToString() + "|" + "EC -592 -201 -133 -173 -172 -143 -372 -349 -336 -332 -314 -309 -295 -274 -265 -261 16 44 75 102 -123 -80 -44 -11 259\n";
+                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                socketToClinician.Send(dataToClinician);
 
                 if (unitySocketWorker != null)
                 {
