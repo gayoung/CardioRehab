@@ -114,7 +114,7 @@ namespace CardioRehab_WPF
 
             // patients send the biodata from port 5000-5005
             int[] ports = new int[6] { 5000, 5001, 5002, 5003, 5004, 5005 };
-            //InitializeBioSockets(ports);
+            InitializeBioSockets(ports);
 
         }
 
@@ -125,7 +125,7 @@ namespace CardioRehab_WPF
             InitializeAudio();
 
             InitializeECG();
-            InitTimer();
+            //InitTimer();
 
             this.DataContext = this;
         }
@@ -191,6 +191,15 @@ namespace CardioRehab_WPF
 
         private void PhoneTestMethod()
         {
+            Random r = new Random();
+            int heartRate = r.Next(60, 200);
+            ProcessHrData(heartRate.ToString(), hrValue1, hrWarning1, border1, 1);
+            ecgms = heartRate * 0.6;
+            if (updateCollectionTimer != null)
+            {
+                updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(ecgms);
+            }
+
             ProcessECGData("-592 -201 -133 -173 -172 -143 -372 -349 -336 -332 -314 -309 -295 -274 -265 -261 16 44 75 102 -123 -80 -44 -11 259", 1);
         }
 

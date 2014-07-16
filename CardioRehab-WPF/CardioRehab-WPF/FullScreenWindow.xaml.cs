@@ -51,6 +51,7 @@ namespace CardioRehab_WPF
         public void InitializeECG()
         {
             ecgPointCollection = new ECGPointCollection();
+            ecgPointCollection = currentSplitScreen.ecgPointCollection;
 
             updateCollectionTimer = new DispatcherTimer();
             updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(currentSplitScreen.ecgms);
