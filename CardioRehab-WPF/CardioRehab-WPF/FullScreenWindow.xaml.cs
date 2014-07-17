@@ -43,6 +43,9 @@ namespace CardioRehab_WPF
 
             InitializeComponent();
 
+            bpSysValue.Content = hidden.systolic;
+            bpDiaValue.Content = hidden.diastolic;
+
             InitializeECG();
 
             this.pateintId.Content = "Patient " + patientindex.ToString();
@@ -62,7 +65,7 @@ namespace CardioRehab_WPF
             ds.SetXMapping(x => x.ECGtime);
             ds.SetYMapping(y => y.ECG);
             fullplotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
-           
+
             //plotter.HorizontalAxis.Remove();
             //MaxECG = 1;
             //MinECG = -1;
@@ -70,7 +73,7 @@ namespace CardioRehab_WPF
 
         void updateCollectionTimer_Tick(object sender, EventArgs e)
         {
-            if(currentSplitScreen != null)
+            if (currentSplitScreen != null)
             {
                 if (currentSplitScreen.ECGPointList.Count > 0)
                 {
@@ -124,3 +127,5 @@ namespace CardioRehab_WPF
         }
     }
 }
+
+

@@ -57,6 +57,9 @@ namespace CardioRehab_WPF
         private int maxSys = 170;
         private int maxDia = 110;
 
+        public String systolic;
+        public String diastolic;
+
         private bool hasBadData = false;
 
         private List<String> patientIPCollection = new List<String>();
@@ -816,12 +819,12 @@ namespace CardioRehab_WPF
                             if (data[0].Trim() == "HR")
                             {
                                 ProcessHrData(data[1], hrValue1, hrWarning1, border1, 1);
-                                int heartrate = Convert.ToInt32(data[1].Trim());
-                                ecgms = heartrate * 0.4;
-                                if (updateCollectionTimer != null)
-                                {
-                                    updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(ecgms);
-                                }
+                                //int heartrate = Convert.ToInt32(data[1].Trim());
+                                //ecgms = heartrate * 0.4;
+                                //if (updateCollectionTimer != null)
+                                //{
+                                //    updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(ecgms);
+                                //}
                             }
                             else if (data[0].Trim() == "OX")
                             {
@@ -829,6 +832,8 @@ namespace CardioRehab_WPF
                             }
                             else if (data[0].Trim() == "BP")
                             {
+                                systolic = data[1].Trim();
+                                diastolic = data[2].Trim();
                                 ProcessBpData(data[1], data[2], bpSysValue1, bpDiaValue1, bpWarning1, border1, 1);
                             }
                             else if (data[0].Trim() == "EC")
@@ -1374,6 +1379,8 @@ namespace CardioRehab_WPF
 
     }
 }
+
+
 
 
 

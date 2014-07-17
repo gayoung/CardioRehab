@@ -44,7 +44,7 @@ namespace CardioRehab_WPF
         private int age;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "192.168.184.14";
+        private String doctorIp = "192.168.184.22";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -103,17 +103,17 @@ namespace CardioRehab_WPF
 
             ConnectToUnity();
             InitializeVR();
-            InitializeBioSockets();
-            CreateSocketConnection();
+            //InitializeBioSockets();
+            //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
-            //InitTimer();
+            InitTimer();
         }
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeKinect();
-            InitializeAudio();
+            //InitializeKinect();
+            //InitializeAudio();
 
         }
 
@@ -296,7 +296,7 @@ namespace CardioRehab_WPF
             // testing for bike data (values may not be in correct range)
             int powerVal = r.Next(20, 40);
             // should be between 100-200 (changed for faster testing)
-            int speedVal = r.Next(50, 100);
+            int speedVal = r.Next(150, 200);
             int cadenceVal = r.Next(40, 60);
 
             // modify patient UI labels
@@ -309,21 +309,21 @@ namespace CardioRehab_WPF
             try
             {
                 //// mock data sent to the clinician
-                data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                //data = patientLabel + "-" + user.ToString() + "|" + "HR " + heartRate.ToString() + "\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
 
-                data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                //data = patientLabel + "-" + user.ToString() + "|" + "OX " + oxygen.ToString() + "\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
 
-                data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                //data = patientLabel + "-" + user.ToString() + "|" + "BP " + systolic.ToString() + " " + diastolic.ToString() + "\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
 
-                data = patientLabel + "-" + user.ToString() + "|" + "EC -592 -201 -133 -173 -172 -143 -372 -349 -336 -332 -314 -309 -295 -274 -265 -261 16 44 75 102 -123 -80 -44 -11 259\n";
-                dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
-                socketToClinician.Send(dataToClinician);
+                //data = patientLabel + "-" + user.ToString() + "|" + "EC -592 -201 -133 -173 -172 -143 -372 -349 -336 -332 -314 -309 -295 -274 -265 -261 16 44 75 102 -123 -80 -44 -11 259\n";
+                //dataToClinician = System.Text.Encoding.ASCII.GetBytes(data);
+                //socketToClinician.Send(dataToClinician);
 
                 if (unitySocketWorker != null)
                 {
@@ -446,6 +446,9 @@ namespace CardioRehab_WPF
                 int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                 System.String tmp = new System.String(chars);
 
+                chars = null;
+                GC.Collect();
+
                 // need to be changed to properly label the patient according to the port used
                 if (!tmp.Contains('|'))
                 {
@@ -460,6 +463,8 @@ namespace CardioRehab_WPF
                 if (name.Length == 2)
                 {
                     System.String[] data = name[1].Trim().Split(' ');
+
+                    Console.WriteLine(name[1]);
 
                     if ((data[0] == "HR") || (data[0] == "OX") || (data[0] == "BP") || (data[0] == "EC"))
                     {
@@ -515,7 +520,7 @@ namespace CardioRehab_WPF
                         {
                             oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = data[1] + " %"));
                             // enable below to display hr from oximeter
-                            hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2] + " bpm"));
+                            hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2].Replace("\0", "").Trim() + " bpm"));
                         }
                     }
 
