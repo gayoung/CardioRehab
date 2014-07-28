@@ -366,7 +366,7 @@ namespace CardioRehab_WPF
                 socketBioListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 if (wirelessIP != null)
                 {
-                    IPAddress addy = System.Net.IPAddress.Parse(wirelessIP);
+                    IPAddress addy = System.Net.IPAddress.Parse("142.244.213.120");
                     IPEndPoint iplocal = new IPEndPoint(addy, 4444);
                     //bind to local IP Address
                     socketBioListener.Bind(iplocal);
@@ -455,9 +455,11 @@ namespace CardioRehab_WPF
                 else
                 {
                     char[] chars = new char[end + 1];
+                    System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
+                    int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                     System.String tmp = new System.String(chars);
 
-                    //Console.WriteLine("sent: " + tmp);
+                    Console.WriteLine("sent: " + tmp);
 
                     // need to be changed to properly label the patient according to the port used
                     if (!tmp.Contains('|'))
