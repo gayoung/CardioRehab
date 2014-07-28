@@ -521,18 +521,46 @@ namespace CardioRehab_WPF
         {
             String[] ecgDataArray = ecgValue.Split(' ');
 
-            Console.WriteLine(ecgValue + "\n");
-            Console.WriteLine(ecgDataArray.Length.ToString() + "\n");
+            //Console.WriteLine(ecgValue + "\n");
+            //Console.WriteLine(ecgDataArray.Length.ToString() + "\n");
 
-            for (int i = 0; i < 25; i++)
+            for (int i = 0; i < ecgDataArray.Length - 1; i++)
             {
                 if ((ecgDataArray[i] != "") || (ecgDataArray[i] != null))
                 {
-                    double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                    int number;
 
-                    ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
-                    //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
-                    xaxisValue += 0.01;
+                    String[] ecgNumber = ecgDataArray[i].Trim().Split('.');
+                    String[] ecgNumberOnly = ecgNumber[0].Split('-');
+
+                    if (ecgNumberOnly.Length >= 2)
+                    {
+                        if (Int32.TryParse(ecgNumberOnly[1].Trim(), out number))
+                        {
+                            double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+
+                            //double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+
+                            ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
+                            //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
+                            xaxisValue += 0.01;
+                        }
+                    }
+                    else if (ecgNumberOnly.Length < 2)
+                    {
+                        if (Int32.TryParse(ecgNumberOnly[0].Trim(), out number))
+                        {
+                            double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+
+                            //double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+
+                            ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
+                            //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
+                            xaxisValue += 0.01;
+                        }
+                    }
+
+
                 }
             }
 
@@ -805,6 +833,8 @@ namespace CardioRehab_WPF
             String[] sentData = tmp.Split('|');
             String[] name = sentData[0].Split('-');
 
+            //Console.WriteLine(tmp);
+
             for (int i = 1; i < sentData.Length; i++)
             {
                 String[] data = sentData[i].Split(' ');
@@ -1048,7 +1078,7 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("192.168.184.57", 4555);
+                _videoClient.Connect("172.10.5.213", 4555);
 
                 //_videoClient2 = new ColorClient();
                 //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
@@ -1064,17 +1094,17 @@ namespace CardioRehab_WPF
                 //    videoListenerCollection.Add(_videoListener);
                 //}
 
-                _audioClient = new AudioClient();
-                _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect("192.168.184.57", 4565);
+                //_audioClient = new AudioClient();
+                //_audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+                //_audioClient.Connect("172.10.5.213", 4565);
 
-                //_audioClient2 = new AudioClient();
-                //_audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
-                //_audioClient2.Connect("192.168.184.19", 4538);
+                ////_audioClient2 = new AudioClient();
+                ////_audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
+                ////_audioClient2.Connect("192.168.184.19", 4538);
 
-                //for sending audio
-                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4541);
-                _audioListener.Start();
+                ////for sending audio
+                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4541);
+                //_audioListener.Start();
 
                 //foreach (int portNum in ports)
                 //{
@@ -1208,8 +1238,8 @@ namespace CardioRehab_WPF
         {
             if (sensorChooser.Kinect != null)
             {
-                _videoClient.Connect("192.168.184.57", 4555);
-                _audioClient.Connect("192.168.184.57", 4565);
+                _videoClient.Connect("172.10.5.213", 4555);
+                // _audioClient.Connect("172.10.5.213", 4565);
                 //Console.WriteLine("patient IP: " + patientIPCollection[0]);
                 //if (patientIPCollection[0] != null)
                 //{

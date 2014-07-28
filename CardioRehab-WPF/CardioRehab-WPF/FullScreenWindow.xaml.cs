@@ -94,6 +94,8 @@ namespace CardioRehab_WPF
         private void CollapseButton_Click(object sender, RoutedEventArgs e)
         {
             // when this method is changed to Close then it closes the entire app...
+            currentSplitScreen.ecgPointCollection = ecgPointCollection;
+            ecgPointCollection = null;
             currentSplitScreen.Show();
             currentSplitScreen = null;
             GC.Collect();
@@ -127,5 +129,6 @@ namespace CardioRehab_WPF
         }
     }
 }
+
 
 
