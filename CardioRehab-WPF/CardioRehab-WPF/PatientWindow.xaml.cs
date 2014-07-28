@@ -44,7 +44,7 @@ namespace CardioRehab_WPF
         private int age;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "172.10.3.211";
+        private String doctorIp = "192.168.184.5";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -104,7 +104,7 @@ namespace CardioRehab_WPF
             ConnectToUnity();
             InitializeVR();
             InitializeBioSockets();
-            CreateSocketConnection();
+            //CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
             //InitTimer();
@@ -112,7 +112,7 @@ namespace CardioRehab_WPF
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            InitializeKinect();
+            //InitializeKinect();
             //InitializeAudio();
 
         }
@@ -124,7 +124,7 @@ namespace CardioRehab_WPF
         class BioSocketPacket
         {
             public System.Net.Sockets.Socket packetSocket;
-            public byte[] dataBuffer = new byte[666];
+            public byte[] dataBuffer = new byte[1024];
         }
 
         #region Helper functions
@@ -366,7 +366,7 @@ namespace CardioRehab_WPF
                 socketBioListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 if (wirelessIP != null)
                 {
-                    IPAddress addy = System.Net.IPAddress.Parse("192.168.173.1");
+                    IPAddress addy = System.Net.IPAddress.Parse(wirelessIP);
                     IPEndPoint iplocal = new IPEndPoint(addy, 4444);
                     //bind to local IP Address
                     socketBioListener.Bind(iplocal);
@@ -374,7 +374,7 @@ namespace CardioRehab_WPF
                     socketBioListener.Listen(4);
                     //create call back for client connections -- aka maybe recieve video here????
                     socketBioListener.BeginAccept(new AsyncCallback(OnBioSocketConnection), null);
-                    MessageBox.Show("Please enter the following IP address to the phone: " + wirelessIP + "and press Wifi Connect");
+                    //MessageBox.Show("Please enter the following IP address to the phone: " + wirelessIP + "and press Wifi Connect");
 
                 }
                 else
@@ -395,7 +395,7 @@ namespace CardioRehab_WPF
         {
             try
             {
-                //Console.WriteLine("econntected");
+               // Console.WriteLine("econntected");
                 bioSocketWorker = socketBioListener.EndAccept(asyn);
 
                 WaitForBioData(bioSocketWorker);
@@ -415,6 +415,7 @@ namespace CardioRehab_WPF
         {
             try
             {
+                //Console.WriteLine("WaitForBioData");
                 if (socketBioWorkerCallback == null)
                 {
                     socketBioWorkerCallback = new AsyncCallback(OnBioDataReceived);
@@ -436,106 +437,113 @@ namespace CardioRehab_WPF
         {
             try
             {
+                Console.WriteLine("OnBioDataReceived");
                 BioSocketPacket socketID = (BioSocketPacket)asyn.AsyncState;
                 //end receive
                 int end = 0;
                 end = socketID.packetSocket.EndReceive(asyn);
 
-                //just getting simple text right now -- needs to be changed
-                char[] chars = new char[end + 1];
-                System.Text.Decoder d = System.Text.Encoding.UTF8.GetDecoder();
-                int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
-                System.String tmp = new System.String(chars);
-
-               // Console.WriteLine("sent: " + tmp);
-
-                // need to be changed to properly label the patient according to the port used
-                if (!tmp.Contains('|'))
+                // If the phone stops sending, then the EndReceive function returns 0
+                // (i.e. zero bytes received)
+                if(end == 0)
                 {
-                    // MessageBox.Show(tmp);
-                    tmp = string.Concat("patient" + patientIndex.ToString() + "-" + user.ToString() + "|", tmp);
+                    socketID.packetSocket.Close();
+                    socketBioListener.Close();
+                    InitializeBioSockets();
                 }
-
-                System.String[] name = tmp.Split('|');
-
-                //Console.WriteLine(name.Length);
-
-                if (name.Length == 2)
+                // phone is connected!
+                else
                 {
-                    System.String[] data = name[1].Trim().Split(' ');
+                    char[] chars = new char[end + 1];
+                    System.String tmp = new System.String(chars);
 
-                   // Console.WriteLine(name[1]);
+                    //Console.WriteLine("sent: " + tmp);
 
-                    if ((data[0] == "HR") || (data[0] == "OX") || (data[0] == "BP") || (data[0] == "EC"))
+                    // need to be changed to properly label the patient according to the port used
+                    if (!tmp.Contains('|'))
                     {
-                        byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
-
-                        //Console.WriteLine(tmp);
-
-                        if (socketToClinician != null)
-                        {
-                            socketToClinician.Send(dataToClinician);
-                        }
+                        tmp = string.Concat("patient" + patientIndex.ToString() + "-" + user.ToString() + "|", tmp);
                     }
-                    else if ((data[0] == "PW") || (data[0] == "WR") || (data[0] == "CR"))
+
+                    System.String[] name = tmp.Split('|');
+
+                    //Console.WriteLine(name.Length);
+
+                    if (name.Length == 2)
                     {
-                        if (unitySocketWorker != null)
+                        System.String[] data = name[1].Trim().Split(' ');
+
+                        // Console.WriteLine(name[1]);
+
+                        if ((data[0] == "HR") || (data[0] == "OX") || (data[0] == "BP") || (data[0] == "EC"))
                         {
-                            if (unitySocketWorker.Connected)
+                            byte[] dataToClinician = System.Text.Encoding.ASCII.GetBytes(tmp);
+
+                            //Console.WriteLine(tmp);
+
+                            if (socketToClinician != null)
                             {
-                                tmp = new System.String(chars);
-                                //Console.WriteLine("connected: "+tmp);
-                                byte[] dataToUnity = System.Text.Encoding.ASCII.GetBytes(tmp);
-                                unitySocketWorker.Send(dataToUnity);
+                                socketToClinician.Send(dataToClinician);
                             }
                         }
-                    }
+                        else if ((data[0] == "PW") || (data[0] == "WR") || (data[0] == "CR"))
+                        {
+                            if (unitySocketWorker != null)
+                            {
+                                if (unitySocketWorker.Connected)
+                                {
+                                    tmp = new System.String(chars);
+                                    //Console.WriteLine("connected: "+tmp);
+                                    byte[] dataToUnity = System.Text.Encoding.ASCII.GetBytes(tmp);
+                                    unitySocketWorker.Send(dataToUnity);
+                                }
+                            }
+                        }
 
-                    var regexlimit = new Regex("^[0-9 ]*$");
+                        // Decide on what encouragement text should be displayed based on heart rate.
+                        //if (data[0] == "HR")
+                        //{
+                        //    //BT
+                        //    int number;
+                        //    bool result = Int32.TryParse(data[1], out number);
+                        //    if (result)
+                        //    {
+                        //        hrdata[hrcount] = Convert.ToInt32(data[1]);
+                        //        hrcount++;
+                        //        // remove null char
+                        //        hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "").Trim() + " bpm"));
+                        //    }
 
-                    // Decide on what encouragement text should be displayed based on heart rate.
-                    //if (data[0] == "HR")
-                    //{
-                    //    //BT
-                    //    int number;
-                    //    bool result = Int32.TryParse(data[1], out number);
-                    //    if (result)
-                    //    {
-                    //        hrdata[hrcount] = Convert.ToInt32(data[1]);
-                    //        hrcount++;
-                    //        // remove null char
-                    //        hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "").Trim() + " bpm"));
-                    //    }
+                        //}
 
-                    //}
+                        // Change the Sats display in the UI thread.
+                        if (data[0] == "OX")
+                        {
+                            if (data.Length > 1)
+                            {
+                                //BT
+                                oxdata[oxcount] = Convert.ToInt32(data[1]); ;
+                                oxcount++;
+                                // MethodInvoker had to be used to solve cross threading issue
+                                if (data[1] != null && data[2] != null)
+                                {
+                                    oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = data[1] + " %"));
+                                    // enable below to display hr from oximeter
+                                    hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2].Replace("\0", "").Trim() + " bpm"));
+                                }
+                            }
+                        }
 
-                    // Change the Sats display in the UI thread.
-                    if (data[0] == "OX")
-                    {
-                        if(data.Length > 1)
+                        else if (data[0] == "BP")
                         {
                             //BT
-                            oxdata[oxcount] = Convert.ToInt32(data[1]); ;
-                            oxcount++;
-                            // MethodInvoker had to be used to solve cross threading issue
-                            if (data[1] != null && data[2] != null)
-                            {
-                                oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = data[1] + " %"));
-                                // enable below to display hr from oximeter
-                                hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2].Replace("\0", "").Trim() + " bpm"));
-                            }
+                            bpdata[bpcount] = Convert.ToInt32(data[1]); ;
+                            bpcount++;
+                            bpValue.Dispatcher.Invoke((Action)(() => bpValue.Content = data[1] + "/" + data[2]));
                         }
                     }
-
-                    else if (data[0] == "BP")
-                    {
-                        //BT
-                        bpdata[bpcount] = Convert.ToInt32(data[1]); ;
-                        bpcount++;
-                        bpValue.Dispatcher.Invoke((Action)(() => bpValue.Content = data[1] + "/" + data[2]));
-                    }
+                    WaitForBioData(bioSocketWorker);
                 }
-                WaitForBioData(bioSocketWorker);
             }
             catch (ObjectDisposedException)
             {
