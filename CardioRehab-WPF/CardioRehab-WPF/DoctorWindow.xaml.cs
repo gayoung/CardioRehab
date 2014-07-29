@@ -528,37 +528,40 @@ namespace CardioRehab_WPF
             {
                 if ((ecgDataArray[i] != "") || (ecgDataArray[i] != null))
                 {
-                    int number;
+                    //int number;
+                    double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                    ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
+                    xaxisValue += 0.01;
 
-                    String[] ecgNumber = ecgDataArray[i].Trim().Split('.');
-                    String[] ecgNumberOnly = ecgNumber[0].Split('-');
+                    //String[] ecgNumber = ecgDataArray[i].Trim().Split('.');
+                    //String[] ecgNumberOnly = ecgNumber[0].Split('-');
 
-                    if (ecgNumberOnly.Length >= 2)
-                    {
-                        if (Int32.TryParse(ecgNumberOnly[1].Trim(), out number))
-                        {
-                            double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                    //if (ecgNumberOnly.Length >= 2)
+                    //{
+                    //    if (Int32.TryParse(ecgNumberOnly[1].Trim(), out number))
+                    //    {
+                    //        double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
 
-                            //double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                    //        //double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
 
-                            ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
-                            //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
-                            xaxisValue += 0.01;
-                        }
-                    }
-                    else if (ecgNumberOnly.Length < 2)
-                    {
-                        if (Int32.TryParse(ecgNumberOnly[0].Trim(), out number))
-                        {
-                            double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                    //        ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
+                    //        //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
+                    //        xaxisValue += 0.01;
+                    //    }
+                    //}
+                    //else if (ecgNumberOnly.Length < 2)
+                    //{
+                    //    if (Int32.TryParse(ecgNumberOnly[0].Trim(), out number))
+                    //    {
+                    //        double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
 
-                            //double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                    //        //double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
 
-                            ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
-                            //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
-                            xaxisValue += 0.01;
-                        }
-                    }
+                    //        ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
+                    //        //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
+                    //        xaxisValue += 0.01;
+                    //    }
+                    //}
 
 
                 }
@@ -1202,21 +1205,30 @@ namespace CardioRehab_WPF
 
         public void InitializeECG()
         {
+
             ecgPointCollection = new ECGPointCollection();
 
-            updateCollectionTimer = new DispatcherTimer();
-            updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(ecgms);
-            updateCollectionTimer.Tick += new EventHandler(updateCollectionTimer_Tick);
-            updateCollectionTimer.Start();
-
             var ds = new EnumerableDataSource<ECGPoint>(ecgPointCollection);
-            ds.SetXMapping(x => x.ECGtime);
+            ds.SetXMapping(x => dateAxis.ConvertToDouble(x.ECGtime));
             ds.SetYMapping(y => y.ECG);
             plotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
-            if (fullscreenview != null)
-            {
-                fullscreenview.fullplotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
-            }
+            plotter.HorizontalAxis.Remove();
+
+            //ecgPointCollection = new ECGPointCollection();
+
+            //updateCollectionTimer = new DispatcherTimer();
+            //updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(ecgms);
+            //updateCollectionTimer.Tick += new EventHandler(updateCollectionTimer_Tick);
+            //updateCollectionTimer.Start();
+
+            //var ds = new EnumerableDataSource<ECGPoint>(ecgPointCollection);
+            //ds.SetXMapping(x => x.ECGtime);
+            //ds.SetYMapping(y => y.ECG);
+            //plotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
+            //if (fullscreenview != null)
+            //{
+            //    fullscreenview.fullplotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
+            //}
             //plotter.HorizontalAxis.Remove();
             //MaxECG = 1;
             //MinECG = -1;

@@ -366,7 +366,7 @@ namespace CardioRehab_WPF
                 socketBioListener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
                 if (wirelessIP != null)
                 {
-                    IPAddress addy = System.Net.IPAddress.Parse("142.244.213.120");
+                    IPAddress addy = System.Net.IPAddress.Parse(wirelessIP);
                     IPEndPoint iplocal = new IPEndPoint(addy, 4444);
                     //bind to local IP Address
                     socketBioListener.Bind(iplocal);
@@ -437,7 +437,6 @@ namespace CardioRehab_WPF
         {
             try
             {
-                Console.WriteLine("OnBioDataReceived");
                 BioSocketPacket socketID = (BioSocketPacket)asyn.AsyncState;
                 //end receive
                 int end = 0;
@@ -459,7 +458,7 @@ namespace CardioRehab_WPF
                     int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                     System.String tmp = new System.String(chars);
 
-                    Console.WriteLine("sent: " + tmp);
+                    Console.WriteLine("received: "+tmp);
 
                     // need to be changed to properly label the patient according to the port used
                     if (!tmp.Contains('|'))
@@ -503,20 +502,20 @@ namespace CardioRehab_WPF
                         }
 
                         // Decide on what encouragement text should be displayed based on heart rate.
-                        //if (data[0] == "HR")
-                        //{
-                        //    //BT
-                        //    int number;
-                        //    bool result = Int32.TryParse(data[1], out number);
-                        //    if (result)
-                        //    {
-                        //        hrdata[hrcount] = Convert.ToInt32(data[1]);
-                        //        hrcount++;
-                        //        // remove null char
-                        //        hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "").Trim() + " bpm"));
-                        //    }
+                        if (data[0] == "HR")
+                        {
+                            //BT
+                            int number;
+                            bool result = Int32.TryParse(data[1], out number);
+                            if (result)
+                            {
+                                hrdata[hrcount] = Convert.ToInt32(data[1]);
+                                hrcount++;
+                                // remove null char
+                                hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "").Trim() + " bpm"));
+                            }
 
-                        //}
+                        }
 
                         // Change the Sats display in the UI thread.
                         if (data[0] == "OX")
