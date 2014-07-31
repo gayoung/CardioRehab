@@ -8,7 +8,7 @@ namespace DynamicDataDisplaySample.ECGViewModel
 {
     public class ECGPointCollection : RingArray <ECGPoint>
     {
-        private const int TOTAL_POINTS = 250;
+        private const int TOTAL_POINTS = 400;
 
         public ECGPointCollection()
             : base(TOTAL_POINTS) // here i set how much values to show 

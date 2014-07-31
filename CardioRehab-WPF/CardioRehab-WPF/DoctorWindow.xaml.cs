@@ -521,47 +521,43 @@ namespace CardioRehab_WPF
         {
             String[] ecgDataArray = ecgValue.Split(' ');
 
-            //Console.WriteLine(ecgValue + "\n");
-            //Console.WriteLine(ecgDataArray.Length.ToString() + "\n");
+           // Console.WriteLine(ecgValue + "\n");
 
             for (int i = 0; i < ecgDataArray.Length - 1; i++)
             {
                 if ((ecgDataArray[i] != "") || (ecgDataArray[i] != null))
                 {
-                    //int number;
-                    double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
-                    ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
-                    xaxisValue += 0.01;
+                    int number;
 
-                    //String[] ecgNumber = ecgDataArray[i].Trim().Split('.');
-                    //String[] ecgNumberOnly = ecgNumber[0].Split('-');
+                    String[] ecgNumber = ecgDataArray[i].Trim().Split('.');
+                    String[] ecgNumberOnly = ecgNumber[0].Split('-');
 
-                    //if (ecgNumberOnly.Length >= 2)
-                    //{
-                    //    if (Int32.TryParse(ecgNumberOnly[1].Trim(), out number))
-                    //    {
-                    //        double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                    if (ecgNumberOnly.Length >= 2)
+                    {
+                        if (Int32.TryParse(ecgNumberOnly[1].Trim(), out number))
+                        {
+                            //double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
 
-                    //        //double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                            double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
 
-                    //        ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
-                    //        //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
-                    //        xaxisValue += 0.01;
-                    //    }
-                    //}
-                    //else if (ecgNumberOnly.Length < 2)
-                    //{
-                    //    if (Int32.TryParse(ecgNumberOnly[0].Trim(), out number))
-                    //    {
-                    //        double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                            ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
+                            //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
+                            xaxisValue += 0.01;
+                        }
+                    }
+                    else if (ecgNumberOnly.Length < 2)
+                    {
+                        if (Int32.TryParse(ecgNumberOnly[0].Trim(), out number))
+                        {
+                            //double yvalue = Convert.ToDouble(Int32.Parse(ecgNumber[0].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
 
-                    //        //double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
+                            double yvalue = Convert.ToDouble(Int32.Parse(ecgDataArray[i].Trim(), System.Globalization.NumberStyles.AllowLeadingSign));
 
-                    //        ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
-                    //        //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
-                    //        xaxisValue += 0.01;
-                    //    }
-                    //}
+                            ECGPointList.Add(new ECGPoint(yvalue, xaxisValue));
+                            //ecgPointCollection.Add(new ECGPoint(yvalue, xaxisValue));
+                            xaxisValue += 0.01;
+                        }
+                    }
 
 
                 }
@@ -833,6 +829,7 @@ namespace CardioRehab_WPF
 
         private void processData(String tmp)
         {
+            Console.WriteLine(tmp);
             String[] sentData = tmp.Split('|');
             String[] name = sentData[0].Split('-');
 
@@ -840,7 +837,14 @@ namespace CardioRehab_WPF
 
             for (int i = 1; i < sentData.Length; i++)
             {
-                String[] data = sentData[i].Split(' ');
+                //String[] data = sentData[i].Split(' ');
+
+                String label = sentData[i].Substring(0,3).Trim();
+                String data = sentData[i].Substring(3,sentData[i].Length-3);
+
+                //Console.WriteLine(sentData[i]);
+                //Console.WriteLine(label);
+                //Console.WriteLine(data);
 
                 // Set the UI in the main thread.
                 this.Dispatcher.Invoke((Action)(() =>
@@ -849,9 +853,9 @@ namespace CardioRehab_WPF
                     switch (currentLabel)
                     {
                         case "patient1":
-                            if (data[0].Trim() == "HR")
+                            if (label == "HR")
                             {
-                                ProcessHrData(data[1], hrValue1, hrWarning1, border1, 1);
+                                ProcessHrData(data, hrValue1, hrWarning1, border1, 1);
                                 //int heartrate = Convert.ToInt32(data[1].Trim());
                                 //ecgms = heartrate * 0.4;
                                 //if (updateCollectionTimer != null)
@@ -859,24 +863,26 @@ namespace CardioRehab_WPF
                                 //    updateCollectionTimer.Interval = TimeSpan.FromMilliseconds(ecgms);
                                 //}
                             }
-                            else if (data[0].Trim() == "OX")
+                            else if (label == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue1, oxiWarning1, border1, 1);
+                                ProcessOxData(data, oxiValue1, oxiWarning1, border1, 1);
                             }
-                            else if (data[0].Trim() == "BP")
+                            else if (label == "BP")
                             {
-                                systolic = data[1].Trim();
-                                diastolic = data[2].Trim();
-                                ProcessBpData(data[1], data[2], bpSysValue1, bpDiaValue1, bpWarning1, border1, 1);
+                                String[] bpData = data.Split(' ');
+                                systolic = bpData[0].Trim();
+                                diastolic = bpData[2].Trim();
+                                ProcessBpData(systolic, diastolic, bpSysValue1, bpDiaValue1, bpWarning1, border1, 1);
                             }
-                            else if (data[0].Trim() == "EC")
+                            else if (label == "EC")
                             {
-                                String ecgData = data[1];
-                                for (int index = 2; index < data.Length; index++)
-                                {
-                                    ecgData += ' ' + data[index];
-                                }
-                                ProcessECGData(ecgData, 1);
+                                //String ecgData = data[1];
+                                //for (int index = 2; index < data.Length; index++)
+                                //{
+                                //    ecgData += ' ' + data[index];
+                                //}
+                                Console.WriteLine(data);
+                                ProcessECGData(data, 1);
                             }
                             if (hasBadData)
                             {
@@ -893,17 +899,20 @@ namespace CardioRehab_WPF
                             break;
 
                         case "patient2":
-                            if (data[0].Trim() == "HR")
+                            if (label == "HR")
                             {
-                                ProcessHrData(data[1], hrValue2, hrWarning2, border2, 2);
+                                ProcessHrData(data, hrValue2, hrWarning2, border2, 2);
                             }
-                            else if (data[0].Trim() == "OX")
+                            else if (label == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue2, oxiWarning2, border2, 2);
+                                ProcessOxData(data, oxiValue2, oxiWarning2, border2, 2);
                             }
-                            else if (data[0].Trim() == "BP")
+                            else if (label == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue2, bpDiaValue2, bpWarning2, border2, 2);
+                                String[] bpData = data.Split(' ');
+                                systolic = bpData[0].Trim();
+                                diastolic = bpData[2].Trim();
+                                ProcessBpData(systolic, diastolic, bpSysValue2, bpDiaValue2, bpWarning2, border2, 2);
                             }
                             if (hasBadData)
                             {
@@ -920,17 +929,21 @@ namespace CardioRehab_WPF
                             break;
 
                         case "patient3":
-                            if (data[0].Trim() == "HR")
+                            if (label == "HR")
                             {
-                                ProcessHrData(data[1], hrValue3, hrWarning3, border3, 3);
+                                ProcessHrData(data, hrValue3, hrWarning3, border3, 3);
                             }
-                            else if (data[0].Trim() == "OX")
+                            else if (label == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue3, oxiWarning3, border3, 3);
+                                ProcessOxData(data, oxiValue3, oxiWarning3, border3, 3);
                             }
-                            else if (data[0].Trim() == "BP")
+                            else if (label == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue3, bpDiaValue3, bpWarning3, border3, 3);
+                                String[] bpData = data.Split(' ');
+                                systolic = bpData[0].Trim();
+                                diastolic = bpData[2].Trim();
+
+                                ProcessBpData(systolic, diastolic, bpSysValue3, bpDiaValue3, bpWarning3, border3, 3);
                             }
                             if (hasBadData)
                             {
@@ -947,17 +960,21 @@ namespace CardioRehab_WPF
                             break;
 
                         case "patient4":
-                            if (data[0].Trim() == "HR")
+                            if (label == "HR")
                             {
-                                ProcessHrData(data[1], hrValue4, hrWarning4, border4, 4);
+                                ProcessHrData(data, hrValue4, hrWarning4, border4, 4);
                             }
-                            else if (data[0].Trim() == "OX")
+                            else if (label == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue4, oxiWarning4, border4, 4);
+                                ProcessOxData(data, oxiValue4, oxiWarning4, border4, 4);
                             }
-                            else if (data[0].Trim() == "BP")
+                            else if (label == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue4, bpDiaValue4, bpWarning4, border4, 4);
+                                String[] bpData = data.Split(' ');
+                                systolic = bpData[0].Trim();
+                                diastolic = bpData[2].Trim();
+
+                                ProcessBpData(systolic, diastolic, bpSysValue4, bpDiaValue4, bpWarning4, border4, 4);
                             }
                             if (hasBadData)
                             {
@@ -974,17 +991,21 @@ namespace CardioRehab_WPF
                             break;
 
                         case "patient5":
-                            if (data[0].Trim() == "HR")
+                            if (label == "HR")
                             {
-                                ProcessHrData(data[1], hrValue5, hrWarning5, border5, 5);
+                                ProcessHrData(data, hrValue5, hrWarning5, border5, 5);
                             }
-                            else if (data[0].Trim() == "OX")
+                            else if (label == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue5, oxiWarning5, border5, 5);
+                                ProcessOxData(data, oxiValue5, oxiWarning5, border5, 5);
                             }
-                            else if (data[0].Trim() == "BP")
+                            else if (label == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue5, bpDiaValue5, bpWarning5, border5, 5);
+                                String[] bpData = data.Split(' ');
+                                systolic = bpData[0].Trim();
+                                diastolic = bpData[2].Trim();
+
+                                ProcessBpData(systolic, diastolic, bpSysValue5, bpDiaValue5, bpWarning5, border5, 5);
                             }
                             if (hasBadData)
                             {
@@ -1001,17 +1022,21 @@ namespace CardioRehab_WPF
                             break;
 
                         case "patient6":
-                            if (data[0].Trim() == "HR")
+                            if (label == "HR")
                             {
-                                ProcessHrData(data[1], hrValue6, hrWarning6, border6, 6);
+                                ProcessHrData(data, hrValue6, hrWarning6, border6, 6);
                             }
-                            else if (data[0].Trim() == "OX")
+                            else if (label == "OX")
                             {
-                                ProcessOxData(data[1], oxiValue6, oxiWarning6, border6, 6);
+                                ProcessOxData(data, oxiValue6, oxiWarning6, border6, 6);
                             }
-                            else if (data[0].Trim() == "BP")
+                            else if (label == "BP")
                             {
-                                ProcessBpData(data[1], data[2], bpSysValue6, bpDiaValue6, bpWarning6, border6, 6);
+                                String[] bpData = data.Split(' ');
+                                systolic = bpData[0].Trim();
+                                diastolic = bpData[2].Trim();
+
+                                ProcessBpData(systolic, diastolic, bpSysValue6, bpDiaValue6, bpWarning6, border6, 6);
                             }
                             if (hasBadData)
                             {
@@ -1081,7 +1106,7 @@ namespace CardioRehab_WPF
             {
                 _videoClient = new ColorClient();
                 _videoClient.ColorFrameReady += _videoClient_ColorFrameReady;
-                _videoClient.Connect("172.10.5.213", 4555);
+                _videoClient.Connect("192.168.184.5", 4555);
 
                 //_videoClient2 = new ColorClient();
                 //_videoClient2.ColorFrameReady += _videoClient2_ColorFrameReady;
@@ -1212,7 +1237,6 @@ namespace CardioRehab_WPF
             ds.SetXMapping(x => dateAxis.ConvertToDouble(x.ECGtime));
             ds.SetYMapping(y => y.ECG);
             plotter.AddLineGraph(ds, Colors.SlateGray, 2, "ECG");
-            plotter.HorizontalAxis.Remove();
 
             //ecgPointCollection = new ECGPointCollection();
 
@@ -1250,7 +1274,7 @@ namespace CardioRehab_WPF
         {
             if (sensorChooser.Kinect != null)
             {
-                _videoClient.Connect("172.10.5.213", 4555);
+                _videoClient.Connect("192.168.184.5", 4555);
                 // _audioClient.Connect("172.10.5.213", 4565);
                 //Console.WriteLine("patient IP: " + patientIPCollection[0]);
                 //if (patientIPCollection[0] != null)
