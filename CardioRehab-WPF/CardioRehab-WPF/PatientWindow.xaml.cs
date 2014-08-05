@@ -58,11 +58,6 @@ namespace CardioRehab_WPF
         public Socket unitySocketListener;
         public Socket unitySocketWorker = null;
 
-        int[] oxdata = new int[1000];
-        int[] hrdata = new int[1000];
-        int[] bpdata = new int[1000];
-        public int hrcount, oxcount, bpcount;
-
         //kinect sensor 
         private KinectSensorChooser sensorChooser;
 
@@ -509,8 +504,6 @@ namespace CardioRehab_WPF
                             bool result = Int32.TryParse(data[1], out number);
                             if (result)
                             {
-                                hrdata[hrcount] = Convert.ToInt32(data[1]);
-                                hrcount++;
                                 // remove null char
                                 hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[1].Replace("\0", "").Trim() + " bpm"));
                             }
@@ -522,9 +515,6 @@ namespace CardioRehab_WPF
                         {
                             if (data.Length > 1)
                             {
-                                //BT
-                                oxdata[oxcount] = Convert.ToInt32(data[1]); ;
-                                oxcount++;
                                 // MethodInvoker had to be used to solve cross threading issue
                                 if (data[1] != null && data[2] != null)
                                 {
@@ -537,9 +527,6 @@ namespace CardioRehab_WPF
 
                         else if (data[0] == "BP")
                         {
-                            //BT
-                            bpdata[bpcount] = Convert.ToInt32(data[1]); ;
-                            bpcount++;
                             bpValue.Dispatcher.Invoke((Action)(() => bpValue.Content = data[1] + "/" + data[2]));
                         }
                     }
@@ -671,13 +658,13 @@ namespace CardioRehab_WPF
                 _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555 + patientIndex - 1, ImageFormat.Jpeg);
                 _videoListener.Start();
 
-                //_audioClient = new AudioClient();
-                //_audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                //_audioClient.Connect(doctorIp, 4541 + patientIndex - 1);
+                _audioClient = new AudioClient();
+                _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+                _audioClient.Connect(doctorIp, 4541 + patientIndex - 1);
 
-                ////for sending audio
-                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4565 + patientIndex - 1);
-                //_audioListener.Start();
+                //for sending audio
+                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4565 + patientIndex - 1);
+                _audioListener.Start();
 
             }
 
