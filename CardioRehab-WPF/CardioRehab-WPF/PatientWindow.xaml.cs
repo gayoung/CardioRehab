@@ -99,7 +99,7 @@ namespace CardioRehab_WPF
             ConnectToUnity();
             InitializeVR();
             InitializeBioSockets();
-            //CreateSocketConnection();
+            CreateSocketConnection();
 
             // disable this function if InitializeBioSockets function is active
             //InitTimer();
@@ -107,8 +107,8 @@ namespace CardioRehab_WPF
 
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
-            //InitializeKinect();
-            //InitializeAudio();
+            InitializeKinect();
+            InitializeAudio();
 
         }
 
@@ -748,6 +748,7 @@ namespace CardioRehab_WPF
             wo.DesiredLatency = 100;
             mybufferwp = new BufferedWaveProvider(wf);
             mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
+            mybufferwp.DiscardOnBufferOverflow = true;
             wo.Init(mybufferwp);
             wo.Play();
         }

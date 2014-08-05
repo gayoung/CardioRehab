@@ -1123,17 +1123,17 @@ namespace CardioRehab_WPF
                 //    videoListenerCollection.Add(_videoListener);
                 //}
 
-                //_audioClient = new AudioClient();
-                //_audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                //_audioClient.Connect("172.10.5.213", 4565);
+                _audioClient = new AudioClient();
+                _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+                _audioClient.Connect("172.10.5.213", 4565);
 
                 ////_audioClient2 = new AudioClient();
                 ////_audioClient2.AudioFrameReady += _audioClient2_AudioFrameReady;
                 ////_audioClient2.Connect("192.168.184.19", 4538);
 
                 ////for sending audio
-                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4541);
-                //_audioListener.Start();
+                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4541);
+                _audioListener.Start();
 
                 //foreach (int portNum in ports)
                 //{
@@ -1276,7 +1276,7 @@ namespace CardioRehab_WPF
             if (sensorChooser.Kinect != null)
             {
                 _videoClient.Connect("192.168.184.5", 4555);
-                // _audioClient.Connect("172.10.5.213", 4565);
+                _audioClient.Connect("172.10.5.213", 4565);
                 //Console.WriteLine("patient IP: " + patientIPCollection[0]);
                 //if (patientIPCollection[0] != null)
                 //{
@@ -1316,24 +1316,25 @@ namespace CardioRehab_WPF
             }
         }
 
-        void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
-        {
-            this.patientFrame2.Source = e.ColorFrame.BitmapImage;
-            if (fullscreenview != null)
-            {
-                if (fullscreenview.patientLabel == 2)
-                {
-                    fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
-                }
-            }
+        //void _videoClient2_ColorFrameReady(object sender, ColorFrameReadyEventArgs e)
+        //{
+        //    this.patientFrame2.Source = e.ColorFrame.BitmapImage;
+        //    if (fullscreenview != null)
+        //    {
+        //        if (fullscreenview.patientLabel == 2)
+        //        {
+        //            fullscreenview.patientFrame.Source = e.ColorFrame.BitmapImage;
+        //        }
+        //    }
 
-        }
+        //}
 
         private void InitializeAudio()
         {
             wo.DesiredLatency = 100;
             mybufferwp = new BufferedWaveProvider(wf);
             mybufferwp.BufferDuration = TimeSpan.FromMinutes(5);
+            mybufferwp.DiscardOnBufferOverflow = true;
             wo.Init(mybufferwp);
             wo.Play();
         }
