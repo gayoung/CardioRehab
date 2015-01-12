@@ -44,7 +44,7 @@ namespace CardioRehab_WPF
         private int age;
         // currently under assumption that
         // first output from the loop is LAN and second is wireless
-        private String doctorIp = "192.168.184.5";
+        private String doctorIp = "192.168.184.9";
         private String patientLocalIp;
         private String wirelessIP;
 
@@ -108,7 +108,7 @@ namespace CardioRehab_WPF
         private void PatientWindow_Loaded(object sender, RoutedEventArgs e)
         {
             InitializeKinect();
-            InitializeAudio();
+            //InitializeAudio();
 
         }
 
@@ -126,22 +126,20 @@ namespace CardioRehab_WPF
 
         private void InitializeVR()
         {
-            //String debugpath = System.Reflection.Assembly.GetExecutingAssembly().Location;
-            //String projectpath = debugpath.Replace("\\bin\\Debug\\CardioRehab-WPF.exe", "");
-
-            //Console.WriteLine(projectpath);
+            String debugpath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+            String projectpath = debugpath.Replace("\\CardioRehab-WPF\\CardioRehab-WPF\\bin\\Debug\\CardioRehab-WPF.exe", "");
+            projectpath = projectpath + "\\BikeVR\\BikeVR.html";
 
             // make this path relative later
             try
             {
-                UnityWindow.Navigate("C:\\Users\\Gayoung\\Documents\\KdaysDemo\\web\\web.html");
+                UnityWindow.Navigate(projectpath);
             }
             catch (Exception e)
             {
                 Console.WriteLine("Error at InitializeVR");
                 Console.WriteLine(e.Message);
             }
-
         }
 
         /// <summary>
@@ -453,7 +451,7 @@ namespace CardioRehab_WPF
                     int len = d.GetChars(socketID.dataBuffer, 0, end, chars, 0);
                     System.String tmp = new System.String(chars);
 
-                    Console.WriteLine("received: "+tmp);
+                    //Console.WriteLine("received: "+tmp);
 
                     // need to be changed to properly label the patient according to the port used
                     if (!tmp.Contains('|'))
@@ -520,7 +518,7 @@ namespace CardioRehab_WPF
                                 {
                                     oxiValue.Dispatcher.Invoke((Action)(() => oxiValue.Content = data[1] + " %"));
                                     // enable below to display hr from oximeter
-                                    hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2].Replace("\0", "").Trim() + " bpm"));
+                                    //hrValue.Dispatcher.Invoke((Action)(() => hrValue.Content = data[2].Replace("\0", "").Trim() + " bpm"));
                                 }
                             }
                         }
@@ -655,16 +653,16 @@ namespace CardioRehab_WPF
 
 
                 // Streaming video out on port 4555
-                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4555 + patientIndex - 1, ImageFormat.Jpeg);
+                _videoListener = new ColorListener(this.sensorChooser.Kinect, 4560, ImageFormat.Jpeg);
                 _videoListener.Start();
 
-                _audioClient = new AudioClient();
-                _audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
-                _audioClient.Connect(doctorIp, 4541 + patientIndex - 1);
+                //_audioClient = new AudioClient();
+                //_audioClient.AudioFrameReady += _audioClient_AudioFrameReady;
+                //_audioClient.Connect(doctorIp, 4541 + patientIndex - 1);
 
-                //for sending audio
-                _audioListener = new AudioListener(this.sensorChooser.Kinect, 4565 + patientIndex - 1);
-                _audioListener.Start();
+                ////for sending audio
+                //_audioListener = new AudioListener(this.sensorChooser.Kinect, 4565 + patientIndex - 1);
+                //_audioListener.Start();
 
             }
 
